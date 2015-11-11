@@ -5,17 +5,17 @@ var router = express.Router();
 
 
 router.get('/', function (req, res) {
-    res.render('index.html', { user : req.user });
+    res.render('pages/index.html', { user : req.user });
 });
 
 router.get('/register', function(req, res) {
-    res.render('register.html', { });
+    res.render('pages/register.html', { });
 });
 
 router.post('/register', function(req, res, next) {
     Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {
-          return res.render("register.html", {info: "Sorry. That username already exists. Try again."});
+          return res.render("pages/register.html", {info: "Sorry. That username already exists. Try again."});
         }
 
         passport.authenticate('local')(req, res, function () {
@@ -31,7 +31,7 @@ router.post('/register', function(req, res, next) {
 
 
 router.get('/login', function(req, res) {
-    res.render('login.html', { user : req.user });
+    res.render('pages/login.html', { user : req.user });
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res, next) {
@@ -55,6 +55,10 @@ router.get('/logout', function(req, res, next) {
 
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
+});
+
+router.get('/starter', function(req, res){
+	 res.render('pages/starter.html');
 });
 
 module.exports = router;

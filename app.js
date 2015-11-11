@@ -11,30 +11,36 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
 app.set('view engine', 'ejs');  
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-}));
+
+var session = {
+	    secret: 'keyboard cat',
+	    resave: false,
+	    saveUninitialized: false,
+	    cookie: {}
+	}
+
+if (app.get('env') === 'production') {
+	// Secure cookies
+	app.set('trust proxy', 1) // trust first proxy
+	session.cookie.secure = true // serve secure cookies
+	}
+
+app.use(require('express-session')(session)); 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.use('/', routes);
 
@@ -54,25 +60,21 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
+// development error handler, will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error.html', {
+        res.render('pages/error.html', {
             message: err.message,
             error: err
         });
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
+// production error handler,  no stacktraces shown
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error.html', {
+    res.render('pages/error.html', {
         message: err.message,
         error: {}
     });

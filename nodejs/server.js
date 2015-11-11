@@ -3,24 +3,28 @@
 /**
  * Module dependencies.
  */
+var fs = require('fs'),
+	https = require('https'),
+	app = require('../app'),
+	debug = require('debug')('passport-local-express4:server'),
+	http = require('http');
 
-var app = require('../app');
-var debug = require('debug')('passport-local-express4:server');
-var http = require('http');
-
+var privateKey  = fs.readFileSync('../key.pem', 'utf8');
+var certificate = fs.readFileSync('../cert.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+//app.set('port', port);
 console.log("PORT:",port);
 /**
- * Create HTTP server.
+ * Create HTTP & HTTPS server.
  */
 
 var server = http.createServer(app);
-
+var httpsServer = https.createServer(credentials, app);
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -28,6 +32,10 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+httpsServer.listen(8443);
+httpsServer.on('error', onError);
+httpsServer.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
