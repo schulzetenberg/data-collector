@@ -49,16 +49,12 @@ router.get('/logout', function(req, res, next) {
         if (err) {
             return next(err);
         }
-        res.redirect('/');
+        res.redirect('/login');
     });
 });
 
-router.get('/ping', function(req, res){
-    res.status(200).send("pong!");
-});
-
-router.get('/starter', function(req, res){
-	 res.render('pages/starter.html');
+router.get('/profile', function(req, res){
+    res.render('pages/profile.html', { user : req.user });
 });
 
 module.exports = router;

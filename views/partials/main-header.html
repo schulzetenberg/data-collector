@@ -169,14 +169,15 @@ desired effect
               </li>
             </ul>
           </li>
-          <!-- User Account Menu -->
+          <% if(user){ %>
+          <!-- User Account Menu (User Logged In) -->
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
               <img src="img/favicon.ico" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs"><%= user.username %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
@@ -184,8 +185,8 @@ desired effect
                 <img src="img/favicon.ico" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  Name:
+                  <small> Email: <%= user.username %></small>
                 </p>
               </li>
               <!-- Menu Body -->
@@ -205,22 +206,26 @@ desired effect
               </li>
               <!-- Menu Footer-->
               <li class="user-footer">
-		     <% if(!user){ %>
                 <div class="pull-left">
-                  <a href="/register" class="btn btn-default btn-flat">Register</a>
+                  <a href="/profile" class="btn btn-default btn-flat">Profile</a>
                 </div>
-                <div class="pull-right">
-                  <a href="/login" class="btn btn-default btn-flat">Log In</a>
-                </div>
-			 <% } else{ %>  
-			    <p> You are currently logged in as <%= user.username %> </p>
                 <div class="pull-right">
                   <a href="/logout" class="btn btn-default btn-flat">Log Out</a>
                 </div>
-		 	<% } %>
               </li>
             </ul>
           </li>
+          <% } else{ %>  
+          <!-- User Account Menu (User Not Logged In) -->
+          <li class="dropdown user user-menu">
+            <!-- Login Link -->
+            <a href="/login">
+              <!-- The user image in the navbar-->
+              <img src="img/favicon.ico" class="user-image" alt="User Image">
+              Log In
+            </a>
+          </li>
+          <% } %>
           <!-- Control Sidebar Toggle Button -->
           <li>
             <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
