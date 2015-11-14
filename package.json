@@ -1,6 +1,6 @@
 {
-  "name": "passport-local-express4",
-  "version": "0.0.0",
+  "name": "node-js-boilerplate",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./nodejs/server.js",
@@ -8,9 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mjhea0/passport-local-express4.git"
+    "url": "https://github.com/schulzetenberg/Boilerplate-Nodejs-Web-Application.git"
   },
-  "author": "Michael Herman <michael@mherman.org>",
+  "engines": {
+	    "node": ">= 0.6.0",
+	    "npm": ">= 1.0.0"
+  },
+  "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.10.2",
@@ -30,5 +34,6 @@
     "promisify-node": "^0.2.1",
     "serve-favicon": "^2.2.0",
     "should": "~2.1.0"
-  }
+  },
+  "main": "./nodejs/server.js"
 }
