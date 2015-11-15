@@ -3,10 +3,10 @@
   <footer class="main-footer">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
-      Version 0.1
+      Version <%= config.web.version %>
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2015 <%= config.web.companyName %>.</strong> All rights reserved.
   </footer>
 
   <!-- Control Sidebar -->
@@ -20,22 +20,6 @@
     <div class="tab-content">
       <!-- Home tab content -->
       <div class="tab-pane active" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript::;">
-              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-
-                <p>Will be 23 on April 24th</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
         <h3 class="control-sidebar-heading">Tasks Progress</h3>
         <ul class="control-sidebar-menu">
           <li>
@@ -95,9 +79,13 @@
 <!-- AdminLTE App -->
 <script src="js/app.min.js"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
+<!-- OPTIONAL JS SCRIPTS -->
+
+<!-- fastclick -->
+<script src="plugins/fastclick/fastclick.min.js"></script>
+
+<!-- Optionally, you can add Slimscroll plugin.
+ Slimscroll is required when using the fixed layout. -->
+ 
 </body>
 </html>

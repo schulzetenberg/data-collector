@@ -3,19 +3,21 @@ var passport = require('passport');
 var Account = require('../models/account');
 var router = express.Router();
 
+//Load config file
+var config = require('../config.json');
 
 router.get('/', function (req, res) {
-    res.render('pages/index.html', { user : req.user });
+    res.render('pages/index.html', {config : config, title: config.web.siteTitle, user : req.user});
 });
 
 router.get('/register', function(req, res) {
-    res.render('pages/register.html', { });
+    res.render('pages/register.html', {config : config, title: "Register | " + config.web.siteTitle});
 });
 
 router.post('/register', function(req, res, next) {
-    Account.register(new Account({ username : req.body.username }), req.body.password, function(err, account) {
+    Account.register(new Account({username : req.body.username}), req.body.password, function(err, account) {
         if (err) {
-          return res.render("pages/register.html", {info: "Sorry. That username already exists. Try again."});
+          return res.render("pages/register.html", {config : config, title: "Register | " + config.web.siteTitle, info: "Sorry. That username already exists. Try again."});
         }
 
         passport.authenticate('local')(req, res, function () {
@@ -31,7 +33,7 @@ router.post('/register', function(req, res, next) {
 
 
 router.get('/login', function(req, res) {
-    res.render('pages/login.html', { user : req.user });
+    res.render('pages/login.html', {config : config, title: "Login | " + config.web.siteTitle, user : req.user});
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res, next) {
@@ -54,7 +56,7 @@ router.get('/logout', function(req, res, next) {
 });
 
 router.get('/profile', function(req, res){
-    res.render('pages/profile.html', { user : req.user });
+    res.render('pages/profile.html', {config : config, title: "Profile | " + config.web.siteTitle, user : req.user});
 });
 
 module.exports = router;
