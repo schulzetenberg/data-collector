@@ -1,56 +1,26 @@
-/log/*.log
-/tmp
-.DS_Store
-.idea/
-.sass-cache
-*~
-node_modules
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
 *.out
-npm-debug.log
-.project
+*.pid
+*.gz
+*.swp
 
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+pids
+logs
+results
+tmp
 
-# Folder config file
-Desktop.ini
+# Dependency directory
+node_modules
+bower_components
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Editors
+.idea
+*.iml
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
+# OS metadata
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-cert.pem
-key.pem
+Thumbs.db
