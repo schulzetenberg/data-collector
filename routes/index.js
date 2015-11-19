@@ -7,6 +7,10 @@ var router = express.Router();
 var config = require('../config.json');
 
 router.get('/', function (req, res) {
+	req.flash('info', 'info');
+	req.flash('error', 'error');
+	req.flash('warning', 'warning');
+	req.flash('success', 'success');
     res.render('pages/index.html', {config : config, title: config.web.siteTitle, user : req.user});
 });
 
