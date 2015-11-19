@@ -1,0 +1,4 @@
+/* Reduce top, bottom padding from 15px */
+.callout-small {
+	  padding: 8px 30px 8px 15px;
+}

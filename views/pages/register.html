@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="css/AdminLTE.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
+  <!-- Override the default template styling -->	
+  <link rel="stylesheet" href="css/override.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,6 +32,7 @@
 	<a href="/"><b> <%= config.web.companyName %> </b></a>
     <p> <%= config.web.siteTitle %> </p>
   </div>
+  <%- include ../partials/flash.html %>
 
   <div class="register-box-body">
     <p class="login-box-msg">Register</p>

@@ -15,6 +15,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/register', function(req, res) {
+	req.flash('info', 'info');
     res.render('pages/register.html', {config : config, title: "Register | " + config.web.siteTitle});
 });
 
