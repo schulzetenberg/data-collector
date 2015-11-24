@@ -12,7 +12,7 @@ var secrets = require('../config/secrets');
  */
 exports.getLogin = function(req, res) {
   if (req.user) return res.redirect('/');
-  res.render('account/login', {
+  res.render('account/login.html', {
     title: 'Login'
   });
 };
@@ -61,7 +61,7 @@ exports.logout = function(req, res) {
  */
 exports.getSignup = function(req, res) {
   if (req.user) return res.redirect('/');
-  res.render('account/signup', {
+  res.render('account/signup.html', {
     title: 'Create Account'
   });
 };
@@ -107,7 +107,7 @@ exports.postSignup = function(req, res, next) {
  * Profile page.
  */
 exports.getAccount = function(req, res) {
-  res.render('account/profile', {
+  res.render('account/profile.html', {
     title: 'Account Management'
   });
 };
@@ -210,7 +210,7 @@ exports.getReset = function(req, res) {
         req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
         return res.redirect('/forgot');
       }
-      res.render('account/reset', {
+      res.render('account/reset.html', {
         title: 'Password Reset'
       });
     });
@@ -288,7 +288,7 @@ exports.getForgot = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
-  res.render('account/forgot', {
+  res.render('account/forgot.html', {
     title: 'Forgot Password'
   });
 };

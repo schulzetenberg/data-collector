@@ -27,7 +27,6 @@ var sass = require('node-sass-middleware');
  */
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
-//var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 
 /**
@@ -55,9 +54,9 @@ mongoose.connection.on('error', function() {
  */
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-//app.set('view engine', 'ejs');  
-//app.engine('html', require('ejs').renderFile);  //render html files as ejs
+//app.set('view engine', 'jade');
+app.set('view engine', 'ejs');  
+app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
 app.use(sass({
   src: path.join(__dirname, 'public'),
@@ -91,13 +90,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-//app.use(function(req, res, next) {
-//  if (/api/i.test(req.path)) req.session.returnTo = req.path;
-//  next();
-//});
-
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-
 
 /**
  * Primary app routes.
