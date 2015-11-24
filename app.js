@@ -58,11 +58,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');  
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
+// Recompile SCSS & SASS files as CSS on page render
 app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
-  debug: true,
-  outputStyle: 'expanded'
+  debug: true,	// (_PROD) debug: false, 
+  outputStyle: 'expanded'  // (_PROD) outputStyle: 'compressed'
 }));
 app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
@@ -85,12 +86,12 @@ app.use(lusca({
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
+// Pass user to each route
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   next();
 });
-
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'public')));  // (_PROD) app.use(express.static(path.join(__dirname, 'public'), { maxAge: 604800000 })); // Max age of 1 week for static content
 
 /**
  * Primary app routes.
