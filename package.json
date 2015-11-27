@@ -1,14 +1,16 @@
 {
-  "name": "hackathon-starter",
-  "version": "3.1.0",
+  "name": "node-js-boilerplate",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/schulzetenberg/Boilerplate-Nodejs-Web-Application.git"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node ./nodejs/server.js",
     "test": "mocha --reporter spec --timeout 5000"
   },
+  "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "async": "^1.5.0",
     "bcrypt-nodejs": "^0.0.3",
@@ -45,5 +47,5 @@
     "multiline": "^1.0.2",
     "supertest": "^1.1.0"
   },
-  "license": "MIT"
+  "main": "./nodejs/server.js"
 }

@@ -43,18 +43,13 @@ var app = express();
 /**
  * Connect to MongoDB.
  */
-mongoose.connect(secrets.db);
-mongoose.connection.on('error', function() {
-  console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
-  process.exit(1);
-});
+var mongoDB = require('./nodejs/db.js');
+mongoDB.start();
 
 /**
  * Express configuration.
  */
-app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-//app.set('view engine', 'jade');
 app.set('view engine', 'ejs');  
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
@@ -86,9 +81,12 @@ app.use(lusca({
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
+
+var config = require('./config.json');
 // Pass user to each route
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+  res.locals.config = config; // TODO: Find better place for this
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));  // (_PROD) app.use(express.static(path.join(__dirname, 'public'), { maxAge: 604800000 })); // Max age of 1 week for static content
@@ -118,12 +116,5 @@ app.post('/account/delete', passportConf.isAuthenticated, userController.postDel
  * Error Handler.
  */
 app.use(errorHandler());
-
-/**
- * Start Express server.
- */
-app.listen(app.get('port'), function() {
-  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
-});
 
 module.exports = app;

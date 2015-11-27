@@ -1,4 +1,17 @@
-A boilerplate for **Node.js** web applications.
+Boilerplate Nodejs Web Application
+-------------------------------------
+ - Passport Local - App Authentication
+ 
+ - Express - Web Server
+ 
+ - Mongoose - MongoDB Connection
+ 
+ - AdminLTE - Website Template
+ 
+ - OpenShift - App Deployment
+
+
+< below cut from hackathon starter readme >
 
 Features
 --------
