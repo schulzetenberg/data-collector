@@ -3,10 +3,10 @@
  * Home page.
  */
 exports.index = function(req, res) {
-	req.flash('info', 'info');
-	req.flash('errors', 'errors');
-	req.flash('warning', 'warning');
-	req.flash('success', 'success');
+	req.flash('info', {msg: 'Info messages go here'});
+	req.flash('errors', {msg: 'Error messages go here'});
+	req.flash('warning', {msg: 'Warning messages go here'});
+	req.flash('success', {msg: 'Success messages go here'});
   res.render('home.html', {
     title: 'Home'
   });
