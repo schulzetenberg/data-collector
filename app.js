@@ -73,6 +73,11 @@ app.use(session({
   secret: secrets.sessionSecret,
   store: new MongoStore({ url: secrets.db, autoReconnect: true })
 }));
+/*if (app.get('env') === 'production') {
+	// Secure cookies
+	app.set('trust proxy', 1); // trust first proxy
+	session.cookie.secure = true; // serve secure cookies
+} */ // (_PROD settings)
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -111,10 +116,23 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 
-
-/**
- * Error Handler.
- */
-app.use(errorHandler());
+// Display stack trace in dev
+if (app.get('env') === 'dev') {
+	app.use(errorHandler());
+} else {
+	//catch 404 and forward to error handler
+	app.use(function(req, res, next) {
+		res.render('404.html',{title: "404"});
+	});
+	// production error handler,  no stacktraces shown
+	app.use(function(err, req, res, next) {
+	    res.status(err.status || 500);
+	    res.render('500.html', {
+	        message: err.message,
+	        error: {},
+	        title : "500"
+	    });
+	});
+}
 
 module.exports = app;
