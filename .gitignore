@@ -1,4 +1,12 @@
-/log/*.log
+*.seed
+*.log
+*.csv
+*.dat
+*.pid
+*.gz
+*.swp
+logs
+config/secrets.js
 /tmp
 .DS_Store
 .idea/

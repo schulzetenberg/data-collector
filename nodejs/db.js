@@ -1,18 +1,15 @@
-var promisify = require('promisify-node');
-var mongoose = promisify('mongoose');
+var mongoose = require('mongoose');
 
 function start () {
-	var url = '127.0.0.1:27017/' + process.env.OPENSHIFT_APP_NAME;
+	var url = '127.0.0.1:27017/boilerplate';
 	
 	// if OPENSHIFT env variables are present, use the available connection info:
 	if (process.env.OPENSHIFT_MONGODB_DB_URL) {
-	    url = process.env.OPENSHIFT_MONGODB_DB_URL +
-	    process.env.OPENSHIFT_APP_NAME;
+	    url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
 	}
 	
 	// Connect to mongodb
 	var connect = function () {
-		console.log("connecting to db");
 	    mongoose.connect(url);
 	};
 	connect();

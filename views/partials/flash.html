@@ -1,17 +1,24 @@
-<% if (messages.info) { %>
-	<div class="callout callout-info text-center callout-small">
-		<b><%= messages.info %></b>
-    </div>
-<% } if(messages.error) { %>
-	<div class="callout callout-danger text-center callout-small">
-		<b><%= messages.error %></b>
-    </div>
-<% } if(messages.warning) { %>
-	<div class="callout callout-warning text-center callout-small">
-		<b><%= messages.warning %></b>
-    </div>
-<% } if(messages.success) { %>
-	<div class="callout callout-success text-center callout-small">
-		<b><%= messages.success %></b>
-    </div>
-<% } %>
+<% if (messages.errors){
+for (var i=0; i < messages.errors.length; i++){ %>
+<div class="callout callout-danger text-center callout-small">
+ <%= messages.errors[i].msg %>
+</div>
+<% }} %>
+<% if (messages.info){
+for (var i=0; i < messages.info.length; i++){ %>
+<div class="callout callout-info text-center callout-small">
+ <%= messages.info[i].msg %>
+</div>
+<% }} %>
+<% if (messages.warning){
+for (var i=0; i < messages.warning.length; i++){ %>
+<div class="callout callout-warning text-center callout-small">
+ <%= messages.info[i].msg %>
+</div>
+<% }} %>
+<% if (messages.success){
+for (var i=0; i < messages.success.length; i++){ %>
+<div class="callout callout-success text-center callout-small">
+ <%= messages.success[i].msg %>
+</div>
+<% }} %>
