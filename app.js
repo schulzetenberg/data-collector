@@ -60,7 +60,10 @@ app.use(sass({
   debug: true,	// (_PROD) debug: false, 
   outputStyle: 'expanded'  // (_PROD) outputStyle: 'compressed'
 }));
-app.use(logger('dev'));
+// log only HTTP request errors
+app.use(morgan('dev', {
+			  skip: function (req, res) { return res.statusCode < 400 }
+}));  
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -95,6 +98,18 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));  // (_PROD) app.use(express.static(path.join(__dirname, 'public'), { maxAge: 604800000 })); // Max age of 1 week for static content
+
+//Remember me on login page
+app.use( function (req, res, next) {
+	  if ( req.method == 'POST' && req.url == '/login' ) {
+	    if ( req.body.rememberMe ) {
+	      req.session.cookie.maxAge = 2592000000; // Remember for 30 days
+	    } else {
+	      req.session.cookie.expires = false; // Else, cookie expires at end of session
+	    }
+	  }
+	  next();
+});
 
 /**
  * Primary app routes.

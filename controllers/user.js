@@ -28,14 +28,14 @@ exports.postLogin = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/login');
   }
 
   passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
     if (!user) {
-      req.flash('errors', { msg: info.message });
+      req.flash('error', { msg: info.message });
       return res.redirect('/login');
     }
     req.logIn(user, function(err) {
@@ -78,7 +78,7 @@ exports.postSignup = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/signup');
   }
 
@@ -89,7 +89,7 @@ exports.postSignup = function(req, res, next) {
 
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
-      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      req.flash('error', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
     }
     user.save(function(err) {
@@ -144,7 +144,7 @@ exports.postUpdatePassword = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/account');
   }
 
@@ -187,7 +187,7 @@ exports.getReset = function(req, res) {
     .where('resetPasswordExpires').gt(Date.now())
     .exec(function(err, user) {
       if (!user) {
-        req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
         return res.redirect('/forgot');
       }
       res.render('account/reset.html', {
@@ -207,7 +207,7 @@ exports.postReset = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('back');
   }
 
@@ -218,7 +218,7 @@ exports.postReset = function(req, res, next) {
         .where('resetPasswordExpires').gt(Date.now())
         .exec(function(err, user) {
           if (!user) {
-            req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+            req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
             return res.redirect('back');
           }
 
@@ -283,7 +283,7 @@ exports.postForgot = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/forgot');
   }
 
@@ -297,7 +297,7 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
         if (!user) {
-          req.flash('errors', { msg: 'No account with that email address exists.' });
+          req.flash('error', { msg: 'No account with that email address exists.' });
           return res.redirect('/forgot');
         }
 

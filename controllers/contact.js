@@ -30,7 +30,7 @@ exports.postContact = function(req, res) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('error', errors);
     return res.redirect('/contact');
   }
 
@@ -49,7 +49,7 @@ exports.postContact = function(req, res) {
 
   transporter.sendMail(mailOptions, function(err) {
     if (err) {
-      req.flash('errors', { msg: err.message });
+      req.flash('error', { msg: err.message });
       return res.redirect('/contact');
     }
     req.flash('success', { msg: 'Email has been sent successfully!' });
