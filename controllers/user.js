@@ -1,4 +1,3 @@
-var _ = require('lodash');
 var async = require('async');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
@@ -39,9 +38,12 @@ exports.postLogin = function(req, res, next) {
       return res.redirect('/login');
     }
     req.logIn(user, function(err) {
-      if (err) return next(err);
-      req.flash('success', { msg: 'Success! You are logged in.' });
-      res.redirect(req.session.returnTo || '/');
+    	if (err) return next(err);
+    	// reset the failure counter so next time they log in they get 5 tries again before the delays kick in 
+    	req.brute.reset(function () {
+    	      req.flash('success', { msg: 'Success! You are logged in.' });
+    	      res.redirect(req.session.returnTo || '/');
+		});
     });
   })(req, res, next);
 };

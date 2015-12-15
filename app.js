@@ -21,13 +21,13 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var sass = require('node-sass-middleware');
 
-
 /**
  * Controllers (route handlers).
  */
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
+var bruteforceController = require('./controllers/brute-force');
 
 /**
  * API keys and Passport configuration.
@@ -44,7 +44,6 @@ var app = express();
  * Connect to MongoDB.
  */
 var mongoDB = require('./nodejs/db.js');
-mongoDB.start();
 
 /**
  * Express configuration.
@@ -61,7 +60,7 @@ app.use(sass({
   outputStyle: 'expanded'  // (_PROD) outputStyle: 'compressed'
 }));
 // log only HTTP request errors
-app.use(morgan('dev', {
+app.use(logger('dev', {
 			  skip: function (req, res) { return res.statusCode < 400 }
 }));  
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
@@ -116,7 +115,11 @@ app.use( function (req, res, next) {
  */
 app.get('/', homeController.index);
 app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
+// app.post('/login', userController.postLogin);
+app.post('/login',
+		bruteforceController.globalBruteforce.prevent,
+		bruteforceController.userBruteforce.getMiddleware({key: function(req, res, next){ next(req.body.email); }}),
+		userController.postLogin);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
 app.post('/forgot', userController.postForgot);

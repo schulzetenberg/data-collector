@@ -1,29 +1,29 @@
 var mongoose = require('mongoose');
+var secrets = require('../config/secrets');
 
-function start () {
-	var url = '127.0.0.1:27017/boilerplate';
-	
-	// if OPENSHIFT env variables are present, use the available connection info:
-	if (process.env.OPENSHIFT_MONGODB_DB_URL) {
-	    url = process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME;
-	}
-	
-	// Connect to mongodb
-	var connect = function () {
-	    mongoose.connect(url);
-	};
-	connect();
-	
-	var db = mongoose.connection;
-	
-	db.on('connected', function(){
-		console.log("Connected to db");
-	});
-	db.on('error', function(error){
-	    console.log("Error loading the db: " + error);
-	});
-	// Keep trying to connect if disconnected
-	db.on('disconnected', connect);
-}
+var url = secrets.db;
+mongoose.connect(url);
+var db = mongoose.connection;
 
-module.exports = {start : start};
+// When successfully connected
+db.on('connected', function () {  
+  console.log('Mongoose connection open to ' + url);
+}); 
+
+// If the connection throws an error
+db.on('error',function (err) {  
+  console.log('Mongoose connection error: ' + err);
+}); 
+
+// When the connection is disconnected
+db.on('disconnected', function () {  
+  console.log('Mongoose disconnected'); 
+});
+
+// If the Node process ends, close the Mongoose connection 
+process.on('SIGINT', function() {  
+  db.close(function () { 
+    console.log('Mongoose connection disconnected through app termination'); 
+    process.exit(0); 
+  }); 
+}); 
