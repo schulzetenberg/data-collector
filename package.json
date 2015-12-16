@@ -6,7 +6,7 @@
     "url": "https://github.com/schulzetenberg/Boilerplate-Nodejs-Web-Application.git"
   },
   "scripts": {
-    "start": "node ./nodejs/server.js",
+    "start": "supervisor ./nodejs/server.js",
     "test": "mocha --reporter spec --timeout 5000"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
