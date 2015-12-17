@@ -1,9 +1,9 @@
 Boilerplate Nodejs Web Application
 -------------------------------------
  
- - Built upon Hackathon Starter boilerplate
+ - Built upon Hackathon Starter 3.2.0
  
- - AdminLTE website Template
+ - Using AdminLTE website Template 2.3.2
  
  - OpenShift App Deployment
 
