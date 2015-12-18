@@ -1,10 +1,10 @@
 #!/bin/env node
 // Initial file from: https://github.com/master-atul/openshift-express4/blob/master/server.js
-
+// See: http://stackoverflow.com/questions/25654796/creating-an-express-js-4-0-application-with-https-on-openshift-including-http-r
 var AppContainer = function () {
   //  Scope.
   var self = this;
-
+  
   /**
    *  Set up server IP address and port # using env variables/defaults.
    */
@@ -12,7 +12,7 @@ var AppContainer = function () {
     //  Set the environment variables we need.
     self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
     self.port = process.env.OPENSHIFT_NODEJS_PORT || 8999;
-
+    
     if (typeof self.ipaddress === "undefined") {
       //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
       //  allows us to run/test the app locally.
@@ -66,25 +66,31 @@ var AppContainer = function () {
     /**
      * Module dependencies.
      */
+	var fs = require('fs');
 	var app = require('../app');
     var http = require('http');
     var https = require('https');
-    /**
-     * Credentials for local HTTPS
-     */
-    //var privateKey  = fs.readFileSync('../key.pem', 'utf8');
-    //var certificate = fs.readFileSync('../cert.pem', 'utf8');
-    //var credentials = {key: privateKey, cert: certificate};
     
     /**
      * Get port from environment and store in Express.
      */
     var port = normalizePort(self.port);
+    
     /**
      * Create HTTP(S) server.
+     * On OpenShift, use HTTP server with HTTPS redirects
      */
-    var server = http.createServer(app);
-	//var secureServer = https.createServer(app);
+    if (!process.env.SSL) {
+    	var server = http.createServer(app);
+    }
+    else{
+        var privateKey  = fs.readFileSync('./key.pem', 'utf8');
+        var certificate = fs.readFileSync('./cert.pem', 'utf8');
+        var credentials = {key: privateKey, cert: certificate};
+        
+    	var server = https.createServer(credentials,app);
+    }
+    
     /**
      * Listen on provided port, on all network interfaces.
      */
@@ -92,10 +98,9 @@ var AppContainer = function () {
       console.log('%s: Node server started on %s:%d ...',
         Date(Date.now()), self.ipaddress, self.port);
     });
-    //secureServer.listen(8443);
-    server.on('error', onError);
-    server.on('listening', onListening);
 
+    server.on('error', onError);
+    
     /**
      * Normalize a port into a number, string, or false.
      */
@@ -140,14 +145,6 @@ var AppContainer = function () {
         default:
           throw error;
       }
-    }
-
-    /**
-     * Event listener for HTTP server "listening" event.
-     */
-    function onListening() {
-      var addr = server.address();
-      console.log('Server on port : ' + addr.port);
     }
   };
 };

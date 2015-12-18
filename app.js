@@ -11,8 +11,6 @@ var logger = require('morgan');
 var errorHandler = require('errorhandler');
 var lusca = require('lusca');
 var methodOverride = require('method-override');
-
-var _ = require('lodash');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('express-flash');
 var path = require('path');
@@ -52,13 +50,23 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');  
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
-// Recompile SCSS & SASS files as CSS on page render
+
+/* 
+ * Recompile SCSS & SASS files as CSS on page render
+ */
+var sassOutput = 'compressed';
+var sassDebug = false;
+if (app.get('env') === 'dev') {
+	sassOutput = 'expanded';
+	sassDebug = true;
+}
 app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
-  debug: true,	// (_PROD) debug: false, 
-  outputStyle: 'expanded'  // (_PROD) outputStyle: 'compressed'
+  debug: sassDebug,
+  outputStyle: sassOutput
 }));
+
 // log only HTTP request errors
 app.use(logger('dev', {
 			  skip: function (req, res) { return res.statusCode < 400 }
@@ -96,7 +104,10 @@ app.use(function(req, res, next) {
   res.locals.config = config; // TODO: Find better place for this
   next();
 });
-app.use(express.static(path.join(__dirname, 'public')));  // (_PROD) app.use(express.static(path.join(__dirname, 'public'), { maxAge: 604800000 })); // Max age of 1 week for static content
+
+var publicOpts = { maxAge: 604800000 }; // Max age of 1 week for static content
+if (app.get('env') === 'dev') publicOpts = { maxAge: 0 }; // No cached content in development
+app.use(express.static(path.join(__dirname, 'public'), publicOpts));
 
 //Remember me on login page
 app.use( function (req, res, next) {
@@ -115,7 +126,6 @@ app.use( function (req, res, next) {
  */
 app.get('/', homeController.index);
 app.get('/login', userController.getLogin);
-// app.post('/login', userController.postLogin);
 app.post('/login',
 		bruteforceController.globalBruteforce.prevent,
 		bruteforceController.userBruteforce.getMiddleware({key: function(req, res, next){ next(req.body.email); }}),
