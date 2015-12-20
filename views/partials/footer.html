@@ -1,9 +1,17 @@
   <!-- Main Footer -->
   <footer class="main-footer">
     <!-- To the right -->
+    
+	 <!--
+	 	 <div class="pull-right hidden-xs">
+	      Version <%= config.web.version %>
+	    </div>
+	 -->      
+	 
     <div class="pull-right hidden-xs">
-      Version <%= config.web.version %>
-    </div>
+    	Version: <app-version></app-version>
+   	</div>
+
     <!-- Default to the left -->
     <strong>Copyright &copy; 2015 <%= config.web.companyName %>.</strong> All rights reserved.
   </footer>
@@ -69,8 +77,15 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- REQUIRED JS SCRIPTS -->
-
+<!-- ** REQUIRED JS SCRIPTS ** -->
+<!-- Angular resources  -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+<script src="angular/app.js"></script>
+<script src="angular/services.js"></script>
+<script src="angular/controllers.js"></script>
+<script src="angular/filters.js"></script>
+<script src="angular/directives.js"></script>
 <!-- jQuery 2.1.4 -->
 <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
@@ -78,8 +93,7 @@
 <!-- AdminLTE App -->
 <script src="js/app.min.js"></script>
 
-<!-- OPTIONAL JS SCRIPTS -->
-
+<!-- ** OPTIONAL JS SCRIPTS ** -->
 <!-- fastclick -->
 <script src="plugins/fastclick/fastclick.min.js"></script>
 <!-- Alertify 0.3 -->
