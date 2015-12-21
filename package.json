@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "supervisor ./nodejs/server.js",
-    "test": "mocha --reporter spec --timeout 5000"
+    "test": "mocha --reporter spec --timeout 5000",
+    "postinstall" : "bower install"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
