@@ -92,7 +92,6 @@ if (app.get('env') === 'production') {
 		  }
 		  next();
 	});
-}
 /*
 	// Secure cookies
 	app.set('trust proxy', 1); // trust first proxy
