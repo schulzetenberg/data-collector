@@ -1,8 +1,25 @@
-<% include ./partials/header.html %>
+<% include ../partials/header.html %>
 
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Forgot Password
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i>Home</a></li>
+        <li class="active"><%=title%></li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+		<%- include ../partials/flash.html %>
+		
 <div class="col-sm-8 col-sm-offset-2">
   <form method="POST">
-    <legend>Forgot Password</legend>
+    <legend>Password Reset</legend>
     <input type="hidden" name="_csrf" value="<%=_csrf%>"/>
     <div class="form-group">
       <p>Enter your email address below and we will send you password reset instructions.</p>
@@ -14,5 +31,10 @@
     </div>
   </form>
 </div>
-
+		
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  
 <% include ../partials/footer.html %>
