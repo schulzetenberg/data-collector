@@ -83,11 +83,22 @@ app.use(session({
   secret: secrets.sessionSecret,
   store: new MongoStore({ url: secrets.db, autoReconnect: true })
 }));
-/*if (app.get('env') === 'production') {
+
+// HTTPS redirection
+if (app.get('env') === 'production') {
+	app.use(function(req, res, next) {
+		  if(!req.secure) {
+		    return res.redirect(['https://', req.get('Host'), req.url].join(''));
+		  }
+		  next();
+	});
+}
+/*
 	// Secure cookies
 	app.set('trust proxy', 1); // trust first proxy
 	session.cookie.secure = true; // serve secure cookies
-} */ // (_PROD settings)
+*/ // (_PROD settings)
+}
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
