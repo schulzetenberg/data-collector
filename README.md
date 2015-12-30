@@ -33,6 +33,10 @@ After installing Node.js & npm:
 - npm install -g grunt-cli
 - npm install
 
+Run
+-------
+- node nodejs/server.js
+
 Packages
 --------
 - Front-end: See bower.json

@@ -83,18 +83,16 @@ app.use(session({
   secret: secrets.sessionSecret,
   store: new MongoStore({ url: secrets.db, autoReconnect: true })
 }));
-
-// HTTPS redirection
+function requireHTTPS(req, res, next) {
+    if (!req.secure) {
+        return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
 if (app.get('env') === 'production') {
-	app.use(function(req, res, next) {
-		  if(!req.secure) {
-		    return res.redirect(['https://', req.get('Host'), req.url].join(''));
-		  }
-		  next();
-	});
-/*
-	// Secure cookies
 	app.set('trust proxy', 1); // trust first proxy
+	app.use(requireHTTPS);  // HTTPS redirection
+/*
 	session.cookie.secure = true; // serve secure cookies
 */ // (_PROD settings)
 }
