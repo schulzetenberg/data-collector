@@ -1,6 +1,6 @@
 {
   "name": "boilerplate",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "dependencies": {
     "angular": "1.4.x",
     "modernizr": "2.8.x",

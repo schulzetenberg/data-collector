@@ -8,7 +8,7 @@
   "scripts": {
     "start": "supervisor ./nodejs/server.js",
     "test": "mocha --reporter spec --timeout 5000",
-    "postinstall": "bower install"
+    "postinstall": "bower install && grunt build"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
