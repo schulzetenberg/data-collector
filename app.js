@@ -28,10 +28,19 @@ var contactController = require('./controllers/contact');
 var bruteforceController = require('./controllers/brute-force');
 
 /**
- * API keys and Passport configuration.
+ * API keys and configuration.
  */
 var secrets = require('./config/secrets');
 var passportConf = require('./config/passport');
+var config = require('./config.json');
+
+/**
+ * Development options
+ */
+var cookieOpts = {httpOnly: false, secure: false}; // Unsecure cookies
+var publicOpts = {maxAge: 0}; // No cached content
+var sassOutput = 'expanded';
+var sassDebug = true;
 
 /**
  * Create Express server.
@@ -47,55 +56,49 @@ var mongoDB = require('./nodejs/db.js');
  * Express configuration.
  */
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');  
+app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
-
-/* 
- * Recompile SCSS & SASS files as CSS on page render
- */
-var sassOutput = 'compressed';
-var sassDebug = false;
-if (app.get('env') === 'dev') {
-	sassOutput = 'expanded';
-	sassDebug = true;
-}
-app.use(sass({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  debug: sassDebug,
-  outputStyle: sassOutput
-}));
-
-// log only HTTP request errors
 app.use(logger('dev', {
-			  skip: function (req, res) { return res.statusCode < 400 }
-}));  
+	skip: function (req, res) { return res.statusCode < 400 } // log only HTTP request errors
+}));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
-app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: secrets.sessionSecret,
-  store: new MongoStore({ url: secrets.db, autoReconnect: true })
-}));
+
 function requireHTTPS(req, res, next) {
     if (!req.secure) {
         return res.redirect('https://' + req.get('host') + req.url);
     }
     next();
 }
+
 if (app.get('env') === 'production') {
+	sassOutput = 'compressed'; // Compress CSS files
+	sassDebug = false;
+	publicOpts = { maxAge: 86400000 }; // Max age of 1 day for static content
 	app.set('trust proxy', 1); // trust first proxy
 	app.use(requireHTTPS);  // HTTPS redirection
-/*
-	session.cookie.secure = true; // serve secure cookies
-*/ // (_PROD settings)
+	cookieOpts = {httpOnly: true, secure: true}; // secure cookies
 }
+// Recompile SCSS & SASS files as CSS on page render
+app.use(sass({
+  src: path.join(__dirname, 'public'),
+  dest: path.join(__dirname, 'public'),
+  debug: sassDebug,
+  outputStyle: sassOutput
+}));
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: secrets.sessionSecret,
+  store: new MongoStore({ url: secrets.db, autoReconnect: true }),
+	cookie: cookieOpts
+}));
+app.use(express.static(path.join(__dirname, 'public'), publicOpts));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -104,18 +107,11 @@ app.use(lusca({
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
-
-var config = require('./config.json');
-// Pass user to each route
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   res.locals.config = config; // TODO: Find better place for this
   next();
 });
-
-var publicOpts = { maxAge: 604800000 }; // Max age of 1 week for static content
-if (app.get('env') === 'dev') publicOpts = { maxAge: 0 }; // No cached content in development
-app.use(express.static(path.join(__dirname, 'public'), publicOpts));
 
 //Remember me on login page
 app.use( function (req, res, next) {
@@ -152,10 +148,7 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 
-// Display stack trace in dev
-if (app.get('env') === 'dev') {
-	app.use(errorHandler());
-} else {
+if (app.get('env') === 'production') {
 	//catch 404 and forward to error handler
 	app.use(function(req, res, next) {
 		res.render('404.html',{title: "404"});
@@ -169,6 +162,8 @@ if (app.get('env') === 'dev') {
 	        title : "500"
 	    });
 	});
+} else {
+	app.use(errorHandler()); // Display stack trace in dev
 }
 
 module.exports = app;

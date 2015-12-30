@@ -3,7 +3,7 @@ Boilerplate Nodejs Web Application
  
  - Built upon Hackathon Starter 3.2.0
  
- - Using AdminLTE website Template 2.3.2
+ - Using AdminLTE website template 2.3.2
  
  - OpenShift App Deployment
 
@@ -13,7 +13,6 @@ Features
 - Local Authentication using Email and Password
 - Flash notifications
 - MVC Project Structure
-- Sass stylesheets (auto-compiled via middleware)
 - Bootstrap 3
 - Contact Form
 - **Account Management**
@@ -23,8 +22,10 @@ Features
  - Forgot Password
  - Reset Password
  - Delete Account
-- CSRF protection
-- Brute force protection
+- **Security**
+ - CSRF protection
+ - Brute force protection
+ - Secure cookies
 
 Install
 -------
