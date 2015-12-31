@@ -39,7 +39,7 @@ exports.postLogin = function(req, res, next) {
     }
     req.logIn(user, function(err) {
     	if (err) return next(err);
-    	// reset the failure counter so next time they log in they get 5 tries again before the delays kick in 
+    	// reset the failure counter so next time they log in they get 5 tries again before the delays kick in
     	req.brute.reset(function () {
     	      req.flash('success', { msg: 'Success! You are logged in.' });
     	      res.redirect(req.session.returnTo || '/');
@@ -85,6 +85,7 @@ exports.postSignup = function(req, res, next) {
   }
 
   var user = new User({
+    profile: {name: req.body.name},
     email: req.body.email,
     password: req.body.password
   });

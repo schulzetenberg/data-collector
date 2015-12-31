@@ -13,19 +13,10 @@
   <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="bower_components/ionicons/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. Red is selected currently -->
-  <link rel="stylesheet" href="css/skin-red.min.css">
-  <!-- Override AdminLTE styling -->
-  <link rel="stylesheet" href="css/override.css">
-  <!-- Custom styling -->
-  <link rel="stylesheet" href="css/custom.css">
   <!-- Core Alertify styles -->
   <link rel="stylesheet" href="bower_components/alertify.js/themes/alertify.core.css" />
-  <!-- Customized Bootstrap Alertify theme -->
-  <link rel="stylesheet" href="css/alertify-custom.css" />
-
+  <!-- Concatenated CSS -->
+  <link rel="stylesheet" href="build.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -33,7 +24,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
   </head>
-  
+
 <!--
 BODY TAG OPTIONS:
 =================
@@ -171,7 +162,7 @@ desired effect
                 <a href="#">View all tasks</a>
               </li>
             </ul>
-          </li>          
+          </li>
           <% if(user){ %>
           <!-- User Account Menu (User Logged In) -->
           <li class="dropdown user user-menu">
@@ -195,7 +186,7 @@ desired effect
 					<img src="<%=user.gravatar(60)%>" class="img-circle" alt="User Image"/>
 				<% } %>
                 <p>
-                  Name: <%= user.name %>
+                  Name: <%= user.profile.name %>
                   <small> Email: <%= user.email %></small>
                 </p>
               </li>
@@ -220,12 +211,12 @@ desired effect
                   <a href="/account" class="btn btn-default">My Account</a>
                 </div>
                 <div class="pull-right">
-                  <a href="/logout" class="btn btn-primary">Log Out</a>
+                  <a href="/logout" class="btn btn-default">Log Out</a>
                 </div>
               </li>
             </ul>
           </li>
-          <% } else{ %>  
+          <% } else{ %>
           <!-- User Account Menu (User Not Logged In) -->
           <li class="user user-menu">
             <a href="/signup">
@@ -266,7 +257,7 @@ desired effect
       </div>
       <% } %>
 
-      <!-- search form (Optional) 
+      <!-- search form (Optional)
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
