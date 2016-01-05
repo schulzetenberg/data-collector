@@ -10,13 +10,13 @@
 
 module.exports = {
 
-  db: process.env.MONGODB || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost:27017/test',
+  db: process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost:27017/boilerplate',
 
   sessionSecret: process.env.SESSION_SECRET || 'Your Session Secret goes here',
-  
+
   sendgrid: {
-    user: process.env.SENDGRID_USER || 'hslogin',
-    password: process.env.SENDGRID_PASSWORD || 'hspassword00'
+    user: process.env.SENDGRID_USER || 'SGlogin',
+    password: process.env.SENDGRID_PASSWORD || 'SGpassword'
   }
 
 };

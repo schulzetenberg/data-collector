@@ -7,8 +7,7 @@
   },
   "scripts": {
     "start": "supervisor ./nodejs/server.js",
-    "test": "mocha --reporter spec --timeout 5000",
-    "postinstall": "bower install && grunt build"
+    "test": "mocha --reporter spec --timeout 5000"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
@@ -32,6 +31,7 @@
     "express-validator": "^2.18.0",
     "grunt": "~0.4.5",
     "grunt-bootlint": "^0.9.1",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-csslint": "^0.5.0",
