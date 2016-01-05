@@ -8,7 +8,6 @@
 *.gz
 *.swp
 logs
-config/secrets.js
 /tmp
 .DS_Store
 .idea/

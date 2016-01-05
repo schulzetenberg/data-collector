@@ -2,6 +2,7 @@
  * Module dependencies.
  */
 var express = require('express');
+var lessMiddleware = require('less-middleware');
 var cookieParser = require('cookie-parser');
 var compress = require('compression');
 var favicon = require('serve-favicon');
@@ -17,7 +18,6 @@ var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
-var sass = require('node-sass-middleware');
 
 /**
  * Controllers (route handlers).
@@ -39,9 +39,8 @@ var config = require('./config.json');
  */
 var cookieOpts = {httpOnly: false, secure: false}; // Unsecure cookies
 var publicOpts = {maxAge: 0}; // No cached content
-var sassOutput = 'expanded';
-var sassDebug = true;
-
+var lessDebug = true;
+var lessCompileOnce = true;
 /**
  * Create Express server.
  */
@@ -77,19 +76,17 @@ function requireHTTPS(req, res, next) {
 }
 
 if (app.get('env') === 'production') {
-	sassOutput = 'compressed'; // Compress CSS files
-	sassDebug = false;
 	publicOpts = { maxAge: 86400000 }; // Max age of 1 day for static content
 	app.set('trust proxy', 1); // trust first proxy
 	app.use(requireHTTPS);  // HTTPS redirection
 	cookieOpts = {httpOnly: true, secure: true}; // secure cookies
+	lessDebug = false;
+	lessCompileOnce = false;
 }
-// Recompile SCSS & SASS files as CSS on page render
-app.use(sass({
-  src: path.join(__dirname, 'public'),
+app.use(lessMiddleware(path.join(__dirname, 'build','less'), {
   dest: path.join(__dirname, 'public'),
-  debug: sassDebug,
-  outputStyle: sassOutput
+	once: lessCompileOnce,
+	debug: lessDebug
 }));
 app.use(session({
   resave: true,
