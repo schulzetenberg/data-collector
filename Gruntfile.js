@@ -118,18 +118,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Optimize images
-    image: {
-      dynamic: {
-        files: [{
-          expand: true,
-          cwd: 'build/img/',
-          src: ['**/*.{png,jpg,gif,svg,jpeg}'],
-          dest: 'public/img/'
-        }]
-      }
-    },
-
     // Validate JS code
     jshint: {
       options: {
@@ -159,13 +147,6 @@ module.exports = function (grunt) {
         relaxerror: ['W005','E001','W001','W002','W003']
       },
       files: ['views/*.html', 'views/**/*.html']
-    },
-
-    // Delete images in build directory
-    // After compressing the images in the build/img dir, there is no need
-    // for them
-    clean: {
-      build: ["build/img/*"]
     }
   });
 
@@ -179,14 +160,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   // Compress JS Files
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  // Include Files Within HTML
-  grunt.loadNpmTasks('grunt-includes');
-  // Optimize images
-  grunt.loadNpmTasks('grunt-image');
   // Validate JS code
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  // Delete not needed files
-  grunt.loadNpmTasks('grunt-contrib-clean');
   // Lint CSS
   grunt.loadNpmTasks('grunt-contrib-csslint');
   // Lint Bootstrap
