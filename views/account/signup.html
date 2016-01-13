@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="myApp">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,12 +13,10 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- Ionicons -->
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="css/AdminLTE.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="bower_components/iCheck/skins/all.css">
-  <!-- Override the default template styling -->	
-  <link rel="stylesheet" href="css/override.css">
+  <!-- Concatenated CSS -->
+  <link rel="stylesheet" href="build.css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -60,7 +58,7 @@
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         <span class="help-block">Minimum of 6 characters</span>
       </div>
-      <div class="form-group"> 
+      <div class="form-group">
         <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control" data-match="#password" data-match-error="Passwords do not match" required/>
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
         <div class="help-block with-errors"></div>
@@ -94,9 +92,11 @@
 <!-- /.register-box -->
 
 <!-- jQuery 2.1.4 -->
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.5 -->
-<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!-- Concatenated JS from Grunt -->
+<script src="build.js"></script>
 <!-- iCheck -->
 <script src="bower_components/iCheck/icheck.min.js"></script>
   <!-- Bootstrap-Validator -->
