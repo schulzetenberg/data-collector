@@ -59,7 +59,8 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-image": "^1.0.5",
     "mocha": "^2.3.4",
-    "supertest": "^1.1.0"
+    "supertest": "^1.1.0",
+    "supertest-session": "^1.0.0"
   },
   "main": "./nodejs/server.js"
 }
