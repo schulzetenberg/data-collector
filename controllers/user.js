@@ -129,7 +129,13 @@ exports.postUpdateProfile = function(req, res, next) {
     user.profile.website = req.body.website || '';
 
     user.save(function(err) {
-      if (err) return next(err);
+      if (err) {
+        if(err.code === 11000){
+          req.flash('error', { msg: 'Email address already in use.' });
+          return res.redirect('/account');
+        }
+        return next(err);  
+      }  
       req.flash('success', { msg: 'Profile information updated.' });
       res.redirect('/account');
     });
