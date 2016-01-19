@@ -18,11 +18,48 @@ before(function(done) {
         done();
     });
 });
+// Remove delete user (if exists)
+before(function(done) {
+    User.remove({ email: 'testing@2.com' }, function(err) {
+        if (err) return done(err);
+        done();
+    });
+});
 // Remove updated user (if exists)
 before(function(done) {
     User.remove({ email: 'testing-new@1.com' }, function(err) {
         if (err) return done(err);
         done();
+    });
+});
+
+describe('Contact page', function () {
+    var session;
+    var csrfToken;
+    
+    beforeEach(function (done) {
+        session = new Session();
+        session.get('/contact')
+        .end(function (err, res) {
+            if (err) return done(err);
+            csrfToken = extractCsrfToken(res);
+            done();
+        });
+    });
+
+    describe('POST /contact', function () {
+      it('should be unauthorized', function (done) {
+        session
+          .post('/contact')
+          .send({
+              name:"Tester",
+              email:"testing@1.com",
+              body:"Test body.",
+              _csrf: csrfToken })
+          .expect(302)
+          .expect('Location', '/contact')
+          .end(done)
+      });
     });
 });
 
@@ -41,31 +78,7 @@ describe('GET: user not logged in', function () {
           .expect(200, done);
       });
     });
-
-    describe('GET /login', function() {
-      it('should return 200 OK', function(done) {
-        session
-          .get('/login')
-          .expect(200, done);
-      });
-    });
-
-    describe('GET /signup', function() {
-      it('should return 200 OK', function(done) {
-        session
-          .get('/signup')
-          .expect(200, done);
-      });
-    });
-
-    describe('GET /contact', function() {
-      it('should return 200 OK', function(done) {
-        session
-          .get('/contact')
-          .expect(200, done);
-      });
-    });
-
+    
     describe('GET /random-url', function() {
       it('should return 404', function(done) {
         session
@@ -168,6 +181,57 @@ describe('POST /signup', function () {
   });
 });
 
+describe('POST /account/delete', function () {
+
+  var session;
+  var csrfToken;
+  
+  before(function (done) {
+    session = new Session();
+    session.get('/signup')
+      .end(function (err, res) {
+        if (err) return done(err);
+        csrfToken = extractCsrfToken(res);
+        done();
+      });
+  });
+  before(function (done) {
+    session
+      .post('/signup')
+      .send({name:"Tester 2", email:"testing@2.com", password:"123456", confirmPassword:"123456", _csrf: csrfToken })
+      .expect(302)
+      .expect('Location', '/')
+      .end(done)
+  });
+  before(function (done) {
+      session.get('/account')
+      .end(function (err, res) {
+          if (err) return done(err);
+          csrfToken = extractCsrfToken(res);
+          done();
+      });
+  });
+
+    describe('POST /account/delete', function() {
+        it('should return 200 OK', function(done) {
+            session
+            .post('/account/delete')
+            .expect(302)
+            .expect('Location', '/')
+            .send({ _csrf: csrfToken})
+            .end(done);
+
+        });
+        it('should not find user in DB', function(done) {
+            User.findOne({ email: 'testing@2.com' }, function(err, user) {
+                if (err) return done(err);
+                should.not.exist(user);
+                done();
+            });
+        });
+    });
+});
+
 describe('POST /login', function () {
     var session;
 
@@ -248,9 +312,9 @@ describe('GET: user logged in', function () {
             .get('/account')
             .expect(200)
             .end(done)
-
         });
     });
+    
 });
 
 describe('POST: user logged in', function () {
@@ -281,6 +345,7 @@ describe('POST: user logged in', function () {
             session
             .post('/account/profile')
             .expect(302)
+            .expect('Location', '/account')
             .send({
                 name:"New Name",
                 email:"testing-new@1.com",
@@ -300,18 +365,13 @@ describe('POST: user logged in', function () {
                 done();
             });
         });
-
     });
+    
 });
 
 /*
-** To write tests for:
+    To manually test:
+    * Forgotten password email gets sent & able to reset password using email link.
+    * Log out
+    * Change password
 */
-            // GET logout
-// POST /forgot
-            // app.get('/reset/:token', userController.getReset);
-// app.post('/reset/:token', userController.postReset);
-// app.post('/contact', contactController.postContact);
-            // app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-// app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
-// app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
