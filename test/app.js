@@ -375,3 +375,9 @@ describe('POST: user logged in', function () {
     * Log out
     * Change password
 */
+
+/*
+    TODO:
+    * Brute force tests
+    * HTTPS redirection
+*/

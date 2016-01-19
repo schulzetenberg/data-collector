@@ -81,6 +81,7 @@ module.exports = function (grunt) {
         files: {
           "dist/js/app.min.js": ['build/js/app.js'],
           "dist/js/google-analytics.min.js": ['build/js/google-analytics.js'],
+          "dist/js/profile.min.js": ['build/js/profile.js'],    
           "dist/js/angular/app.min.js": ["build/js/angular/app.js"],
           "dist/js/angular/services.min.js": ["build/js/angular/services.js"],
           "dist/js/angular/controllers.min.js": ["build/js/angular/controllers.js"],
@@ -107,6 +108,7 @@ module.exports = function (grunt) {
       src: [
         "dist/js/app.min.js",
         "dist/js/google-analytics.min.js",
+        "dist/js/profile.min.js",
         "dist/js/angular/app.min.js",
         "dist/js/angular/services.min.js",
         "dist/js/angular/controllers.min.js",
