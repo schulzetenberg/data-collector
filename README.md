@@ -1,7 +1,5 @@
-Boilerplate Nodejs Web Application
+Boilerplate MEAN Web App
 ----------------------------------
-
- - Built upon Hackathon Starter 3.2.0
 
  - Using AdminLTE website template 2.3.2
 
