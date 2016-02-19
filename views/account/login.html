@@ -29,9 +29,9 @@
     <a href="/"><b> <%= config.web.companyName %> </b></a>
     <p> <%= config.web.siteTitle %> </p>
   </div>
-  
+
   <%- include ../partials/flash.html %>
-  
+
   <div class="login-box-body">
     <p class="login-box-msg">Sign In</p>
     <form role="form" name="form" action="/login" method="post">
@@ -41,14 +41,14 @@
           <span ng-show="form.email.$error.email">Email address is invalid</span>
         </div>
       <div class="form-group has-feedback">
-        <input type="email" name="email" ng-model="email" ng-model-options="{updateOn: 'blur'}" placeholder="Email" autofocus="autofocus" required class="form-control"/>
+        <input type="email" name="email" placeholder="Email" autofocus="autofocus" required class="form-control" ng-model="email" ng-model-options="{updateOn: 'blur'}"/>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div ng-show="form.$submitted || form.password.$touched">
         <span ng-show="form.password.$error.required">Please enter your password</span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" name="password" ng-model="password" ng-model-options="{updateOn: 'blur'}" placeholder="Password" required class="form-control"/>
+        <input type="password" name="password" placeholder="Password" required class="form-control" ng-model="password" ng-model-options="{updateOn: 'blur'}"/>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -67,8 +67,8 @@
         </div>
         <!-- /.col -->
       </div>
-    </form>    
-    
+    </form>
+
     <div class="social-auth-links">
     </div>
     <a href="/forgot">I forgot my password</a><br>
