@@ -11,9 +11,7 @@ var secrets = require('../config/secrets');
  */
 exports.getLogin = function(req, res) {
   if (req.user) return res.redirect('/');
-  res.render('account/login.html', {
-    title: 'Login'
-  });
+  res.render('account/login.html', { title: 'Login' });
 };
 
 /**
@@ -134,8 +132,8 @@ exports.postUpdateProfile = function(req, res, next) {
           req.flash('error', { msg: 'Email address already in use.' });
           return res.redirect('/account');
         }
-        return next(err);  
-      }  
+        return next(err);
+      }
       req.flash('success', { msg: 'Profile information updated.' });
       res.redirect('/account');
     });

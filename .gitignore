@@ -65,3 +65,5 @@ cert.pem
 key.pem
 public/build.js
 public/build.css
+public/fonts/
+public/plugins.min.js

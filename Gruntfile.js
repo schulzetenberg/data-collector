@@ -1,7 +1,8 @@
-// AdminLTE Gruntfile
 module.exports = function (grunt) {
 
   'use strict';
+
+  require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
     watch: {
@@ -79,7 +80,14 @@ module.exports = function (grunt) {
         files: {
           "dist/js/app.min.js": ['build/js/app.js'],
           "dist/js/google-analytics.min.js": ['build/js/google-analytics.js'],
-          "dist/js/profile.min.js": ['build/js/profile.js']
+          "dist/js/profile.min.js": ['build/js/profile.js'],
+          "public/plugins.min.js": [
+            'node_modules/fastclick/lib/fastclick.js',
+            'node_modules/alertify.js/dist/js/alertify.js',
+            'node_modules/slimscroll/lib/slimscroll.js',
+            'node_modules/icheck/icheck.min.js',
+            'node_modules/bootstrap-validator/dist/validator.min.js'
+          ]
         /*  ,"dist/js/angular/app.min.js": ["build/js/angular/app.js"],
           "dist/js/angular/services.min.js": ["build/js/angular/services.js"],
           "dist/js/angular/controllers.min.js": ["build/js/angular/controllers.js"],
@@ -97,7 +105,11 @@ module.exports = function (grunt) {
         "dist/css/alertify-custom.min.css",
         "dist/css/custom.min.css",
         "dist/css/override.min.css",
-        "dist/css/skins/skin-red.min.css"
+        "dist/css/skins/skin-red.min.css",
+        'node_modules/icheck/skins/all.css',
+        'node_modules/alertify.js/dist/css/alertify.css',
+        'node_modules/font-awesome/css/font-awesome.min.css',
+        'node_modules/ionicons/dist/css/ionicons.min.css'
       ],
       dest: 'public/build.css',
       nonull: true,
@@ -147,7 +159,33 @@ module.exports = function (grunt) {
         relaxerror: ['W005','E001','W001','W002','W003']
       },
       files: ['views/*.html', 'views/**/*.html']
+    },
+
+    // Copy dependencies to public folder
+    copy: {
+      fa: {
+        nonull: true,
+        expand: true,
+        cwd: 'node_modules/font-awesome/fonts/',
+        src: ['*.eot', '*.svg', '*.ttf', '*.woff', '*.woff2', '*.otf'],
+        dest: 'public/fonts/'
+      },
+      ion: {
+        nonull: true,
+        expand: true,
+        cwd: 'node_modules/ionicons/dist/fonts',
+        src: ['*.eot', '*.svg', '*.ttf', '*.woff', '*.woff2'],
+        dest: 'public/fonts/'
+      },
+      bs: {
+        nonull: true,
+        expand: true,
+        cwd: 'node_modules/bootstrap/fonts/',
+        src: '**',
+        dest: 'public/fonts/'
+      }
     }
+
   });
 
   // Load all grunt tasks
@@ -174,6 +212,6 @@ module.exports = function (grunt) {
   grunt.registerTask('default', ['watch']);
 
   // Task that runs on npm install
-  grunt.registerTask('build', ['less', 'uglify', 'concat']);
+  grunt.registerTask('build', ['less', 'uglify', 'concat', 'copy']);
 
 };

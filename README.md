@@ -28,9 +28,9 @@ Features
 Install
 -------
 After installing Node.js & npm:
-- npm install -g bower
-- npm install -g grunt-cli
-- npm install
+- $ npm install -g grunt-cli
+- $ npm install
+- $ grunt build
 
 Deployment
 -------
@@ -42,10 +42,8 @@ Create a build file in <your git repo>/.openshift/action_hooks/ and add the foll
 OLD_HOME=$HOME
 
 ##########
-echo "INFO: Running 'bower install'"
 cd $OPENSHIFT_REPO_DIR
 export HOME=$OPENSHIFT_REPO_DIR
-bower install
 
 ##########
 echo "INFO: Running 'grunt build'"
@@ -58,9 +56,8 @@ echo "INFO: HOME is $HOME"
 
 Run
 -------
-- node nodejs/server.js
+- $ node nodejs/server.js
 
 Packages
 --------
-- Front-end: See bower.json
-- Server-side: See package.json
+- See package.json
