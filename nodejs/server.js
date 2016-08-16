@@ -4,7 +4,7 @@
 var AppContainer = function () {
   //  Scope.
   var self = this;
-  
+
   /**
    *  Set up server IP address and port # using env variables/defaults.
    */
@@ -12,7 +12,7 @@ var AppContainer = function () {
     //  Set the environment variables we need.
     self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
     self.port = process.env.OPENSHIFT_NODEJS_PORT || 8999;
-    
+
     if (typeof self.ipaddress === "undefined") {
       //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
       //  allows us to run/test the app locally.
@@ -29,7 +29,7 @@ var AppContainer = function () {
   self.terminator = function (sig) {
     if (typeof sig === "string") {
       console.log('%s: Received %s - terminating the app ...',
-        Date(Date.now()), sig);
+      Date(Date.now()), sig);
       process.exit(1);
     }
     console.log('%s: Node server stopped.', Date(Date.now()));
@@ -53,54 +53,53 @@ var AppContainer = function () {
       });
   };
 
-  
+
    //Initializes the application.
   self.initialize = function () {
     self.setupVariables();
     self.setupTerminationHandlers();
   };
 
-  
+
   self.setupServer = function () {
 
     /**
      * Module dependencies.
      */
-	var fs = require('fs');
-	var app = require('../app');
+    var fs = require('fs');
+    var app = require('../app');
     var http = require('http');
     var https = require('https');
-    
+
     /**
      * Get port from environment and store in Express.
      */
     var port = normalizePort(self.port);
-    
+
     /**
      * Create HTTP(S) server.
      * On OpenShift, use HTTP server with HTTPS redirects
      */
     if (!process.env.SSL) {
     	var server = http.createServer(app);
-    }
-    else{
-        var privateKey  = fs.readFileSync('./key.pem', 'utf8');
-        var certificate = fs.readFileSync('./cert.pem', 'utf8');
-        var credentials = {key: privateKey, cert: certificate};
-        
+    } else {
+      var privateKey  = fs.readFileSync('./key.pem', 'utf8');
+      var certificate = fs.readFileSync('./cert.pem', 'utf8');
+      var credentials = {key: privateKey, cert: certificate};
+
     	var server = https.createServer(credentials,app);
     }
-    
+
     /**
-     * Listen on provided port, on all network interfaces.
-     */
+    * Listen on provided port, on all network interfaces.
+    */
     server.listen(self.port, self.ipaddress, function () {
       console.log('%s: Node server started on %s:%d ...',
-        Date(Date.now()), self.ipaddress, self.port);
+      Date(Date.now()), self.ipaddress, self.port);
     });
 
     server.on('error', onError);
-    
+
     /**
      * Normalize a port into a number, string, or false.
      */

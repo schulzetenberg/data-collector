@@ -112,7 +112,6 @@ module.exports = function (grunt) {
           "dist/css/custom.min.css",
           "dist/css/override.min.css",
           "dist/css/skins/skin-red.min.css",
-          'node_modules/alertify.js/dist/css/alertify.css',
           'node_modules/font-awesome/css/font-awesome.min.css',
           'node_modules/ionicons/dist/css/ionicons.min.css'
         ],

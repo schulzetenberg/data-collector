@@ -41,6 +41,7 @@ var cookieOpts = {httpOnly: false, secure: false}; // Unsecure cookies
 var publicOpts = {maxAge: 0}; // No cached content
 var lessDebug = true;
 var lessCompileOnce = true;
+
 /**
  * Create Express server.
  */
@@ -69,10 +70,10 @@ app.use(methodOverride());
 app.use(cookieParser());
 
 function requireHTTPS(req, res, next) {
-    if (!req.secure) {
-        return res.redirect('https://' + req.get('host') + req.url);
-    }
-    next();
+  if (!req.secure) {
+    return res.redirect('https://' + req.get('host') + req.url);
+  }
+  next();
 }
 
 if (app.get('env') === 'production') {
@@ -83,6 +84,7 @@ if (app.get('env') === 'production') {
   lessDebug = false;
   lessCompileOnce = false;
 }
+
 app.use(lessMiddleware(path.join(__dirname, 'build','less'), {
   dest: path.join(__dirname, 'public'),
   once: lessCompileOnce,
@@ -112,14 +114,14 @@ app.use(function(req, res, next) {
 
 //Remember me on login page
 app.use( function (req, res, next) {
-    if ( req.method == 'POST' && req.url == '/login' ) {
-      if ( req.body.rememberMe ) {
-        req.session.cookie.maxAge = 2592000000; // Remember for 30 days
-      } else {
-        req.session.cookie.expires = false; // Else, cookie expires at end of session
-      }
+  if ( req.method == 'POST' && req.url == '/login' ) {
+    if ( req.body.rememberMe ) {
+      req.session.cookie.maxAge = 2592000000; // Remember for 30 days
+    } else {
+      req.session.cookie.expires = false; // Else, cookie expires at end of session
     }
-    next();
+  }
+  next();
 });
 
 /**
@@ -152,12 +154,12 @@ if (app.get('env') === 'production') {
   });
   // production error handler,  no stacktraces shown
   app.use(function(err, req, res, next) {
-      res.status(err.status || 500);
-      res.render('500.html', {
-          message: err.message,
-          error: {},
-          title : "500"
-      });
+    res.status(err.status || 500);
+    res.render('500.html', {
+      message: err.message,
+      error: {},
+      title : "500"
+    });
   });
 } else {
   app.use(errorHandler()); // Display stack trace in dev
