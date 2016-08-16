@@ -78,8 +78,6 @@
 <!-- ./wrapper -->
 
 <!-- ** REQUIRED JS SCRIPTS ** -->
-<!-- jQuery 2.1.4 -->
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <!-- Angular resources  -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
@@ -87,15 +85,14 @@
 <!-- TODO: Move Angular files to Grunt build process -->
 <script src ="app/main.js"></script>
 
-<!-- Bootstrap 3.3.6 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!-- ** OPTIONAL PLUGINS ** -->
+<script src="plugins.min.js"></script>
 <!-- Concatenated JS from Grunt -->
 <script src="build.js"></script>
 
-<!-- ** OPTIONAL PLUGINS ** -->
-<script src="plugins.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<!-- <script>
+<!--
+<script>
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 -->

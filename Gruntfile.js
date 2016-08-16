@@ -78,15 +78,19 @@ module.exports = function (grunt) {
       },
       my_target: {
         files: {
-          "dist/js/app.min.js": ['build/js/app.js'],
-          "dist/js/google-analytics.min.js": ['build/js/google-analytics.js'],
-          "dist/js/profile.min.js": ['build/js/profile.js'],
+          "public/build.js": [
+            'build/js/profile.js'
+          ],
           "public/plugins.min.js": [
+            'node_modules/jquery/dist/jquery.min.js',
+            'node_modules/bootstrap/dist/js/bootstrap.min.js',
+            'node_modules/admin-lte/dist/js/app.min.js',
             'node_modules/fastclick/lib/fastclick.js',
             'node_modules/alertify.js/dist/js/alertify.js',
-            'node_modules/slimscroll/lib/slimscroll.js',
+            'node_modules/slimscroll/example/ssmaster/jquery.slimscroll.min.js',
             'node_modules/icheck/icheck.min.js',
-            'node_modules/bootstrap-validator/dist/validator.min.js'
+            'node_modules/bootstrap-validator/dist/validator.min.js',
+            'build/js/google-analytics.js'
           ]
         /*  ,"dist/js/angular/app.min.js": ["build/js/angular/app.js"],
           "dist/js/angular/services.min.js": ["build/js/angular/services.js"],
@@ -100,33 +104,20 @@ module.exports = function (grunt) {
     // Concatenate CSS files into build.css
     concat: {
       css: {
-      src: [
-        "dist/css/AdminLTE.min.css",
-        "dist/css/alertify-custom.min.css",
-        "dist/css/custom.min.css",
-        "dist/css/override.min.css",
-        "dist/css/skins/skin-red.min.css",
-        'node_modules/icheck/skins/all.css',
-        'node_modules/alertify.js/dist/css/alertify.css',
-        'node_modules/font-awesome/css/font-awesome.min.css',
-        'node_modules/ionicons/dist/css/ionicons.min.css'
-      ],
-      dest: 'public/build.css',
-      nonull: true,
-      },
-      js: {
-      src: [
-        "dist/js/app.min.js",
-        "dist/js/google-analytics.min.js",
-        "dist/js/profile.min.js"
-        /* ,"dist/js/angular/app.min.js",
-        "dist/js/angular/services.min.js",
-        "dist/js/angular/controllers.min.js",
-        "dist/js/angular/filters.min.js",
-        "dist/js/angular/directives.min.js" */
-      ],
-      dest: 'public/build.js',
-      nonull: true,
+        src: [
+          'node_modules/bootstrap/dist/css/bootstrap.min.css',
+          "dist/css/AdminLTE.min.css",
+          'node_modules/icheck/skins/flat/blue.css',
+          "dist/css/alertify-custom.min.css",
+          "dist/css/custom.min.css",
+          "dist/css/override.min.css",
+          "dist/css/skins/skin-red.min.css",
+          'node_modules/alertify.js/dist/css/alertify.css',
+          'node_modules/font-awesome/css/font-awesome.min.css',
+          'node_modules/ionicons/dist/css/ionicons.min.css'
+        ],
+        dest: 'public/build.css',
+        nonull: true
       }
     },
 
@@ -149,7 +140,7 @@ module.exports = function (grunt) {
         csslintrc: 'build/less/.csslintrc'
       },
       dist: [
-        'dist/css/AdminLTE.css',
+        'dist/css/AdminLTE.css'
       ]
     },
 
@@ -176,6 +167,13 @@ module.exports = function (grunt) {
         cwd: 'node_modules/ionicons/dist/fonts',
         src: ['*.eot', '*.svg', '*.ttf', '*.woff', '*.woff2'],
         dest: 'public/fonts/'
+      },
+      icheck: {
+        nonull: true,
+        expand: true,
+        cwd: 'node_modules/icheck/skins/flat',
+        src: ['blue*.png'],
+        dest: 'public/'
       },
       bs: {
         nonull: true,

@@ -7,10 +7,6 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="<%= _csrf %>">
-  <!-- Bootstrap 3.3.5 -->
-  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- Concatenated CSS -->
   <link rel="stylesheet" href="build.css">
 
@@ -77,8 +73,6 @@
 </div>
 <!-- /.login-box -->
 
-<!-- jQuery 2.1.4 -->
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <!-- Angular resources  -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
@@ -86,15 +80,15 @@
 <!-- TODO: Move Angular files to Grunt build process -->
 <script src ="app/main.js"></script>
 
-<!-- Bootstrap 3.3.6 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!-- ** OPTIONAL PLUGINS ** -->
+<script src="plugins.min.js"></script>
 <!-- Concatenated JS from Grunt -->
 <script src="build.js"></script>
 <script>
   $(function () {
     $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
+      checkboxClass: 'icheckbox_flat-blue',
+      radioClass: 'iradio_flat-blue',
       increaseArea: '20%' // optional
     });
   });
