@@ -32,5 +32,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, passw
 // Login Required middleware.
 exports.isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) return next();
+  req.session.returnTo = req.originalUrl; // Save requested URL
   res.redirect('/login');
 };
