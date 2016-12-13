@@ -1,46 +1,47 @@
 /**
  * Module dependencies.
  */
-var express = require('express');
-var lessMiddleware = require('less-middleware');
-var cookieParser = require('cookie-parser');
-var compress = require('compression');
-var favicon = require('serve-favicon');
-var session = require('express-session');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var errorHandler = require('errorhandler');
-var lusca = require('lusca');
-var methodOverride = require('method-override');
-var MongoStore = require('connect-mongo')(session);
-var flash = require('express-flash');
-var path = require('path');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var expressValidator = require('express-validator');
+var express = require('express'),
+  lessMiddleware = require('less-middleware'),
+  cookieParser = require('cookie-parser'),
+  compress = require('compression'),
+  favicon = require('serve-favicon'),
+  session = require('express-session'),
+  bodyParser = require('body-parser'),
+  logger = require('morgan'),
+  errorHandler = require('errorhandler'),
+  lusca = require('lusca'),
+  methodOverride = require('method-override'),
+  MongoStore = require('connect-mongo')(session),
+  flash = require('express-flash'),
+  path = require('path'),
+  passport = require('passport'),
+  expressValidator = require('express-validator');
 
 /**
  * Controllers (route handlers).
  */
-var homeController = require('./controllers/home');
-var userController = require('./controllers/user');
-var contactController = require('./controllers/contact');
-var bruteforceController = require('./controllers/brute-force');
+var homeController = require('./controllers/home'),
+  userController = require('./controllers/user'),
+  settingsController = require('./controllers/settings'),
+  appConfigController = require('./controllers/app-config'),
+  contactController = require('./controllers/contact'),
+  bruteforceController = require('./controllers/brute-force');
 
 /**
  * API keys and configuration.
  */
-var secrets = require('./config/secrets');
-var passportConf = require('./config/passport');
-var config = require('./config.json');
+var secrets = require('./config/secrets'),
+  passportConf = require('./config/passport'),
+  config = require('./config.json');
 
 /**
  * Development options
  */
-var cookieOpts = {httpOnly: false, secure: false}; // Unsecure cookies
-var publicOpts = {maxAge: 0}; // No cached content
-var lessDebug = true;
-var lessCompileOnce = true;
+var cookieOpts = { httpOnly: false, secure: false }, // Unsecure cookies
+  publicOpts = { maxAge: 0 }, // No cached content
+  lessDebug = true,
+  lessCompileOnce = true;
 
 /**
  * Create Express server.
@@ -50,7 +51,7 @@ var app = express();
 /**
  * Connect to MongoDB.
  */
-var mongoDB = require('./nodejs/db.js');
+require('./nodejs/db.js');
 
 /**
  * Express configuration.
@@ -80,7 +81,7 @@ if (app.get('env') === 'production') {
   publicOpts = { maxAge: 86400000 }; // Max age of 1 day for static content
   app.set('trust proxy', 1); // trust first proxy
   app.use(requireHTTPS);  // HTTPS redirection
-  cookieOpts = {httpOnly: true, secure: true}; // secure cookies
+  cookieOpts = { httpOnly: true, secure: true }; // secure cookies
   lessDebug = false;
   lessCompileOnce = false;
 }
@@ -128,6 +129,8 @@ app.use( function (req, res, next) {
  * Primary app routes.
  */
 app.get('/', homeController.index);
+app.get('/app-config', appConfigController.getConfig);
+app.get('/settings', settingsController.getSettings);
 app.get('/login', userController.getLogin);
 app.post('/login',
   bruteforceController.globalBruteforce.prevent,
@@ -149,11 +152,11 @@ app.post('/account/delete', passportConf.isAuthenticated, userController.postDel
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
-  app.use(function(req, res, next) {
+  app.use(function(req, res) {
     res.render('404.html',{title: "404"});
   });
   // production error handler,  no stacktraces shown
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.render('500.html', {
       message: err.message,
