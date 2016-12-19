@@ -72,11 +72,11 @@ module.exports = function (grunt) {
 
     // Uglify task info. Compress the js files.
     uglify: {
-      options: {
-        mangle: true,
-        preserveComments: 'some'
-      },
-      my_target: {
+      js: {
+        options: {
+          mangle: true,
+          preserveComments: 'some'
+        },
         files: {
           "public/build.js": [
             'build/js/profile.js'
@@ -92,11 +92,22 @@ module.exports = function (grunt) {
             'node_modules/bootstrap-validator/dist/validator.min.js',
             'build/js/google-analytics.js'
           ]
-        /*  ,"dist/js/angular/app.min.js": ["build/js/angular/app.js"],
-          "dist/js/angular/services.min.js": ["build/js/angular/services.js"],
-          "dist/js/angular/controllers.min.js": ["build/js/angular/controllers.js"],
-          "dist/js/angular/filters.min.js": ["build/js/angular/filters.js"],
-          "dist/js/angular/directives.min.js": ["build/js/angular/directives.js"] */
+        }
+      },
+      // Combine all Angular app files into one minified file
+      angular: {
+        options: {
+          mangle: false,
+          preserveComments: 'some'
+        },
+        files: {
+          "public/ng.min.js": [
+            // Load files in specific order
+            'build/app/main.js',
+            'build/app/services/*.js',
+            'build/app/shared/*.js',
+            // 'build/app/components/*.js'
+          ]
         }
       }
     },

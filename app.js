@@ -103,7 +103,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(lusca({
-  csrf: true,
+  csrf: {angular: true},
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
@@ -129,7 +129,9 @@ app.use( function (req, res, next) {
  * Primary app routes.
  */
 app.get('/', homeController.index);
-app.get('/app-config', appConfigController.getConfig);
+app.get('/app-config', appConfigController.getConfigPage);
+app.get('/app-config/config', appConfigController.getConfig);
+app.post('/app-config/config', appConfigController.saveConfig);
 app.get('/settings', settingsController.getSettings);
 app.get('/login', userController.getLogin);
 app.post('/login',

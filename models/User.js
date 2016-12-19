@@ -22,7 +22,8 @@ var userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date
   },
-  {timestamps: true} // createdAt and updatedAt
+  {timestamps: true}, // createdAt and updatedAt
+  { minimize: false }
 );
 
 /**
