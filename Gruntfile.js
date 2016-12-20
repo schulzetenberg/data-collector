@@ -104,9 +104,10 @@ module.exports = function (grunt) {
           "public/ng.min.js": [
             // Load files in specific order
             'build/app/main.js',
+            'build/app/filters/*.js',
             'build/app/services/*.js',
-            'build/app/shared/*.js',
-            // 'build/app/components/*.js'
+            'build/app/shared/*.js'
+            // ,'build/app/components/*.js'
           ]
         }
       }
