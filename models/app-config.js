@@ -2,18 +2,24 @@ var mongoose = require('mongoose');
 
 var appConfigSchema = new mongoose.Schema({
   application1: {
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     email: { type: String, default: '' },
     threshold: { type: Number, default: 0 },
     schedule: { type: String, default: '' }
   },
   application2: {
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     email: { type: String, default: '' },
     threshold: { type: Number, default: 0 },
     schedule: { type: String, default: '' }
   },
   application3: {
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     email: { type: String, default: '' },
     schedule: { type: String, default: '' },

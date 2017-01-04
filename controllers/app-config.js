@@ -61,3 +61,15 @@ exports.saveConfig = function(req, res, next) {
     res.sendStatus(200);
   });
 };
+
+/**
+ * POST /app-config/run-app
+ * Save application config
+ */
+exports.runApp = function(req, res, next) {
+  var data = req.body;
+  if(!data) return next('No App to run');
+
+  // TODO
+  res.sendStatus(200);
+};

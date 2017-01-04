@@ -10,5 +10,9 @@ app.factory('dataFactory', ['$http', function($http) {
     return $http.post('/app-config/config', data);
   };
 
+  dataFactory.runApp = function(data) {
+    return $http.post('/app-config/run-app', data);
+  };
+
   return dataFactory;
 }]);

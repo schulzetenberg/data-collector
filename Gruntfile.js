@@ -22,7 +22,6 @@ module.exports = function (grunt) {
         files: {
           // compilation.css  :  source.less
           "dist/css/AdminLTE.css": "build/less/AdminLTE.less",
-          "dist/css/alertify-custom.css": "build/less/custom/alertify-custom.less",
           "dist/css/custom.css": "build/less/custom/custom.less",
           "dist/css/override.css": "build/less/custom/override.less",
           //Non minified skin files
@@ -49,7 +48,6 @@ module.exports = function (grunt) {
         files: {
           // compilation.css  :  source.less
           "dist/css/AdminLTE.min.css": "build/less/AdminLTE.less",
-          "dist/css/alertify-custom.min.css": "build/less/custom/alertify-custom.less",
           "dist/css/custom.min.css": "build/less/custom/custom.less",
           "dist/css/override.min.css": "build/less/custom/override.less",
           // Skins minified
@@ -120,7 +118,6 @@ module.exports = function (grunt) {
           'node_modules/bootstrap/dist/css/bootstrap.min.css',
           "dist/css/AdminLTE.min.css",
           'node_modules/icheck/skins/flat/blue.css',
-          "dist/css/alertify-custom.min.css",
           "dist/css/custom.min.css",
           "dist/css/override.min.css",
           "dist/css/skins/skin-red.min.css",

@@ -32,9 +32,27 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
 
     dataFactory.saveAppConfig($scope.config).then(function() {
       $scope.getData();
+      alertify.success("Updated app config");
       }, function(err) {
+        alertify.error("Error updating app config");
       console.log(err.data);
     });
+  };
+
+  $scope.runApp = function(app){
+    alertify.confirm("Manually run application " + app + "?", function (ok) {
+        if (ok) {
+          dataFactory.runApp({application: app}).then(function() {
+            alertify.success("Application " + app + " started");
+            }, function(err) {
+            console.log(err);
+            alertify.error("Error. Application " + app + " not started");
+          });
+        } else {
+            // user clicked "cancel"
+        }
+    });
+
   };
 
   $scope.getTypeof = function(obj){
@@ -50,7 +68,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
     if (index > -1) {
       $scope.config[app][key].splice(index, 1);
     } else {
-      console.log("Error removing option " + option);
+      alertify.error("Error removing option " + option);
     }
   };
 

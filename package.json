@@ -14,7 +14,7 @@
   "dependencies": {
     "R2": "~1.4.3",
     "admin-lte": "~2.3.2",
-    "alertify.js": "~1.0.12",
+    "alertify.js": "1.0.11",
     "angular": "~1.5.8",
     "angular-route": "~1.5.8",
     "async": "~1.5.0",
@@ -76,6 +76,7 @@
     "mongoose": "~4.2.5",
     "morgan": "~1.6.1",
     "node-sass-middleware": "~0.9.7",
+    "node-schedule": "^1.2.0",
     "nodemailer": "~1.10.0",
     "pace-progress": "~1.0.2",
     "passport": "~0.3.2",

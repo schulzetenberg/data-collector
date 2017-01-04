@@ -18,7 +18,8 @@
         <div class="col-xs-12">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active capitalize"><a href="#addApp" data-toggle="tab" aria-expanded="true"><u><b>Add Application</b></u></a></li>
+              <li class="active"><a href="#addApp" data-toggle="tab" aria-expanded="true"><b>Add Application</b></a></li>
+              <li class=""><a href="#schedules" data-toggle="tab" aria-expanded="false"><b>Application Schedules</b></a></li>
               <li class="capitalize" ng-repeat="app in appList.existingApp"><a href="#{{app}}" data-toggle="tab" aria-expanded="false" ng-bind="::app"></a></li>
             </ul>
             <div class="tab-content">
@@ -26,59 +27,70 @@
                 <form class="form-horizontal" style="padding-top:20px;">
                     <h3 class="capitalize" ng-bind="::app"></h3>
                     <div class="form-group" ng-repeat="(key, value) in config[app]">
+
                       <span ng-if="getTypeof(value) === 'string'">
-                        <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
-                        <div class="col-sm-7">
-                          <input type="text" ng-model="config[app][key]" class="form-control"/>
-                        </div>
-                      </span>
-                      <span ng-if="getTypeof(value) === 'boolean'">
-                        <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
-                        <div class="col-sm-7">
-                          <div class="checkbox">
-                            <label></label>
-                            <input type="checkbox" ng-model="config[app][key]">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                          <div class="col-sm-7">
+                            <input type="text" ng-model="config[app][key]" class="form-control"/>
                           </div>
                         </div>
                       </span>
+
+                      <span ng-if="getTypeof(value) === 'boolean'">
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                          <div class="col-sm-7">
+                            <div class="checkbox">
+                              <label></label>
+                              <input type="checkbox" ng-model="config[app][key]">
+                            </div>
+                          </div>
+                        </div>
+                      </span>
+
                       <span ng-if="getTypeof(value) === 'number'">
-                        <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
-                        <div class="col-sm-7">
-                          <input type="number" ng-model="config[app][key]" class="form-control"/>
+                        <div class="form-group">
+                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                          <div class="col-sm-7">
+                            <input type="number" ng-model="config[app][key]" class="form-control"/>
+                          </div>
                         </div>
                       </span>
 
                       <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
-                        <label class="control-label col-sm-3" ng-bind="::key"></label>
-                        <div class="col-sm-7">
-                         <div class="input-group input-group-md">
+                        <div class="form-group">
+                          <label class="control-label col-sm-3" ng-bind="::key | camelCaseToHuman"></label>
+                          <div class="col-sm-7">
                             <input type="text" class="form-control" ng-model="added">
-                            <span class="input-group-btn">
-                              <button type="button" class="btn btn-success" ng-click="addArrItem(app, key, added); added = ''">Add</button>
-                            </span>
                           </div>
+                          <button type="button" class="col-sm-1 btn btn-success" ng-click="addArrItem(app, key, added); added = ''">Add</button>
                         </div>
-                        <label class="control-label col-sm-3"></label>
-                        <div class="col-sm-7">
-                          <div class="input-group input-group-md">
-                            <select class="form-control" ng-model="removed" ng-options="option for option in value">
-                            </select>
-                            <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="removeArrItem(app, key, removed)">Remove</button></span>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3"></label>
+                          <div class="col-sm-7">
+                            <select class="form-control" ng-model="removed" ng-options="option for option in value"></select>
                           </div>
+                          <button type="button" class="col-sm-1 btn btn-danger" ng-click="removeArrItem(app, key, removed)">Remove</button>
                         </div>
                       </span>
 
                       <span ng-if="key === 'scheduleList'">
-                        <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                        <div class="col-sm-7">
-                          <div class="input-group input-group-md">
-                            <select class="form-control" ng-model="removed" ng-options="option for option in value"></select>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                          <div class="col-sm-7">
+                            <div class="box box-border">
+                              <div class="box-body">
+                                <span ng-repeat="option in value">{{option}} <br></span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </span>
                     </div>
                   <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-4">
+                      <button class="btn btn btn-warning" ng-click="runApp(app)">Manually Run</button>
                       <button class="btn btn btn-primary" ng-click="saveAppConfig('update')">Update Config</button>
                     </div>
                   </div>
@@ -97,13 +109,13 @@
                   </div>
                   <div class="form-group" ng-repeat="(key, value) in config[selectedNewApp]">
                     <span ng-if="getTypeof(value) === 'string' || value == null">
-                      <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
+                      <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
                         <input type="text" ng-model="newAppConfig[selectedNewApp][key]" class="form-control"/>
                       </div>
                     </span>
                     <span ng-if="getTypeof(value) === 'boolean'">
-                      <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
+                      <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
                         <div class="checkbox">
                           <label></label>
@@ -112,7 +124,7 @@
                       </div>
                     </span>
                     <span ng-if="getTypeof(value) === 'number'">
-                      <label class="col-sm-3 control-label capitalize" ng-bind="::key"></label>
+                      <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
                         <input type="number" ng-model="newAppConfig[selectedNewApp][key]" class="form-control"/>
                       </div>
@@ -125,6 +137,9 @@
                     </div>
                   </div>
                 </form>
+              </div>
+
+              <div class="tab-pane" id="schedules">
               </div>
 
             </div>
