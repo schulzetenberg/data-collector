@@ -70,3 +70,9 @@ public/plugins.min.js
 public/blue.png
 public/blue@2x.png
 public/ng.min.js
+public/css/styles.css
+public/js/footer-plugins.js
+public/js/header-plugins.js
+public/images
+config/tmdb.js
+config/tmdb.json

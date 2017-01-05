@@ -26,6 +26,7 @@ var homeController = require('./controllers/home'),
   settingsController = require('./controllers/settings'),
   appConfigController = require('./controllers/app-config'),
   contactController = require('./controllers/contact'),
+  apiController = require('./controllers/api'),
   bruteforceController = require('./controllers/brute-force');
 
 /**
@@ -132,12 +133,15 @@ scheduler.run();
  * Primary app routes.
  */
 app.get('/', homeController.index);
+
 app.get('/app-config', appConfigController.getConfigPage);
 app.get('/app-config/config', appConfigController.getConfig);
 app.post('/app-config/config', appConfigController.saveConfig);
 app.post('/app-config/run-app', appConfigController.runApp);
 app.get('/app-config/scheduler', function(req, res){ scheduler.run(); res.sendStatus(200); });
+
 app.get('/settings', settingsController.getSettings);
+
 app.get('/login', userController.getLogin);
 app.post('/login',
   bruteforceController.globalBruteforce.prevent,
@@ -150,12 +154,19 @@ app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
 app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
+
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
+
 app.get('/account', passportConf.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+
+app.get('/api/lastFM', apiController.getLastFM);
+app.get('/api/goodreads', apiController.getGoodreads);
+app.get('/api/github', apiController.getGithub);
+app.get('/api/trakt', apiController.getTrakt);
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler

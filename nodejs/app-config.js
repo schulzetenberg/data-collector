@@ -7,7 +7,7 @@ exports.get = function(){
 
     config.findOne('', '', {sort: {'_id' : -1}}).lean().exec(function(err, data) {
         if (err) return defer.reject(err);
-        if (!data) return defer.reject(" No config saved in db");
+        if (!data) return defer.reject("No config saved in db");
         defer.resolve(data);
     });
 

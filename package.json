@@ -85,7 +85,8 @@
     "serve-favicon": "~2.3.0",
     "slimscroll": "~0.9.1",
     "sparkline": "~0.1.2",
-    "validator": "~4.2.1"
+    "validator": "~4.2.1",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "chai": "~3.4.1",

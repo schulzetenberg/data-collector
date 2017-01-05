@@ -1,29 +1,45 @@
 var mongoose = require('mongoose');
 
 var appConfigSchema = new mongoose.Schema({
-  application1: {
+  github: {
     filePath: { type: String, default: '' },
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    email: { type: String, default: '' },
-    threshold: { type: Number, default: 0 },
+    user: { type: String, default: '' },
+    token: { type: String, default: '' },
     schedule: { type: String, default: '' }
   },
-  application2: {
+  goodreads: {
     filePath: { type: String, default: '' },
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    email: { type: String, default: '' },
-    threshold: { type: Number, default: 0 },
+    numDays: { type: Number, default: 0 },
+    id: { type: Number, default: 0 },
+    key: { type: String, default: '' },
     schedule: { type: String, default: '' }
   },
-  application3: {
+  lastFm: {
     filePath: { type: String, default: '' },
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    email: { type: String, default: '' },
-    schedule: { type: String, default: '' },
-    users: {type: Array , default: []}
+    key: { type: String, default: '' },
+    schedule: { type: String, default: '' }
+  },
+  trakt: {
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
+    active: { type: Boolean, default: false },
+    id: { type: String, default: '' },
+    key: { type: String, default: '' },
+    user: { type: String, default: '' },
+    schedule: { type: String, default: '' }
+  },
+  tmdb: {
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
+    active: { type: Boolean, default: false },
+    key: { type: String, default: '' },
+    schedule: { type: String, default: '' }
   }
   },
   { timestamps: true }, // Save createdAt and updatedAt fields
