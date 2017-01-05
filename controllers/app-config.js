@@ -2,6 +2,7 @@ var parser = require('cron-parser');
 var _ = require('lodash');
 
 var config = require('../models/app-config');
+var appConfig = require('../nodejs/app-config');
 
 /**
  * GET /app-config-page
@@ -64,12 +65,28 @@ exports.saveConfig = function(req, res, next) {
 
 /**
  * POST /app-config/run-app
- * Save application config
+ * Manually run application
  */
 exports.runApp = function(req, res, next) {
   var data = req.body;
-  if(!data) return next('No App to run');
+  if(!data || !data.app) return next('No App to run');
 
-  // TODO
-  res.sendStatus(200);
+  appConfig.get().then(function(config){
+    if(config[data.app].filePath && config[data.app].functionName){
+      try {
+        var scheduledFunction = require('../' + config[data.app].filePath)[config[data.app].functionName];
+        if(typeof scheduledFunction !== 'function') {
+          throw config[data.app].filePath + ".js " + config[data.app].functionName + "(), not a function";
+        }
+        scheduledFunction();
+      } catch (err){
+        console.log("Error running appplication. Error:", err);
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    } else {
+      return next("App missing file path or function name");
+    }
+  });
+
 };

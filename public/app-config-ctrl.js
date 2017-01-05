@@ -7,14 +7,12 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
         $scope.newAppConfig = {};
         $scope.appList = objectList(response.data.config);
         $scope.config = response.data.config;
-        console.log("CONFIG", $scope.config);
       } else {
         console.log("No config data!");
       }
 
       if(response.data && response.data.schedules){
         $scope.schedules = response.data.schedules;
-        console.log($scope.schedules);
       } else {
         console.log("No schedule data!");
       }
@@ -42,7 +40,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   $scope.runApp = function(app){
     alertify.confirm("Manually run application " + app + "?", function (ok) {
         if (ok) {
-          dataFactory.runApp({application: app}).then(function() {
+          dataFactory.runApp({app: app}).then(function() {
             alertify.success("Application " + app + " started");
             }, function(err) {
             console.log(err);
@@ -52,7 +50,15 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
             // user clicked "cancel"
         }
     });
+  };
 
+  $scope.reloadScheduler = function(){
+    dataFactory.scheduler().then(function() {
+      alertify.success("Scheduler restarted");
+      }, function(err) {
+      console.log(err);
+      alertify.error("Error. Scheduler not restarted");
+    });
   };
 
   $scope.getTypeof = function(obj){

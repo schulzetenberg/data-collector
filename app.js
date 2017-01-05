@@ -125,6 +125,9 @@ app.use( function (req, res, next) {
   next();
 });
 
+var scheduler = require('./nodejs/scheduler');
+scheduler.run();
+
 /**
  * Primary app routes.
  */
@@ -133,6 +136,7 @@ app.get('/app-config', appConfigController.getConfigPage);
 app.get('/app-config/config', appConfigController.getConfig);
 app.post('/app-config/config', appConfigController.saveConfig);
 app.post('/app-config/run-app', appConfigController.runApp);
+app.get('/app-config/scheduler', function(req, res){ scheduler.run(); res.sendStatus(200); });
 app.get('/settings', settingsController.getSettings);
 app.get('/login', userController.getLogin);
 app.post('/login',
@@ -170,8 +174,5 @@ if (app.get('env') === 'production') {
 } else {
   app.use(errorHandler()); // Display stack trace in dev
 }
-
-var scheduler = require('./nodejs/scheduler');
-scheduler.run();
 
 module.exports = app;

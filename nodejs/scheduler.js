@@ -1,21 +1,28 @@
-var nodeSchedule = require('node-schedule');
+var schedule = require('node-schedule');
 
 var appConfig = require('./app-config');
+var scheduledJobs = [];
 
 exports.run = function(){
+  // Clear out current jobs before scheduling new jobs
+  for(var i=0, x=scheduledJobs.length; i < x; i++){
+    scheduledJobs[i].cancel();
+  }
+
   appConfig.get().then(function(config){
     var appList = objectList(config);
 
     for(var i=0, x=appList.length; i < x; i++){
       var app = appList[i];
-      console.log("RUN THE SCHEDULE!",app);
+
       if(config[app].schedule && config[app].filePath && config[app].functionName){
         try {
           var scheduledFunction = require('../' + config[app].filePath)[config[app].functionName];
           if(typeof scheduledFunction !== 'function') {
             throw config[app].filePath + ".js " + config[app].functionName + "(), not a function";
           }
-          nodeSchedule.scheduleJob(config[app].schedule, scheduledFunction);
+          var job = schedule.scheduleJob(config[app].schedule, scheduledFunction);
+          scheduledJobs.push(job);
         } catch (err){
           console.log("Error scheduling appplication. Error:", err);
         }
