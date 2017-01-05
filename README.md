@@ -1,4 +1,4 @@
-Boilerplate MEAN Web App
+Data Collector Web App
 ----------------------------------
 
  - Using AdminLTE website template 2.3.2

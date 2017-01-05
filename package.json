@@ -1,9 +1,9 @@
 {
-  "name": "node-js-boilerplate",
+  "name": "Data-Collector",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/schulzetenberg/Boilerplate-Nodejs-Web-Application.git"
+    "url": "https://github.com/schulzetenberg/Data-Collector.git"
   },
   "scripts": {
     "start": "supervisor ./nodejs/server.js",
@@ -12,7 +12,6 @@
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "R2": "~1.4.3",
     "admin-lte": "~2.3.2",
     "alertify.js": "1.0.11",
     "angular": "~1.5.8",
