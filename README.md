@@ -34,6 +34,9 @@ After installing Node.js & npm:
 
 Deployment
 -------
+Set npm environment variable:
+- $ rhc env set NPM_CONFIG_PRODUCTION="true"
+
 Create a build file in <your git repo>/.openshift/action_hooks/ and add the following script to the file:
 
 ```
