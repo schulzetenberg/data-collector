@@ -1,4 +1,4 @@
-exports.states = [
+module.exports = [
   [{v: 'US-AK', f: 'Alaska'}, 0, ''],
   [{v: 'US-AL', f: 'Alabama'}, 0, ''],
   [{v: 'US-AZ', f: 'Arizona'}, 0, ''],

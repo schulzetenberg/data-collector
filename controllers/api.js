@@ -4,6 +4,7 @@ var lastFM = require('../models/last-fm-schema');
 var goodreads = require('../models/goodreads-schema');
 var github = require('../models/github-schema');
 var trakt = require('../models/trakt-schema');
+var states = require('../nodejs/states');
 
 exports.getLastFM = function(req, res, next) {
   lastFM.findOne({}, {}, { sort: { '_id' : -1 } }, function(err, data) {
@@ -37,5 +38,15 @@ exports.getTrakt = function(req, res, next) {
     data.totalDays = totalDays;
 
     res.json(data);
+  });
+};
+
+exports.getStates = function(req, res) {
+  states.get().then(function(data){
+    console.log(data);
+    res.json(data);
+  }).catch(function(err){
+    console.log("Get states error", err);
+    res.sendStatus(500);
   });
 };

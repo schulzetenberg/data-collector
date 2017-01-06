@@ -169,6 +169,7 @@ app.get('/api/lastFM', apiController.getLastFM);
 app.get('/api/goodreads', apiController.getGoodreads);
 app.get('/api/github', apiController.getGithub);
 app.get('/api/trakt', apiController.getTrakt);
+app.get('/api/states', apiController.getStates);
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
