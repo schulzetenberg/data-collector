@@ -18,5 +18,9 @@ app.factory('dataFactory', ['$http', function($http) {
     return $http.get('/app-config/scheduler');
   };
 
+  dataFactory.initApps = function() {
+    return $http.get('/app-config/init');
+  };
+
   return dataFactory;
 }]);

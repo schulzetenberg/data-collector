@@ -34,7 +34,7 @@ var homeController = require('./controllers/home'),
  */
 var secrets = require('./config/secrets'),
   passportConf = require('./config/passport'),
-  config = require('./config.json');
+  webConfig = require('./config/web');
 
 /**
  * Development options
@@ -110,7 +110,7 @@ app.use(lusca({
 }));
 app.use(function(req, res, next) {
   res.locals.user = req.user;
-  res.locals.config = config; // TODO: Find better place for this
+  res.locals.config = webConfig;
   next();
 });
 
@@ -128,6 +128,7 @@ app.use( function (req, res, next) {
 
 var scheduler = require('./nodejs/scheduler');
 scheduler.run();
+var init = require('./nodejs/init');
 
 /**
  * Primary app routes.
@@ -139,6 +140,7 @@ app.get('/app-config/config', appConfigController.getConfig);
 app.post('/app-config/config', appConfigController.saveConfig);
 app.post('/app-config/run-app', appConfigController.runApp);
 app.get('/app-config/scheduler', function(req, res){ scheduler.run(); res.sendStatus(200); });
+app.get('/app-config/init', function(req, res){ init.run(); res.sendStatus(200); });
 
 app.get('/settings', settingsController.getSettings);
 

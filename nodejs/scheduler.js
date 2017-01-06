@@ -49,5 +49,7 @@ function objectList(o){
 }
 
 function isEmptyObject(o) {
-  return Object.keys(o).every(function(x) { return !o[x]; });
+  return Object.keys(o).every(function(x) {
+    return !o[x] || (Array.isArray(o[x]) && o[x].length === 0);
+  });
 }

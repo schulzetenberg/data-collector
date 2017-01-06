@@ -40,6 +40,10 @@ var appConfigSchema = new mongoose.Schema({
     active: { type: Boolean, default: false },
     key: { type: String, default: '' },
     schedule: { type: String, default: '' }
+  },
+  states: {
+    visited: { type: [] },
+    lived: { type: [] }
   }
   },
   { timestamps: true }, // Save createdAt and updatedAt fields

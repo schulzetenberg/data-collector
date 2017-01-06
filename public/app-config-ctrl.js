@@ -3,12 +3,14 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   $scope.getData = function(){
     dataFactory.getAppConfig().then(function(response) {
       if(response.data && response.data.config){
+        $scope.init = false;
         $scope.selectedNewApp = null;
         $scope.newAppConfig = {};
         $scope.appList = objectList(response.data.config);
         $scope.config = response.data.config;
       } else {
         console.log("No config data!");
+        $scope.init = true;
       }
 
       if(response.data && response.data.schedules){
@@ -38,6 +40,10 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   };
 
   $scope.runApp = function(app){
+    if(!$scope.config[app].filePath || !$scope.config[app].function){
+      return alertify.error("Application not configured to run");
+    }
+
     alertify.confirm("Manually run application " + app + "?", function (ok) {
         if (ok) {
           dataFactory.runApp({app: app}).then(function() {
@@ -45,6 +51,22 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
             }, function(err) {
             console.log(err);
             alertify.error("Error. Application " + app + " not started");
+          });
+        } else {
+            // user clicked "cancel"
+        }
+    });
+  };
+
+  $scope.initApps = function(){
+    alertify.confirm("Initalization will replace any existing application settings. Are you sure?", function (ok) {
+        if (ok) {
+          dataFactory.initApps().then(function() {
+            alertify.success("Applications initialized");
+            $scope.getData();
+            }, function(err) {
+            console.log(err);
+            alertify.error("Error. Applications not initialized");
           });
         } else {
             // user clicked "cancel"
@@ -70,6 +92,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   };
 
   $scope.removeArrItem = function(app, key, option){
+    if(!option) return;
     var index = $scope.config[app][key].indexOf(option);
     if (index > -1) {
       $scope.config[app][key].splice(index, 1);
@@ -103,5 +126,7 @@ function objectList(o){
 }
 
 function isEmptyObject(o) {
-  return Object.keys(o).every(function(x) { return !o[x]; });
+  return Object.keys(o).every(function(x) {
+    return !o[x] || (Array.isArray(o[x]) && o[x].length === 0);
+  });
 }
