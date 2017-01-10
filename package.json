@@ -6,7 +6,7 @@
     "url": "https://github.com/schulzetenberg/Data-Collector.git"
   },
   "scripts": {
-    "start": "supervisor ./nodejs/server.js",
+    "postinstall": "export HOME=app-root/runtime/repo; ./node_modules/grunt-cli/bin/grunt",
     "test": "mocha --reporter spec --timeout 5000"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
