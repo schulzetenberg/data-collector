@@ -133,8 +133,8 @@ var init = require('./nodejs/init');
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index);
-
+// app.get('/', homeController.index); // Default home page
+app.get('/', passportConf.isAuthenticated, appConfigController.getConfigPage);
 app.get('/app-config', passportConf.isAuthenticated, appConfigController.getConfigPage);
 app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
 app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);

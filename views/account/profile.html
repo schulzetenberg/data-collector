@@ -5,8 +5,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Profile
-        <small>Profile Information</small>
+        <%=title%>
+        <small>User Profile</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="/"><i class="fa fa-dashboard"></i>Home</a></li>
@@ -17,7 +17,7 @@
     <!-- Main content -->
     <section class="content">
 		<%- include ../partials/flash.html %>
-		
+
 		<form action="/account/profile" method="POST" class="form-horizontal" style="padding-top:20px;">
 		  <input type="hidden" name="_csrf" value="<%=_csrf%>" />
 		  <div class="form-group">
@@ -89,10 +89,10 @@
 		    </div>
 		  </div>
 		</form>
-		
+
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  
+
 <% include ../partials/footer.html %>

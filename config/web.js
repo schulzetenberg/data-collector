@@ -3,5 +3,6 @@ module.exports = {
   "siteTitle": "Data Collector",
   "companyName": "Data Collector",
   "companyAbbreviation": "DC",
-  "companyLocation": "Denver, CO"
+  "companyLocation": "Denver, CO",
+  "demo": false
 };

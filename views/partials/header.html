@@ -57,6 +57,7 @@ desired effect
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
+      <% if(config.demo){ %>
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
@@ -162,21 +163,21 @@ desired effect
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
               <% if(user.profile.picture){ %>
-			  	<img src="<%=user.profile.picture%>" class="user-image" alt="User Image"/>
-			  <% }else{ %>
-				<img src="<%=user.gravatar(60)%>" class="user-image" alt="User Image"/>
-			  <% } %>
+          <img src="<%=user.profile.picture%>" class="user-image" alt="User Image"/>
+        <% }else{ %>
+        <img src="<%=user.gravatar(60)%>" class="user-image" alt="User Image"/>
+        <% } %>
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><%= user.email %></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-             	<% if(user.profile.picture){ %>
-					<img src="<%=user.profile.picture%>" class="img-circle" alt="User Image"/>
-				<% }else{ %>
-					<img src="<%=user.gravatar(60)%>" class="img-circle" alt="User Image"/>
-				<% } %>
+               <% if(user.profile.picture){ %>
+          <img src="<%=user.profile.picture%>" class="img-circle" alt="User Image"/>
+        <% }else{ %>
+          <img src="<%=user.gravatar(60)%>" class="img-circle" alt="User Image"/>
+        <% } %>
                 <p>
                   Name: <%= user.profile.name %>
                   <small> Email: <%= user.email %></small>
@@ -228,6 +229,7 @@ desired effect
           </li>
         </ul>
       </div>
+      <% } %>
     </nav>
   </header>
   <!-- Left side column. contains the logo and sidebar -->
@@ -264,7 +266,8 @@ desired effect
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu">
         <li class="header">NAVIGATION</li>
-        <li class="<% if(title=='Home'){ %>active<% } %>"><a href="/"><i class="fa fa-home"></i> <span>Home</span></a></li>
+        <li class="<% if(title=='Application Configuration'){ %>active<% } %>"><a href="/"><i class="fa fa-home"></i> <span>App Config</span></a></li>
+        <li class="<% if(title=='Account Management'){ %>active<% } %>"><a href="/account"><i class="fa fa-user"></i> <span>Account Management</span></a></li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>
