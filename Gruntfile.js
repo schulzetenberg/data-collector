@@ -217,10 +217,7 @@ module.exports = function (grunt) {
   // Linting task
   grunt.registerTask('lint', ['jshint', 'csslint', 'bootlint']);
 
-  // The default task (running "grunt" in console) is "watch"
-  grunt.registerTask('default', ['watch']);
-
   // Task that runs on npm install
-  grunt.registerTask('build', ['less', 'uglify', 'concat', 'copy']);
+  grunt.registerTask('default', ['less', 'uglify', 'concat', 'copy']);
 
 };
