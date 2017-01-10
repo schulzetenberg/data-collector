@@ -135,14 +135,14 @@ var init = require('./nodejs/init');
  */
 app.get('/', homeController.index);
 
-app.get('/app-config', appConfigController.getConfigPage);
-app.get('/app-config/config', appConfigController.getConfig);
-app.post('/app-config/config', appConfigController.saveConfig);
-app.post('/app-config/run-app', appConfigController.runApp);
-app.get('/app-config/scheduler', function(req, res){ scheduler.run(); res.sendStatus(200); });
-app.get('/app-config/init', function(req, res){ init.run(); res.sendStatus(200); });
+app.get('/app-config', passportConf.isAuthenticated, appConfigController.getConfigPage);
+app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
+app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
+app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
+app.get('/app-config/scheduler', passportConf.isAuthenticated, function(req, res){ scheduler.run(); res.sendStatus(200); });
+app.get('/app-config/init', passportConf.isAuthenticated, function(req, res){ init.run(); res.sendStatus(200); });
 
-app.get('/settings', settingsController.getSettings);
+app.get('/settings', passportConf.isAuthenticated, settingsController.getSettings);
 
 app.get('/login', userController.getLogin);
 app.post('/login',

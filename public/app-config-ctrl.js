@@ -8,6 +8,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
         $scope.newAppConfig = {};
         $scope.appList = objectList(response.data.config);
         $scope.config = response.data.config;
+        $scope.scheduleList = scheduleList($scope.config, $scope.appList.existingApp);
       } else {
         console.log("No config data!");
         $scope.init = true;
@@ -52,8 +53,6 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
             console.log(err);
             alertify.error("Error. Application " + app + " not started");
           });
-        } else {
-            // user clicked "cancel"
         }
     });
   };
@@ -68,18 +67,20 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
             console.log(err);
             alertify.error("Error. Applications not initialized");
           });
-        } else {
-            // user clicked "cancel"
         }
     });
   };
 
-  $scope.reloadScheduler = function(){
-    dataFactory.scheduler().then(function() {
-      alertify.success("Scheduler restarted");
-      }, function(err) {
-      console.log(err);
-      alertify.error("Error. Scheduler not restarted");
+  $scope.restartScheduler = function(){
+    alertify.confirm("Restart scheduler: Are you sure?", function (ok) {
+      if(ok){
+        dataFactory.scheduler().then(function() {
+          alertify.success("Scheduler restarted");
+          }, function(err) {
+          console.log(err);
+          alertify.error("Error. Scheduler not restarted");
+        });
+      }
     });
   };
 
@@ -129,4 +130,21 @@ function isEmptyObject(o) {
   return Object.keys(o).every(function(x) {
     return !o[x] || (Array.isArray(o[x]) && o[x].length === 0);
   });
+}
+
+function scheduleList(config, apps){
+  var schedules = [];
+  for(var i=0, x=apps.length; i < x; i++){
+    if(config[apps[i]].scheduleList) {
+      console.log("FOUND!");
+      for(var j=0, y=config[apps[i]].scheduleList.length; j < y; j++){
+        schedules.push({
+          app: apps[i],
+          schedule: config[apps[i]].scheduleList[j],
+          value: 0.1 * i
+        });
+      }
+    }
+  }
+  return schedules;
 }

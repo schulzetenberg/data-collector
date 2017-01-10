@@ -88,7 +88,10 @@ module.exports = function (grunt) {
             'node_modules/slimscroll/example/ssmaster/jquery.slimscroll.min.js',
             'node_modules/icheck/icheck.min.js',
             'node_modules/bootstrap-validator/dist/validator.min.js',
-            'build/js/google-analytics.js'
+            'build/js/google-analytics.js',
+            'node_modules/d3/d3.min.js',
+            'node_modules/dimple/dist/dimple.latest.js',
+            'node_modules/angular-dimple/dist/angular-dimple.min.js'
           ]
         }
       },

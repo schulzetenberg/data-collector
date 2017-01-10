@@ -1,4 +1,5 @@
 var app = angular.module('mainApp', [
   'customFilters',
-  'camelCaseToHuman'
+  'camelCaseToHuman',
+  'angular-dimple'
 ]);

@@ -61,6 +61,10 @@ Run
 -------
 - $ node nodejs/server.js
 
+Sign Up
+-------
+- Signing up is currently locked down to admin@1.com to prevent multiple users
+
 Packages
 --------
 - See package.json

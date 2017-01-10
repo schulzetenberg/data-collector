@@ -79,6 +79,9 @@ exports.postSignup = function(req, res, next) {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
+  // Allow only one account (For now)
+  req.assert('email', 'Only admin@1.com is allowed').equals('admin@1.com');
+
   var errors = req.validationErrors();
 
   if (errors) {
