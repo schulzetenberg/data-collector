@@ -36,26 +36,9 @@ Deployment
 -------
 Set npm environment variable:
 - $ rhc env set NPM_CONFIG_PRODUCTION="true"
-
-Create a build file in <your git repo>/.openshift/action_hooks/ and add the following script to the file:
-
-```
-# Save the old HOME so we can revert after running the script.
-# Set $HOME to the REPO_DIR temporarily.
-OLD_HOME=$HOME
-
-##########
-cd $OPENSHIFT_REPO_DIR
-export HOME=$OPENSHIFT_REPO_DIR
-
-##########
-echo "INFO: Running 'grunt build'"
-grunt build
-
-#########
-export HOME=$OLD_HOME
-echo "INFO: HOME is $HOME"
-```
+- $ git remote add openshift -f ssh://XXXXXXXXXXXXXXXXXXXXXXXXX@YYYYYYY.rhcloud.com/~/git/ZZZZZZZZ.git/
+- $ git merge openshift/master -s recursive -X ours
+- $ git push openshift HEAD
 
 Run
 -------
