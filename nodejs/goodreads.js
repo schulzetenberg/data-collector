@@ -6,7 +6,9 @@ var goodreadsSchema = require('../models/goodreads-schema.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
-    appConfig.get().then(booksRead).then(topBooks).then(save).catch(function(err){
+  console.log("Starting Goodreads");
+
+  appConfig.get().then(booksRead).then(topBooks).then(save).catch(function(err){
     console.log(err);
   });
 

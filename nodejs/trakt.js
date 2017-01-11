@@ -5,10 +5,12 @@ var appConfig = require('./app-config');
 var traktSchema = require('../models/trakt-schema.js');
 
 exports.save = function() {
+  console.log("Starting Trakt");
+
   var traktConfig = {};
   var statsData;
   var moviesData;
-  
+
   appConfig.get().then(function(config){
     traktConfig = config && config.trakt;
     if(!traktConfig) return console.log("Missing trakt config");

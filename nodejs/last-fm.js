@@ -6,6 +6,8 @@ var lastFMSchema = require('../models/last-fm-schema');
 var appConfig = require('./app-config');
 
 exports.save = function() {
+  console.log("Starting LastFM");
+
   appConfig.get().then(topArtists).then(recentTracks).then(save).catch(function(err){
     console.log("Caught lastFM error", err);
   });

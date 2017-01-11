@@ -74,5 +74,5 @@ public/css/styles.css
 public/js/footer-plugins.js
 public/js/header-plugins.js
 public/images
-config/tmdb.js
+public/d3.min.js
 config/tmdb.json

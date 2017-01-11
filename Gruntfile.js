@@ -89,7 +89,6 @@ module.exports = function (grunt) {
             'node_modules/icheck/icheck.min.js',
             'node_modules/bootstrap-validator/dist/validator.min.js',
             'build/js/google-analytics.js',
-            'node_modules/d3/d3.min.js',
             'node_modules/dimple/dist/dimple.latest.js',
             'node_modules/angular-dimple/dist/angular-dimple.min.js'
           ]
@@ -166,6 +165,11 @@ module.exports = function (grunt) {
 
     // Copy dependencies to public folder
     copy: {
+      d3: {
+        nonull: true,
+        src: 'node_modules/d3/d3.min.js',
+        dest: 'public/d3.min.js'
+      },
       fa: {
         nonull: true,
         expand: true,

@@ -10,6 +10,7 @@ var appConfig = require('./app-config');
 
 // Get updated configuration & save to file for future use
 exports.getConfig = function() {
+  console.log("Starting TMDB");
 
   appConfig.get().then(function(config){
     if(!config || !config.tmdb || !config.tmdb.key) return console.log("Missing TMDB config");

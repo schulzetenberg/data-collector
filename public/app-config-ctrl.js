@@ -41,7 +41,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   };
 
   $scope.runApp = function(app){
-    if(!$scope.config[app].filePath || !$scope.config[app].function){
+    if(!$scope.config[app].filePath || !$scope.config[app].functionName){
       return alertify.error("Application not configured to run");
     }
 

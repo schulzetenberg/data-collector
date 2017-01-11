@@ -5,6 +5,8 @@ var githubSchema = require('../models/github-schema.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
+  console.log("Starting Github");
+  
   appConfig.get().then(function(config){
     if(config && config.github && config.github.user && config.github.token){
       var promises = [userData(config.github),contribData(config.github)];
