@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bootstrap-colorpicker": "2.3.6",
+    "bootstrap-datepicker": "1.6.4",
+    "bootstrap-daterangepicker": "2.1.19",
+    "bootstrap-datetimepicker": "0.0.7",
+    "bootstrap-slider": "5.3.1",
+    "bootstrap-timepicker": "0.5.2",
+    "bootstrap-validator": "0.11.9",
+    "bootstrap3-wysihtml5-bower": "0.3.3",
+    "ckeditor": "4.5.11",
+    "fullcalendar": "3.0.1",
+    "ion-rangeslider": "2.1.6",
+    "ionicons": "3.0.0",
+    "jquery-knob": "1.2.11",
+    "jquery-ui": "1.12.1",
+    "jquery.inputmask": "3.3.4",
+    "jvectormap": "2.0.4",
+    "select2": "4.0.3"
+  }
+}

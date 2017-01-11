@@ -1,4 +1,3 @@
-var parser = require('cron-parser');
 var _ = require('lodash');
 
 var config = require('../models/app-config');
@@ -17,6 +16,7 @@ exports.getConfigPage = function(req, res) {
  * Get application config
  */
 exports.getConfig = function(req, res, next) {
+  var parser = require('cron-parser'); // TODO: Move out of function
   var schedules = {};
 
   config.findOne({}, {}, { sort: { '_id' : -1 } }).exec(function (err, data) {
