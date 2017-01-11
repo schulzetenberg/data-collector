@@ -104,6 +104,7 @@ module.exports = function (grunt) {
         files: {
           "public/ng.min.js": [
             // Load files in specific order
+            'node_modules/angular/angular.min.js',
             'build/app/main.js',
             'build/app/filters/*.js',
             'build/app/services/*.js',

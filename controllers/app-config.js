@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var moment = require('moment');
 
 var config = require('../models/app-config');
 var appConfig = require('../nodejs/app-config');
@@ -29,9 +30,13 @@ exports.getConfig = function(req, res, next) {
           try {
             var interval = parser.parseExpression(value.schedule, {utc: true});
             var scheduleArr = [];
-            for(var i=0, x=10; i < x; i++){
-              scheduleArr.push(interval.next().toString());
+            var next = interval.next();
+
+            while(next.toDate() <= moment().add(1, 'days').toDate()) {
+              scheduleArr.push(next.toString());
+              next = interval.next();
             }
+
             schedules[key] = scheduleArr;
             data[key].scheduleList = scheduleArr;
           } catch (err) {

@@ -1,7 +1,7 @@
 Data Collector Web App
 ----------------------------------
 
- - Using AdminLTE website template 2.3.2
+ - Using AdminLTE website template 2.3.11
 
  - OpenShift App Deployment
 
@@ -25,6 +25,10 @@ Features
  - Brute force protection
  - Secure cookies
 
+ Requirements
+ -------
+node > 0.12
+
 Install
 -------
 After installing Node.js & npm:
@@ -36,6 +40,8 @@ Deployment
 -------
 Set npm environment variable:
 - $ rhc env set NPM_CONFIG_PRODUCTION="true"
+
+Add openshift remote to Github repo:
 - $ git remote add openshift -f ssh://XXXXXXXXXXXXXXXXXXXXXXXXX@YYYYYYY.rhcloud.com/~/git/ZZZZZZZZ.git/
 - $ git merge openshift/master -s recursive -X ours
 - $ git push openshift HEAD
