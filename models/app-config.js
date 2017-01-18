@@ -44,6 +44,13 @@ var appConfigSchema = new mongoose.Schema({
   states: {
     visited: { type: [] },
     lived: { type: [] }
+  },
+  fuelly: {
+    url: { type: String, default: '' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
+    active: { type: Boolean, default: false },
+    schedule: { type: String, default: '' }
   }
   },
   { timestamps: true }, // Save createdAt and updatedAt fields

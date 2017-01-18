@@ -170,6 +170,7 @@ app.get('/api/goodreads', apiController.getGoodreads);
 app.get('/api/github', apiController.getGithub);
 app.get('/api/trakt', apiController.getTrakt);
 app.get('/api/states', apiController.getStates);
+app.get('/api/fuelly', apiController.getFuelly);
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
