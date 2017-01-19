@@ -1,6 +1,3 @@
-var mongoose = require('mongoose');
-mongoose.set('debug', true);
-
 module.exports = require('mongoose').model('fuelly', {
   timestamp : { type: Date, default: Date.now }, // Keep documents forever
   fillTime: {

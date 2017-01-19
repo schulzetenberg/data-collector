@@ -171,6 +171,7 @@ app.get('/api/github', apiController.getGithub);
 app.get('/api/trakt', apiController.getTrakt);
 app.get('/api/states', apiController.getStates);
 app.get('/api/fuelly', apiController.getFuelly);
+app.get('/api/fuelly-avg', apiController.getFuellyAvg);
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler

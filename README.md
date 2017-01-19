@@ -25,8 +25,8 @@ Features
  - Brute force protection
  - Secure cookies
 
- Requirements
- -------
+Requirements
+-------
 node > 0.12
 
 Install

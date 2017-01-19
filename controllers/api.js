@@ -52,6 +52,14 @@ exports.getStates = function(req, res) {
 };
 
 exports.getFuelly = function(req, res, next) {
+  if(!req.query.start || !req.query.end) return next('Start and end time parameters required');
+  fuelly.find({"fillTime" : {"$gte": start, "$lte": end}}, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
+    if (err) return next(err);
+    res.json(data);
+  });
+};
+
+exports.getFuellyAvg = function(req, res, next) {
   // Get all data from the current year
   var year = moment().year();
   var start = moment('01/01/' + year, 'MM-DD-YYYY');
@@ -59,6 +67,22 @@ exports.getFuelly = function(req, res, next) {
 
   fuelly.find({"fillTime" : {"$gte": start, "$lte": end}}, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
     if (err) return next(err);
-    res.json(data);
+
+    var retData = {
+      totalGallons: 0,
+      totalMiles: 0,
+      totalPrice: 0,
+      totalDays: moment().diff('01/01/' + year, 'days')
+    };
+
+    for(var i=0, x=data.length; i<x; i++){
+      retData.totalGallons += data[i].gallons;
+      retData.totalMiles += data[i].miles;
+      retData.totalPrice += (data[i].price * data[i].gallons);
+    }
+
+    retData.daysPerBarrel = parseInt(1 / ( (retData.totalGallons / 42) / retData.totalDays )); 
+    retData.totalPrice = retData.totalPrice.toFixed(2);
+    res.json(retData);
   });
 };
