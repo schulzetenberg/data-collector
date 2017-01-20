@@ -116,6 +116,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
 
   $scope.removeObject = function(app, key, index) {
     if(!app || !key || index === undefined) return console.log("Cant remove object. Missing app, key or index");
+    if($scope.config[app][key].length === 1) return alertify.error('Cannot remove last object. Schema data will be lost');
     $scope.config[app][key].splice(index, 1);
 
     // The angular datatable is removing the wrong row, but the correct row is being removed from the array

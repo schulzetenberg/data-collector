@@ -122,7 +122,7 @@
                             </tr>
                             <tr ng-init="addObj = {}">
                               <th ng-repeat="(key2, value2) in value[0]">
-                                <input class="form-control" type="text" ng-model="addObj[key2]">
+                                <input class="form-control" type="text" ng-model="addObj[key2]" ng-init="addObj[key2] = ''">
                               </th>
                               <th class="text-center">
                                 <button ng-click="addObject(app, key, addObj)" class="btn btn-success"><i class="fa fa-plus"></i></button>
