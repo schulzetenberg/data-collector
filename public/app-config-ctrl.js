@@ -1,3 +1,4 @@
+
 app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
 
   $scope.getData = function(){
@@ -25,11 +26,7 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   };
   $scope.getData();
 
-  $scope.saveAppConfig = function(status){
-    if(status === 'new') {
-      // Add new app config object to existing config
-      Object.keys($scope.newAppConfig).forEach(function(key) { $scope.config[key] = $scope.newAppConfig[key]; });
-    }
+  $scope.saveAppConfig = function(){
 
     dataFactory.saveAppConfig($scope.config).then(function() {
       $scope.getData();
@@ -87,7 +84,13 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
   $scope.getTypeof = function(obj){
     var type = typeof obj;
     if (type === 'object'){
-      if(Array.isArray(obj)) type = 'array';
+      if(Array.isArray(obj)) {
+        type = 'array';
+        if(obj.length > 0){
+          var inside = $scope.getTypeof(obj[0]);
+          if(inside === 'object') type = 'arrayObj';
+        }
+      }
     }
     return type;
   };
@@ -106,6 +109,25 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
     $scope.config[app][key].push(option);
   };
 
+  $scope.addObject = function(app, key, obj) {
+    if(!app || !key || !obj) return console.log("Cant add object. Missing app, key or obj");
+    $scope.config[app][key].push(obj);
+  };
+
+  $scope.removeObject = function(app, key, index) {
+    if(!app || !key || index === undefined) return console.log("Cant remove object. Missing app, key or index");
+    $scope.config[app][key].splice(index, 1);
+
+    // The angular datatable is removing the wrong row, but the correct row is being removed from the array
+    // The short term solution is to refresh the page on delete to get datatable in sync with the actual data
+    dataFactory.saveAppConfig($scope.config).then(function() {
+      location.reload();
+      }, function(err) {
+        alertify.error("Error updating app config");
+      console.log(err.data);
+    });
+  };
+
 });
 
 function objectList(o){
@@ -114,8 +136,7 @@ function objectList(o){
 
   Object.keys(o).forEach(function(key) {
     if(o[key] !== null && typeof o[key] === 'object'){
-      var empty = isEmptyObject(o[key]);
-      if(empty){
+      if(!o[key].active){
         newApp.push(key);
       } else {
         existingApp.push(key);
@@ -136,7 +157,6 @@ function scheduleList(config, apps){
   var schedules = [];
   for(var i=0, x=apps.length; i < x; i++){
     if(config[apps[i]].scheduleList) {
-      console.log("FOUND!");
       for(var j=0, y=config[apps[i]].scheduleList.length; j < y; j++){
         schedules.push({
           app: apps[i],

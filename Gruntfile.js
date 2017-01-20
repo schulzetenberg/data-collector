@@ -90,7 +90,9 @@ module.exports = function (grunt) {
             'node_modules/bootstrap-validator/dist/validator.min.js',
             'build/js/google-analytics.js',
             'node_modules/dimple/dist/dimple.latest.js',
-            'node_modules/angular-dimple/dist/angular-dimple.min.js'
+            'node_modules/angular-dimple/dist/angular-dimple.min.js',
+            'node_modules/datatables.net/js/jquery.dataTables.js',
+            'node_modules/datatables.net-bs/js/dataTables.bootstrap.js'
           ]
         }
       },
@@ -124,7 +126,8 @@ module.exports = function (grunt) {
           "dist/css/custom.min.css",
           "dist/css/override.min.css",
           "dist/css/skins/skin-red.min.css",
-          'node_modules/font-awesome/css/font-awesome.min.css'
+          'node_modules/font-awesome/css/font-awesome.min.css',
+          'node_modules/datatables.net-bs/css/dataTables.bootstrap.css'
           // ,'node_modules/ionicons/dist/css/ionicons.min.css'
         ],
         dest: 'public/build.css',

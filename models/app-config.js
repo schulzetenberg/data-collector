@@ -43,7 +43,8 @@ var appConfigSchema = new mongoose.Schema({
   },
   states: {
     visited: { type: [] },
-    lived: { type: [] }
+    lived: { type: [] },
+    active: { type: Boolean, default: false }
   },
   fuelly: {
     url: { type: String, default: '' },
@@ -51,8 +52,20 @@ var appConfigSchema = new mongoose.Schema({
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     schedule: { type: String, default: '' }
-  }
   },
+  arrayObj: {
+    arr: { type: [], default:
+      [{
+        obj1: '',
+        obj2: ''
+      }]
+    },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
+    active: { type: Boolean, default: false },
+    schedule: { type: String, default: '' }
+  }
+},
   { timestamps: true }, // Save createdAt and updatedAt fields
   { minimize: false }, // Save empty objects
   { strict: true } // Save only fields defined in the schema
