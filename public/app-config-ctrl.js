@@ -6,19 +6,12 @@ app.controller('appConfigCtrl', function($scope, $window, dataFactory) {
       if(response.data && response.data.config){
         $scope.init = false;
         $scope.selectedNewApp = null;
-        $scope.newAppConfig = {};
         $scope.appList = objectList(response.data.config);
         $scope.config = response.data.config;
         $scope.scheduleList = scheduleList($scope.config, $scope.appList.existingApp);
       } else {
         console.log("No config data!");
         $scope.init = true;
-      }
-
-      if(response.data && response.data.schedules){
-        $scope.schedules = response.data.schedules;
-      } else {
-        console.log("No schedule data!");
       }
     }, function(err) {
       console.log(err.data);

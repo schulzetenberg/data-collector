@@ -58,12 +58,12 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#addApp" data-toggle="tab" aria-expanded="true"><b>Add Application</b></a></li>
-              <li class="capitalize" ng-repeat="app in appList.existingApp"><a href="#{{app}}" data-toggle="tab" aria-expanded="false" ng-bind="::app"></a></li>
+              <li class="capitalize" ng-repeat="app in appList.existingApp"><a href="#{{app}}" data-toggle="tab" aria-expanded="false" ng-bind="::app | camelCaseToHuman"></a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane" id="{{app}}" ng-repeat="app in appList.existingApp">
                 <form class="form-horizontal" style="padding-top:20px;">
-                    <h3 class="capitalize" ng-bind="::app"></h3>
+                    <h3 class="capitalize" ng-bind="::app | camelCaseToHuman"></h3>
                     <div class="form-group" ng-repeat="(key, value) in config[app]">
 
                       <span ng-if="getTypeof(value) === 'string'">

@@ -1,7 +1,8 @@
 var _ = require('lodash');
 var moment = require('moment');
+var parser = require('cron-parser');
 
-var config = require('../models/app-config');
+var configModel = require('../models/app-config');
 var appConfig = require('../nodejs/app-config');
 
 /**
@@ -17,14 +18,9 @@ exports.getConfigPage = function(req, res) {
  * Get application config
  */
 exports.getConfig = function(req, res, next) {
-  var parser = require('cron-parser'); // TODO: Move out of function
-  var schedules = {};
 
-  config.findOne({}, {}, { sort: { '_id' : -1 } }).exec(function (err, data) {
-    if (err) return next(err);
-
+  appConfig.get().then(function(data){
     if(data) {
-      data = data.toJSON();
       _.forIn(data, function(value, key) {
         if(value && value.schedule){
           try {
@@ -37,7 +33,6 @@ exports.getConfig = function(req, res, next) {
               next = interval.next();
             }
 
-            schedules[key] = scheduleArr;
             data[key].scheduleList = scheduleArr;
           } catch (err) {
             console.log('Cannot parse schedule ' + value.schedule + ". Err:" + err.message);
@@ -46,7 +41,10 @@ exports.getConfig = function(req, res, next) {
       });
     }
 
-    res.send({config: data, schedules: schedules});
+    res.send({ config: data });
+  }).catch(function(err){
+    console.log(err);
+    return next(err);
   });
 };
 
@@ -60,7 +58,7 @@ exports.saveConfig = function(req, res, next) {
   delete data.updatedAt;
   delete data.createdAt;
   delete data._id;
-  var doc = new config(data);
+  var doc = new configModel(data);
 
   doc.save(function(err) {
     if (err) return next('Error saving config');

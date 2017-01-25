@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     watch: {
       // If any files change, run tasks
       files: ["build/less/*.less", "build/less/skins/*.less", "dist/js/*.js"],
-      tasks: ["less", "uglify", "concat"]
+      tasks: ["less:development", 'uglify:jsDev', 'uglify:angularDev', "concat"]
     },
 
     // "less"-task configuration
@@ -70,7 +70,36 @@ module.exports = function (grunt) {
 
     // Uglify task info. Compress the js files.
     uglify: {
-      js: {
+      jsDev: {
+        options: {
+          mangle: false,
+          preserveComments: 'all',
+          beautify: true
+        },
+        files: {
+          "public/build.js": [
+            'build/js/profile.js'
+          ],
+          "public/plugins.min.js": [
+            'node_modules/jquery/dist/jquery.js',
+            'node_modules/bootstrap/dist/js/bootstrap.js',
+            'node_modules/admin-lte/dist/js/app.js',
+            'node_modules/fastclick/lib/fastclick.js',
+            'node_modules/alertify.js/dist/js/alertify.js',
+            'node_modules/slimscroll/example/ssmaster/jquery.slimscroll.js',
+            'node_modules/icheck/icheck.js',
+            'node_modules/bootstrap-validator/dist/validator.js',
+            'build/js/google-analytics.js',
+            'node_modules/dimple/dist/dimple.latest.js',
+            'node_modules/angular/angular.js',
+            'node_modules/angular-dimple/dist/angular-dimple.js',
+            'node_modules/datatables.net/js/jquery.dataTables.js',
+            'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+            'node_modules/angular-datatables/dist/angular-datatables.js'
+          ]
+        }
+      },
+      jsProd: {
         options: {
           mangle: true,
           preserveComments: 'some'
@@ -90,14 +119,33 @@ module.exports = function (grunt) {
             'node_modules/bootstrap-validator/dist/validator.min.js',
             'build/js/google-analytics.js',
             'node_modules/dimple/dist/dimple.latest.js',
+            'node_modules/angular/angular.min.js',
             'node_modules/angular-dimple/dist/angular-dimple.min.js',
             'node_modules/datatables.net/js/jquery.dataTables.js',
-            'node_modules/datatables.net-bs/js/dataTables.bootstrap.js'
+            'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
+            'node_modules/angular-datatables/dist/angular-datatables.min.js'
           ]
         }
       },
       // Combine all Angular app files into one minified file
-      angular: {
+      angularDev: {
+        options: {
+          mangle: false,
+          preserveComments: 'all',
+          beautify: true
+        },
+        files: {
+          "public/ng.min.js": [
+            // Load files in specific order
+            'build/app/main.js',
+            'build/app/filters/*.js',
+            'build/app/services/*.js',
+            'build/app/shared/*.js'
+            // ,'build/app/components/*.js'
+          ]
+        }
+      },
+      angularProd: {
         options: {
           mangle: false,
           preserveComments: 'some'
@@ -105,7 +153,6 @@ module.exports = function (grunt) {
         files: {
           "public/ng.min.js": [
             // Load files in specific order
-            'node_modules/angular/angular.min.js',
             'build/app/main.js',
             'build/app/filters/*.js',
             'build/app/services/*.js',
@@ -207,27 +254,13 @@ module.exports = function (grunt) {
 
   });
 
-  // Load all grunt tasks
-
-  // Concatenate Files
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  // LESS Compiler
-  grunt.loadNpmTasks('grunt-contrib-less');
-  // Watch File Changes
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  // Compress JS Files
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  // Validate JS code
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  // Lint CSS
-  grunt.loadNpmTasks('grunt-contrib-csslint');
-  // Lint Bootstrap
-  grunt.loadNpmTasks('grunt-bootlint');
-
   // Linting task
   grunt.registerTask('lint', ['jshint', 'csslint', 'bootlint']);
 
   // Task that runs on npm install
-  grunt.registerTask('default', ['less', 'uglify', 'concat', 'copy']);
+  grunt.registerTask('default', ['less:production', 'uglify:jsProd', 'uglify:angularProd', 'concat', 'copy']);
+
+  // Default dev task
+  grunt.registerTask('dev', ['less:development', 'uglify:jsDev', 'uglify:angularDev', 'concat', 'copy']);
 
 };
