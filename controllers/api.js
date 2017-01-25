@@ -53,19 +53,33 @@ exports.getStates = function(req, res) {
 
 exports.getFuelly = function(req, res, next) {
   if(!req.query.start || !req.query.end) return next('Start and end time parameters required');
-  fuelly.find({"fillTime" : {"$gte": start, "$lte": end}}, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
+  if(!req.query.name) return next('Vehicle name required');
+
+  var by = {
+    "name": req.query.name,
+    "fillTime" : { "$gte": req.query.start, "$lte": req.query.end }
+  };
+
+  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
     if (err) return next(err);
     res.json(data);
   });
 };
 
 exports.getFuellyAvg = function(req, res, next) {
+  if(!req.query.name) return next('Vehicle name required');
+
   // Get all data from the current year
   var year = moment().year();
   var start = moment('01/01/' + year, 'MM-DD-YYYY');
   var end = moment('01/01/' + (year + 1), 'MM-DD-YYYY');
 
-  fuelly.find({"fillTime" : {"$gte": start, "$lte": end}}, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
+  var by = {
+    "name": req.query.name,
+    "fillTime" : { "$gte": start, "$lte": end }
+  };
+
+  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
     if (err) return next(err);
 
     var retData = {
@@ -81,7 +95,7 @@ exports.getFuellyAvg = function(req, res, next) {
       retData.totalPrice += (data[i].price * data[i].gallons);
     }
 
-    retData.daysPerBarrel = parseInt(1 / ( (retData.totalGallons / 42) / retData.totalDays )); 
+    retData.daysPerBarrel = parseInt(1 / ( (retData.totalGallons / 42) / retData.totalDays ));
     retData.totalPrice = retData.totalPrice.toFixed(2);
     res.json(retData);
   });

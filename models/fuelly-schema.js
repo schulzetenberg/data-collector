@@ -7,5 +7,6 @@ module.exports = require('mongoose').model('fuelly', {
   },
   miles: Number,
   gallons: Number,
-  price: Number
+  price: Number,
+  name: String
 });

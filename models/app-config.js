@@ -47,7 +47,12 @@ var appConfigSchema = new mongoose.Schema({
     active: { type: Boolean, default: false }
   },
   fuelly: {
-    url: { type: String, default: '' },
+    vehicles: { type: [], default:
+      [{
+        name: '',
+        url: ''
+      }]
+    },
     filePath: { type: String, default: '' },
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
