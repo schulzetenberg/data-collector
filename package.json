@@ -75,7 +75,6 @@
     "request": "2.65.0",
     "serve-favicon": "2.3.2",
     "slimscroll": "0.9.1",
-    "sparkline": "0.1.2",
     "xml2js": "0.4.17"
   },
   "devDependencies": {
