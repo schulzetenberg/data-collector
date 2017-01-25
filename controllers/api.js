@@ -67,15 +67,12 @@ exports.getFuelly = function(req, res, next) {
 };
 
 exports.getFuellyAvg = function(req, res, next) {
-  if(!req.query.name) return next('Vehicle name required');
-
   // Get all data from the current year
   var year = moment().year();
   var start = moment('01/01/' + year, 'MM-DD-YYYY');
   var end = moment('01/01/' + (year + 1), 'MM-DD-YYYY');
 
   var by = {
-    "name": req.query.name,
     "fillTime" : { "$gte": start, "$lte": end }
   };
 

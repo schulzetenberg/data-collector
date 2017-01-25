@@ -104,9 +104,15 @@ function carData(config){
 function save(data) {
   var defer = Q.defer();
 
-  // If fillTime already exists in DB, do not save duplicate data
-  fuellySchema.findOne({"fillTime" : data.fillTime}, {}, {sort: { '_id' : -1 }}).lean().exec(function (err, oldData){
+  var by = {
+    "name" : data.name,
+    "fillTime" : data.fillTime
+  };
+
+  fuellySchema.findOne(by, {}, {sort: { '_id' : -1 }}).lean().exec(function (err, oldData){
     if (err) defer.reject(err);
+
+    // If fillTime already exists in DB, do not save duplicate data
     if(!oldData){
       var doc = new fuellySchema(data);
       doc.save(function(err) {
