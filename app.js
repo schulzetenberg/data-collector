@@ -16,7 +16,8 @@ var express = require('express'),
   flash = require('express-flash'),
   path = require('path'),
   passport = require('passport'),
-  expressValidator = require('express-validator');
+  expressValidator = require('express-validator'),
+  assets = require('express-asset-versions');
 
 /**
  * Controllers (route handlers).
@@ -100,6 +101,7 @@ app.use(session({
   cookie: cookieOpts
 }));
 app.use(express.static(path.join(__dirname, 'public'), publicOpts));
+app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

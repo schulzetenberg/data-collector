@@ -10,6 +10,7 @@ exports.run = function(){
   }
 
   appConfig.get().then(function(config){
+    if(!config) return console.log("Scheduler not started. No config saved in db");
     var appList = objectList(config);
 
     for(var i=0, x=appList.length; i < x; i++){
