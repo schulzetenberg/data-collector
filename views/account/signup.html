@@ -20,7 +20,7 @@
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="register-logo">
-	<a href="/"><b> <%= config.companyName %> </b></a>
+  <a href="/"><b> <%= config.companyName %> </b></a>
     <p> <%= config.siteTitle %> </p>
   </div>
   <%- include ../partials/flash.html %>
@@ -30,12 +30,12 @@
     <div class="text-center">
     <% if(typeof info !== 'undefined') { %>
       <p class=" label-danger">
-      	<%= info %>
+        <%= info %>
       </p>
     <% } %>
     </div>
     <form name="form" role="form" method="POST" action="/signup">
- 	  <input type="hidden" name="_csrf" value="<%=_csrf%>"/>
+     <input type="hidden" name="_csrf" value="<%=_csrf%>"/>
       <div class="form-group">
         <div ng-show="form.$submitted || form.name.$touched">
           <span ng-show="form.name.$error.required">Please enter your name</span>
