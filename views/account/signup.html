@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title> <%= title %> </title>
+  <title><%= title %> | <%=config.siteAbbreviation %></title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="csrf-token" content="<%= _csrf %>">
   <!-- Concatenated CSS -->
-  <link rel="stylesheet" href="build.css">
+  <link rel="stylesheet" href="<%= asset('build.css') %>">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -96,16 +96,18 @@
 </div>
 <!-- /.register-box -->
 
-<!-- Angular resources  -->
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+<script src="<%= asset('plugins.min.js') %>"></script>
 
-<script src ="ng.min.js"></script>
-
-<!-- ** OPTIONAL PLUGINS ** -->
-<script src="plugins.min.js"></script>
 <!-- Concatenated JS from Grunt -->
-<script src="build.js"></script>
+<script src="<%= asset('build.js') %>"></script>
+
+<!-- Angular app -->
+<script src ="<%= asset('ng.min.js') %>"></script>
+
+<script>
+  alertify.logPosition("bottom right");
+</script>
+
 <script>
   $(function () {
     $('input').iCheck({
