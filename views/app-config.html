@@ -98,7 +98,7 @@
 
                       <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
                         <div class="form-group">
-                          <label class="control-label col-sm-3" ng-bind="::key | camelCaseToHuman"></label>
+                          <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
                           <div class="col-sm-7">
                             <input type="text" class="form-control" ng-model="added">
                           </div>
@@ -200,9 +200,9 @@
                         <input type="number" ng-model="config[selectedNewApp][key]" class="form-control"/>
                       </div>
                     </span>
-                    <span ng-if="getTypeof(value) === 'array'">
+                    <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
                       <div class="form-group">
-                        <label class="control-label col-sm-3" ng-bind="::key | camelCaseToHuman"></label>
+                        <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
                         <div class="col-sm-7">
                           <input type="text" class="form-control" ng-model="added">
                         </div>
