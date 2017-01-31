@@ -7,10 +7,10 @@ var ExpressBrute = require('express-brute');
 var MongoStore = require('express-brute-mongo');
 var MongoClient = require('mongodb').MongoClient;
 var store = new MongoStore(function (ready) {
-	  MongoClient.connect(secrets.db, function(err, db) {
-	    if (err) throw err;
-	    ready(db.collection('bruteforce-store'));
-	  });
+  MongoClient.connect(secrets.db, function(err, db) {
+    if (err) throw err;
+    ready(db.collection('bruteforce-store'));
+  });
 });
 var bruteforce = new ExpressBrute(store);
 
@@ -20,7 +20,7 @@ var failCallback = function (req, res, next, nextValidRequestDate) {
 };
 
 var handleStoreError = function (error) {
-    log.error(error); // log this error so we can figure out what went wrong
+    console.log(error); // log this error so we can figure out what went wrong
     // cause node to exit, hopefully restarting the process fixes the problem
     throw {
         message: error.message,
@@ -28,7 +28,7 @@ var handleStoreError = function (error) {
     };
 };
 
-// Start slowing requests after 5 failed attempts to do something for the same user 
+// Start slowing requests after 5 failed attempts to do something for the same user
 exports.userBruteforce =  new ExpressBrute(store, {
     freeRetries: 5,
     proxyDepth: 1,
