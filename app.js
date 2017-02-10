@@ -17,7 +17,13 @@ var express = require('express'),
   path = require('path'),
   passport = require('passport'),
   expressValidator = require('express-validator'),
-  assets = require('express-asset-versions');
+  assets = require('express-asset-versions'),
+  winston = require('winston');
+
+/**
+* Logging configuration
+*/
+require('./nodejs/log.js');
 
 /**
  * Controllers (route handlers).
@@ -110,9 +116,13 @@ app.use(lusca({
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
+
+var env = process.env.NODE_ENV || 'local';
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+  res.locals.user = req.user;
   res.locals.config = webConfig;
+  res.locals.env = env;
   next();
 });
 
@@ -131,6 +141,11 @@ app.use( function (req, res, next) {
 var scheduler = require('./nodejs/scheduler');
 scheduler.run();
 var init = require('./nodejs/init');
+
+winston.level = secrets.logLevel;
+winston.log('info', 'Hello log files!', {
+  someKey: 'some-value'
+})
 
 /**
  * Primary app routes.
@@ -175,19 +190,37 @@ app.get('/api/states', apiController.getStates);
 app.get('/api/fuelly', apiController.getFuelly);
 app.get('/api/fuelly-avg', apiController.getFuellyAvg);
 
+// Testing
+app.get('/404', function(req, res){ res.render('404.html', { title: "404" }); });
+app.get('/500', function(req, res){ res.render('500.html', { message: 'Test Error!', error: {}, title : "500" }); });
+
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
   app.use(function(req, res) {
-    res.render('404.html',{title: "404"});
+    if (req.accepts('html')) {
+      res.render('pages/404.html', {title: "404"}); // Respond with HTML
+    } else if (req.accepts('json')) {
+      res.send({error: 'Not found'}); // Respond with JSON
+    } else {
+      res.type('txt').send('Not found'); // Fall back to plain text
+    }
   });
   // production error handler,  no stacktraces shown
   app.use(function(err, req, res) {
     res.status(err.status || 500);
-    res.render('500.html', {
-      message: err.message,
-      error: {},
-      title : "500"
-    });
+
+    if (req.accepts('html')) {
+      // Respond with HTML
+      res.render('500.html', {
+        message: err.message,
+        error: {},
+        title : "500"
+      });
+    } else if (req.accepts('json')) {
+      res.send({error: 'Internal Server Error'}); // Respond with JSON
+    } else {
+      res.type('txt').send('Internal Server Error'); // Fall back to plain text
+    }
   });
 } else {
   app.use(errorHandler()); // Display stack trace in dev
