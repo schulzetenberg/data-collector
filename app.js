@@ -198,7 +198,7 @@ if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
   app.use(function(req, res) {
     if (req.accepts('html')) {
-      res.render('pages/404.html', {title: "404"}); // Respond with HTML
+      res.render('404.html', {title: "404"}); // Respond with HTML
     } else if (req.accepts('json')) {
       res.send({error: 'Not found'}); // Respond with JSON
     } else {
@@ -206,7 +206,9 @@ if (app.get('env') === 'production') {
     }
   });
   // production error handler,  no stacktraces shown
-  app.use(function(err, req, res) {
+  app.use(function(err, req, res, next) {
+    console.log("500 error", err);
+
     res.status(err.status || 500);
 
     if (req.accepts('html')) {
