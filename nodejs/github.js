@@ -1,12 +1,13 @@
 var request = require('request');
 var Q = require('q');
 
+var logger = require('./log');
 var githubSchema = require('../models/github-schema.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
-  console.log("Starting Github");
-  
+  logger.info("Starting Github");
+
   appConfig.get().then(function(config){
     if(config && config.github && config.github.user && config.github.token){
       var promises = [userData(config.github),contribData(config.github)];
@@ -17,16 +18,16 @@ exports.save = function() {
         });
 
         doc.save(function(err) {
-          if (err) console.log(err);
+          if (err) logger.error(err);
         });
       }).catch(function(err){
-        console.log("Caught github save error:", err);
+        logger.error("Caught github save error:", err);
       });
     } else {
-      console.log("Github config missing");
+      logger.error("Github config missing");
     }
   }).catch(function(err){
-    console.log("Github config error:", err);
+    logger.error("Github config error:", err);
   });
 
   function userData(config){
@@ -54,8 +55,8 @@ exports.save = function() {
   }
 
   function contribData(config){
-  	var defer = Q.defer();
-  	var optionsContrib = { url: "https://github.com/users/" + config.user + "/contributions" };
+    var defer = Q.defer();
+    var optionsContrib = { url: "https://github.com/users/" + config.user + "/contributions" };
 
     request(optionsContrib, function (error, response, body) {
       if (error || response.statusCode !== 200) {

@@ -7,7 +7,6 @@
 *.pid
 *.gz
 *.swp
-logs
 /tmp
 .DS_Store
 .idea/

@@ -1,5 +1,6 @@
 var Q = require('q');
 
+var logger = require('./log');
 var appConfig = require('./app-config');
 
 exports.get = function() {
@@ -9,7 +10,7 @@ exports.get = function() {
   appConfig.get().then(function(config){
     var lived = config && config.states && config.states.lived;
     var visited = config && config.states && config.states.visited;
-    if(!lived || !visited) return console.log("States config missing");
+    if(!lived || !visited) return logger.error("States config missing");
 
     updateStates(defaultConfig, visited, 1);
     updateStates(defaultConfig, lived, 2);

@@ -17,13 +17,12 @@ var express = require('express'),
   path = require('path'),
   passport = require('passport'),
   expressValidator = require('express-validator'),
-  assets = require('express-asset-versions'),
-  winston = require('winston');
+  assets = require('express-asset-versions');
 
 /**
 * Logging configuration
 */
-require('./nodejs/log.js');
+var logger = require('./nodejs/log.js');
 
 /**
  * Controllers (route handlers).
@@ -141,11 +140,6 @@ app.use( function (req, res, next) {
 var scheduler = require('./nodejs/scheduler');
 scheduler.run();
 var init = require('./nodejs/init');
-
-winston.level = secrets.logLevel;
-winston.log('info', 'Hello log files!', {
-  someKey: 'some-value'
-})
 
 /**
  * Primary app routes.

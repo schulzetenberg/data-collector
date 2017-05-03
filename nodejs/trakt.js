@@ -1,3 +1,4 @@
+var logger = require('./log');
 var request = require('request');
 var Q = require('q');
 
@@ -5,7 +6,7 @@ var appConfig = require('./app-config');
 var traktSchema = require('../models/trakt-schema.js');
 
 exports.save = function() {
-  console.log("Starting Trakt");
+  logger.info("Starting Trakt");
 
   var traktConfig = {};
   var statsData;
@@ -13,7 +14,7 @@ exports.save = function() {
 
   appConfig.get().then(function(config){
     traktConfig = config && config.trakt;
-    if(!traktConfig) return console.log("Missing trakt config");
+    if(!traktConfig) return logger.error("Missing trakt config");
     return userData(traktConfig);
   }).then(function(data) {
     statsData = data;
@@ -29,10 +30,10 @@ exports.save = function() {
     });
 
     doc.save(function(err) {
-      if (err) console.log(err);
+      if (err) logger.error(err);
     });
   }).catch(function(err){
-    console.log("Caught trakt save error:", err);
+    logger.error("Caught trakt save error:", err);
   });
 };
 

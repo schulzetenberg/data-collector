@@ -2,11 +2,12 @@ var request = require('request');
 var parseString = require('xml2js').parseString;
 var Q = require('q');
 
+var logger = require('./log');
 var fuellySchema = require('../models/fuelly-schema.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
-  console.log("Starting Fuelly");
+  logger.info("Starting Fuelly");
 
   appConfig.get().then(function(config){
     var defer = Q.defer();
@@ -25,12 +26,12 @@ exports.save = function() {
     Q.all(promiseArr).then(function(){
       defer.resolve();
     }).catch(function(err){
-      console.log(err);
+      logger.error(err);
     });
 
     return defer.promise;
   }).catch(function(err){
-    console.log(err);
+    logger.error(err);
   });
 
 };
@@ -45,7 +46,7 @@ function carData(config){
   } else {
     request(url, function (error, response, body) {
       if (error || response.statusCode !== 200) {
-        console.log(error);
+        logger.error(error);
           defer.reject("Get fuelly data error");
       } else {
         try {
@@ -119,7 +120,7 @@ function save(data) {
         if (err) {
           defer.reject(err);
         } else {
-          console.log("Saved Fuelly data");
+          logger.info("Saved Fuelly data");
           defer.resolve();
         }
       });

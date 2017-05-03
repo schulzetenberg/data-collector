@@ -2,14 +2,15 @@ var request = require('request');
 var parseString = require('xml2js').parseString;
 var Q = require('q');
 
+var logger = require('./log');
 var goodreadsSchema = require('../models/goodreads-schema.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
-  console.log("Starting Goodreads");
+  logger.info("Starting Goodreads");
 
   appConfig.get().then(booksRead).then(topBooks).then(save).catch(function(err){
-    console.log(err);
+    logger.error(err);
   });
 
 };
@@ -139,7 +140,7 @@ function save(data) {
     if (err) {
       defer.reject(err);
     } else {
-      console.log("Saved GoodReads data");
+      logger.info("Saved GoodReads data");
       defer.resolve();
     }
   });

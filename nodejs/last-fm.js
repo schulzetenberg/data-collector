@@ -2,14 +2,15 @@ var request = require('request');
 var Q = require('q');
 var moment = require('moment');
 
+var logger = require('./log');
 var lastFMSchema = require('../models/last-fm-schema');
 var appConfig = require('./app-config');
 
 exports.save = function() {
-  console.log("Starting LastFM");
+  logger.info("Starting LastFM");
 
   appConfig.get().then(topArtists).then(recentTracks).then(save).catch(function(err){
-    console.log("Caught lastFM error", err);
+    logger.error("Caught lastFM error", err);
   });
 };
 
