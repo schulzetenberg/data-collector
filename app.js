@@ -8,7 +8,7 @@ var express = require('express'),
   favicon = require('serve-favicon'),
   session = require('express-session'),
   bodyParser = require('body-parser'),
-  logger = require('morgan'),
+  morgan = require('morgan'),
   errorHandler = require('errorhandler'),
   lusca = require('lusca'),
   methodOverride = require('method-override'),
@@ -67,7 +67,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);  //render html files as ejs
 app.use(compress());
-app.use(logger('dev', {
+app.use(morgan('dev', {
   skip: function (req, res) { return res.statusCode < 400 } // log only HTTP request errors
 }));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
