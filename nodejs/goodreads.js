@@ -1,6 +1,7 @@
 var request = require('request');
 var parseString = require('xml2js').parseString;
 var Q = require('q');
+var cheerio = require('cheerio');
 
 var logger = require('./log');
 var goodreadsSchema = require('../models/goodreads-schema.js');
@@ -33,7 +34,7 @@ function booksRead(config){
           defer.reject("Get Goodreads read books error");
       } else {
         try {
-          var booksRead = [];
+          var promises = [];
 
           parseString(body, function (err, result) {
             if (err) return defer.reject(err);
@@ -51,23 +52,51 @@ function booksRead(config){
                   imgSplit[4] = imgSplit[4].replace("m", "l");
                   img = imgSplit.join('/');
                 }
-                booksRead.push({
+
+                var ret = {
                   title: books[i].book[0].title[0],
                   img: img,
                   pages: books[i].book[0].num_pages[0],
                   link: books[i].book[0].link[0]
-                });
+                };
+                promises.push(getPhoto(ret));
               }
             }
           });
 
-          defer.resolve({config: config, booksRead: booksRead});
+          Q.all(promises).then(function(data){
+            defer.resolve({ booksRead: data, config: config });
+          }).catch(function(err){
+            defer.reject(err);
+          });
 
         } catch(err){
           defer.reject(err);
         }
       }
     });
+  }
+
+  return defer.promise;
+}
+
+/* If image not returned from Goodreads API, get the image from the webpage */
+function getPhoto(data){
+  var defer = Q.defer();
+
+  if(data.img.indexOf('nophoto') > 0){
+    // Need to get the image from Goodreads url
+    request(data.link, function (error, response, html) {
+      if (error || response.statusCode !== 200) {
+        defer.reject("Get Goodreads img error");
+      } else {
+        var $ = cheerio.load(html);
+        data.img = $('#coverImage').attr("src");
+        defer.resolve(data);
+      }
+    });
+  } else {
+    defer.resolve(data); // Image url from API is fine, do nothing
   }
 
   return defer.promise;
