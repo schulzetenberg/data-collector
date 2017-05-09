@@ -91,7 +91,8 @@ function getPhoto(data){
         defer.reject("Get Goodreads img error");
       } else {
         var $ = cheerio.load(html);
-        data.img = $('#coverImage').attr("src");
+        var src = $('#coverImage').attr("src");
+        if(src) data.img = src;
         defer.resolve(data);
       }
     });
