@@ -3,7 +3,7 @@ var Q = require('q');
 var moment = require('moment');
 
 var logger = require('./log');
-var lastFMSchema = require('../models/last-fm-schema');
+var lastFMModel = require('../models/last-fm-model');
 var appConfig = require('./app-config');
 
 exports.save = function() {
@@ -88,7 +88,7 @@ function recentTracks(promiseData) {
 function save(data) {
   var defer = Q.defer();
 
-  var doc = new lastFMSchema({
+  var doc = new lastFMModel({
     songCount: data.songCount,
     artistCount: data.artistCount,
     topArtists: data.topArtists

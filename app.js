@@ -199,7 +199,7 @@ if (app.get('env') === 'production') {
       res.type('txt').send('Not found'); // Fall back to plain text
     }
   });
-  // production error handler,  no stacktraces shown
+  // production error handler, no stacktraces shown
   app.use(function(err, req, res, next) {
     console.log("500 error", err);
 

@@ -2,7 +2,7 @@ var request = require('request');
 var Q = require('q');
 
 var logger = require('./log');
-var githubSchema = require('../models/github-schema.js');
+var githubModel = require('../models/github-model.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
@@ -12,7 +12,7 @@ exports.save = function() {
     if(config && config.github && config.github.user && config.github.token){
       var promises = [userData(config.github),contribData(config.github)];
       Q.all(promises).then(function(data){
-        var doc = new githubSchema({
+        var doc = new githubModel({
           repos: data[0].public_repos,
           contribSvg: data[1]
         });

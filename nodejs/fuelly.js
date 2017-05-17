@@ -3,7 +3,7 @@ var parseString = require('xml2js').parseString;
 var Q = require('q');
 
 var logger = require('./log');
-var fuellySchema = require('../models/fuelly-schema.js');
+var fuellyModel = require('../models/fuelly-model.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
@@ -23,6 +23,7 @@ exports.save = function() {
         promiseArr.push(carData(vehicleConf));
       }
     }
+
     Q.all(promiseArr).then(function(){
       defer.resolve();
     }).catch(function(err){
@@ -47,7 +48,7 @@ function carData(config){
     request(url, function (error, response, body) {
       if (error || response.statusCode !== 200) {
         logger.error(error);
-          defer.reject("Get fuelly data error");
+        defer.reject("Get fuelly data error");
       } else {
         try {
           var data = [];
@@ -110,12 +111,10 @@ function save(data) {
     "fillTime" : data.fillTime
   };
 
-  fuellySchema.findOne(by, {}, {sort: { '_id' : -1 }}).lean().exec(function (err, oldData){
-    if (err) defer.reject(err);
-
+  fuellyModel.findOne(by, {}, {sort: { '_id' : -1 }}).lean().exec().then(function(oldData){
     // If fillTime already exists in DB, do not save duplicate data
     if(!oldData){
-      var doc = new fuellySchema(data);
+      var doc = new fuellyModel(data);
       doc.save(function(err) {
         if (err) {
           defer.reject(err);
@@ -127,6 +126,8 @@ function save(data) {
     } else {
       defer.resolve(); // Data already exists
     }
+  }).catch(function(err){
+    defer.reject(err);
   });
 
   return defer.promise;

@@ -3,7 +3,7 @@ var request = require('request');
 var Q = require('q');
 
 var appConfig = require('./app-config');
-var traktSchema = require('../models/trakt-schema.js');
+var traktModel = require('../models/trakt-model.js');
 
 exports.save = function() {
   logger.info("Starting Trakt");
@@ -23,7 +23,7 @@ exports.save = function() {
     moviesData = data;
     return topRatings(traktConfig, 'shows');
   }).then(function(showsData){
-    var doc = new traktSchema({
+    var doc = new traktModel({
       stats: statsData,
       topMovies: moviesData,
       topShows: showsData

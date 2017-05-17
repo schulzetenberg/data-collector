@@ -3,14 +3,7 @@ var Q = require('q');
 var configModel = require('../models/app-config');
 
 exports.get = function(){
-    var defer = Q.defer();
-
-    configModel.findOne({}, '', {sort: {'_id' : -1}}).lean().exec(function(err, data) {
-        if (err) return defer.reject(err);
-        defer.resolve(data);
-    });
-
-    return defer.promise;
+  return configModel.findOne({}, '', {sort: {'_id' : -1}}).lean().exec();
 };
 
 exports.app = function(filter){

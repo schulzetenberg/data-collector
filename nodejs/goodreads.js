@@ -4,7 +4,7 @@ var Q = require('q');
 var cheerio = require('cheerio');
 
 var logger = require('./log');
-var goodreadsSchema = require('../models/goodreads-schema.js');
+var goodreadsModel = require('../models/goodreads-model.js');
 var appConfig = require('./app-config');
 
 exports.save = function() {
@@ -165,7 +165,7 @@ function topBooks(params){
 function save(data) {
   var defer = Q.defer();
 
-  var doc = new goodreadsSchema(data);
+  var doc = new goodreadsModel(data);
   doc.save(function(err) {
     if (err) {
       defer.reject(err);

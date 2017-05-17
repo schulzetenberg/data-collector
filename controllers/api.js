@@ -1,36 +1,38 @@
 var moment = require('moment');
 
-var lastFM = require('../models/last-fm-schema');
-var goodreads = require('../models/goodreads-schema');
-var github = require('../models/github-schema');
-var trakt = require('../models/trakt-schema');
+var lastFM = require('../models/last-fm-model');
+var goodreads = require('../models/goodreads-model');
+var github = require('../models/github-model');
+var trakt = require('../models/trakt-model');
 var states = require('../nodejs/states');
-var fuelly = require('../models/fuelly-schema');
+var fuelly = require('../models/fuelly-model');
 
 exports.getLastFM = function(req, res, next) {
-  lastFM.findOne({}, {}, { sort: { '_id' : -1 } }, function(err, data) {
-    if (err) return next(err);
+  lastFM.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     res.json(data);
+  }).catch(function(err){
+    return next(err);
   });
 };
 
 exports.getGoodreads = function(req, res, next) {
-  goodreads.findOne({}, {}, { sort: { '_id' : -1 } }, function(err, data) {
-    if (err) return next(err);
+  goodreads.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     res.json(data);
+  }).catch(function(err){
+    return next(err);
   });
 };
 
 exports.getGithub = function(req, res, next) {
-  github.findOne({}, {}, { sort: { '_id' : -1 } }, function(err, data) {
-    if (err) return next(err);
+  github.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     res.json(data);
+  }).catch(function(err){
+    return next(err);
   });
 };
 
 exports.getTrakt = function(req, res, next) {
-  trakt.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
-    if (err) return next(err);
+  trakt.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     if(!data) return next("No data");
 
     var startDate = moment('2016-10-02');
@@ -39,6 +41,8 @@ exports.getTrakt = function(req, res, next) {
     data.totalDays = totalDays;
 
     res.json(data);
+  }).catch(function(err){
+    return next(err);
   });
 };
 
@@ -60,9 +64,10 @@ exports.getFuelly = function(req, res, next) {
     "fillTime" : { "$gte": req.query.start, "$lte": req.query.end }
   };
 
-  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
-    if (err) return next(err);
+  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     res.json(data);
+  }).catch(function(err){
+    return next(err);
   });
 };
 
@@ -76,9 +81,7 @@ exports.getFuellyAvg = function(req, res, next) {
     "fillTime" : { "$gte": start, "$lte": end }
   };
 
-  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec(function (err, data){
-    if (err) return next(err);
-
+  fuelly.find(by, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     var retData = {
       totalGallons: 0,
       totalMiles: 0,
@@ -95,5 +98,7 @@ exports.getFuellyAvg = function(req, res, next) {
     retData.daysPerBarrel = parseInt(1 / ( (retData.totalGallons / 42) / retData.totalDays ));
     retData.totalPrice = retData.totalPrice.toFixed(2);
     res.json(retData);
+  }).catch(function(err){
+    return next(err);
   });
 };
