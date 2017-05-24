@@ -30,11 +30,10 @@
       <div class="login-box-body">
         <p class="login-box-msg">Sign In</p>
         <form role="form" name="form" action="/login" method="post">
-          <input type="hidden" name="_csrf" value="<%=_csrf%>"/>
-            <div ng-show="form.$submitted || form.email.$touched">
-              <span ng-show="form.email.$error.required">Please enter your email</span>
-              <span ng-show="form.email.$error.email">Email address is invalid</span>
-            </div>
+          <div ng-show="form.$submitted || form.email.$touched">
+            <span ng-show="form.email.$error.required">Please enter your email</span>
+            <span ng-show="form.email.$error.email">Email address is invalid</span>
+          </div>
           <div class="form-group has-feedback">
             <input type="email" name="email" placeholder="Email" autofocus="autofocus" required class="form-control" ng-model="email" ng-model-options="{updateOn: 'blur'}"/>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -47,14 +46,14 @@
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="row">
-           <div class=" form-group col-xs-12">
-            <div class="checkbox">
-            <input type="checkbox" ng-model="rememberMe" name="rememberMe" value="true">
-            <label for="rememberMe">Remember Me</label>
+            <div class=" form-group col-xs-12">
+              <div class="checkbox">
+                <input type="checkbox" ng-model="rememberMe" name="rememberMe" value="true">
+                <label for="rememberMe">Remember Me</label>
+              </div>
             </div>
-             </div>
-            <div class="col-xs-6">
-              <a href="/"><button type="button" class="btn btn-danger btn-block">Cancel</button></a>
+             <div class="col-xs-6">
+               <a href="/"><button type="button" class="btn btn-danger btn-block">Cancel</button></a>
             </div>
             <div class="col-xs-6">
               <button type="submit" class="btn btn-primary btn-block">Sign In</button>
