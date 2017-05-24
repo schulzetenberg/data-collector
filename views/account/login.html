@@ -30,6 +30,7 @@
       <div class="login-box-body">
         <p class="login-box-msg">Sign In</p>
         <form role="form" name="form" action="/login" method="post">
+          <input type="hidden" name="_csrf" value="<%=_csrf%>"/>
           <div ng-show="form.$submitted || form.email.$touched">
             <span ng-show="form.email.$error.required">Please enter your email</span>
             <span ng-show="form.email.$error.email">Email address is invalid</span>

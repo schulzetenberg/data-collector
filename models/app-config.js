@@ -18,11 +18,12 @@ var appConfigSchema = new mongoose.Schema({
     key: { type: String, default: '' },
     schedule: { type: String, default: '' }
   },
-  lastFm: {
+  music: {
     filePath: { type: String, default: '' },
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    key: { type: String, default: '' },
+    lastFmKey: { type: String, default: '' },
+    spotifyKey: { type: String, default: '' }, // Optional, used to get genre data
     schedule: { type: String, default: '' }
   },
   trakt: {

@@ -1,14 +1,14 @@
 var moment = require('moment');
 
-var lastFM = require('../models/last-fm-model');
+var music = require('../models/music-model');
 var goodreads = require('../models/goodreads-model');
 var github = require('../models/github-model');
 var trakt = require('../models/trakt-model');
 var states = require('../nodejs/states');
 var fuelly = require('../models/fuelly-model');
 
-exports.getLastFM = function(req, res, next) {
-  lastFM.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
+exports.getMusic = function(req, res, next) {
+  music.findOne({}, {}, { sort: { '_id' : -1 } }).lean().exec().then(function(data){
     res.json(data);
   }).catch(function(err){
     return next(err);

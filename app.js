@@ -176,7 +176,7 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 
-app.get('/api/lastFM', apiController.getLastFM);
+app.get('/api/music', apiController.getMusic);
 app.get('/api/goodreads', apiController.getGoodreads);
 app.get('/api/github', apiController.getGithub);
 app.get('/api/trakt', apiController.getTrakt);
