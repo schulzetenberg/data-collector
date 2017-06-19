@@ -23,7 +23,8 @@ var appConfigSchema = new mongoose.Schema({
     functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     lastFmKey: { type: String, default: '' },
-    spotifyKey: { type: String, default: '' }, // Optional, used to get genre data
+    spotifyId: { type: String, default: '' },
+    spotifySecret: { type: String, default: '' },
     schedule: { type: String, default: '' }
   },
   trakt: {

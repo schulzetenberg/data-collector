@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise-native');
 var Q = require('q');
 var moment = require('moment');
 
@@ -9,7 +10,15 @@ var appConfig = require('./app-config');
 exports.save = function() {
   logger.info("Starting music save");
 
-  appConfig.get().then(topArtists).then(recentTracks).then(topArtistGenres).then(save).catch(function(err){
+  appConfig.get('music')
+  .then(topArtists)
+  .then(recentTracks)
+  .then(topArtistGenres)
+  .then(save)
+  .then(function(){
+    logger.info('Saved music data');
+  })
+  .catch(function(err){
     logger.error("Caught music error", err);
   });
 };
@@ -44,6 +53,7 @@ function topArtists(config) {
           }
 
           var res = {
+            config: config,
             key: key,
             artistCount: artistCount,
             topArtists: temp
@@ -92,7 +102,7 @@ function topArtistGenres(promiseData) {
   var promises = [];
 
   for (let i=0, x=promiseData.topArtists.length; i<x; i++) {
-    promises.push(getArtistGenres(promiseData.topArtists[i]));
+    promises.push(getArtistGenres(promiseData.config, promiseData.topArtists[i]));
   }
 
   Q.all(promises).then(function(data){
@@ -105,52 +115,55 @@ function topArtistGenres(promiseData) {
   return defer.promise;
 }
 
-function getArtistGenres(artist) {
+function getArtistGenres(config, artist) {
   var defer = Q.defer();
 
-  var reqParams = {
-    name: artist.artist,
-    market: 'US',
-    offset: '0'
+  var postOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    form: {'grant_type': 'client_credentials', 'client_id': config.music.spotifyId, 'client_secret': config.music.spotifySecret}
   };
 
-  var url = 'https://api.spotify.com/v1/search?q=' + reqParams.name + '&type=artist&market=' + reqParams.market + '&limit=1&offset=' + reqParams.offset;
+  rp.post(postOptions).then(function(response) {
+    try {
+      var data = JSON.parse(response);
+      var access_token = data && data.access_token;
 
-  request(url, function (error, response, body) {
-    if (error || response.statusCode !== 200) {
-      defer.reject("Get artist genre error for:" + artist.artist);
-    } else {
-      try {
-        var data = JSON.parse(body);
-
-        if(!data || !data.artists || !data.artists.items || !data.artists.items[0] || !data.artists.items[0].genres){
-          return defer.reject("Could not parse genre data");
-        }
-
-        artist.genres = data.artists.items[0].genres;
-
-        defer.resolve(artist);
-      } catch(err){
-        defer.reject(err);
+      if(access_token){
+        var getOptions = {
+          url: 'https://api.spotify.com/v1/search?q=' + artist.artist + '&type=artist&market=' + 'US' + '&limit=1&offset=' + '0',
+          auth: { 'bearer': data.access_token }
+        };
+        return getOptions;
+      } else {
+        defer.reject("Error parsing access token");
       }
+    } catch (err) {
+      defer.reject(err);
     }
+  })
+  .then(rp.get).then(function(body) {
+    try {
+      var data = JSON.parse(body);
+
+      if(!data || !data.artists || !data.artists.items || !data.artists.items[0] || !data.artists.items[0].genres){
+        return defer.reject("Could not parse genre data");
+      }
+
+      artist.genres = data.artists.items[0].genres;
+
+      defer.resolve(artist);
+    } catch(err){
+      defer.reject(err);
+    }
+  }).catch(function(err){
+    logger.error(err);
+    defer.reject("Get Spotify data error");
   });
 
   return defer.promise;
 }
 
 function save(data) {
-  var defer = Q.defer();
-
   var doc = new musicModel(data);
-
-  doc.save(function(err) {
-    if (err) {
-      defer.reject(err);
-    } else {
-      defer.resolve();
-    }
-  });
-
-  return defer.promise;
+  return doc.save();
 }
