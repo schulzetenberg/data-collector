@@ -1,7 +1,7 @@
 Data Collector Web App
 ----------------------------------
 
- - Using AdminLTE website template 2.3.11
+ - Using AdminLTE website template 2.3
 
  - OpenShift App Deployment
 
@@ -27,7 +27,7 @@ Features
 
 Requirements
 -------
-node > 0.12
+node v6.3 (or above)
 
 Install
 -------
