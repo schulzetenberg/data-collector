@@ -2,46 +2,46 @@ var mongoose = require('mongoose');
 
 var appConfigSchema = new mongoose.Schema({
   github: {
-    filePath: { type: String, default: 'nodejs/github' },
-    functionName: { type: String, default: 'save' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    user: { type: String, default: 'schulzetenberg' },
+    user: { type: String, default: '' },
     token: { type: String, default: '' },
-    schedule: { type: String, default: '5 0 0 * * *' }
+    schedule: { type: String, default: '' }
   },
   goodreads: {
-    filePath: { type: String, default: 'nodejs/goodreads' },
-    functionName: { type: String, default: 'save' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    numDays: { type: Number, default: 185 },
+    numDays: { type: Number, default: 0 },
     id: { type: Number, default: 0 },
     key: { type: String, default: '' },
-    schedule: { type: String, default: '5 0 0 * * *' }
+    schedule: { type: String, default: '' }
   },
   music: {
-    filePath: { type: String, default: 'nodejs/music' },
-    functionName: { type: String, default: 'save' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     lastFmKey: { type: String, default: '' },
     spotifyId: { type: String, default: '' },
     spotifySecret: { type: String, default: '' },
-    schedule: { type: String, default: '5 0 0 * * *' }
+    schedule: { type: String, default: '' }
   },
   trakt: {
-    filePath: { type: String, default: 'nodejs/trakt' },
-    functionName: { type: String, default: 'save' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     id: { type: String, default: '' },
     key: { type: String, default: '' },
-    user: { type: String, default: 'waterland15' },
-    schedule: { type: String, default: '5 0 0 * * *' }
+    user: { type: String, default: '' },
+    schedule: { type: String, default: '' }
   },
   tmdb: {
-    filePath: { type: String, default: 'nodejs/tmdb' },
-    functionName: { type: String, default: 'getConfig' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
     key: { type: String, default: '' },
-    schedule: { type: String, default: '20 0 0 */3 * *' }
+    schedule: { type: String, default: '' }
   },
   states: {
     visited: { type: [] },
@@ -55,10 +55,10 @@ var appConfigSchema = new mongoose.Schema({
         url: ''
       }]
     },
-    filePath: { type: String, default: 'nodejs/fuelly' },
-    functionName: { type: String, default: 'save' },
+    filePath: { type: String, default: '' },
+    functionName: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    schedule: { type: String, default: '5 0 0 * * *' }
+    schedule: { type: String, default: '' }
   },
   arrayObj: {
     arr: { type: [], default:
