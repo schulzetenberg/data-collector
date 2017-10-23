@@ -1,5 +1,7 @@
-var mongoose = require('mongoose');
-var secrets = require('../config/secrets');
+const mongoose = require('mongoose');
+
+const secrets = require('../config/secrets');
+const logger = require('./log');
 
 // q promise library
 mongoose.Promise = require('q').Promise;
@@ -15,7 +17,7 @@ db.on('connected', function () {
 
 // If the connection throws an error
 db.on('error',function (err) {
-  console.log('Mongoose connection error: ' + err);
+  logger.error('Mongoose connection error: ' + err);
 });
 
 // When the connection is disconnected
@@ -26,7 +28,7 @@ db.on('disconnected', function () {
 // If the Node process ends, close the Mongoose connection
 process.on('SIGINT', function() {
   db.close(function () {
-    console.log('Mongoose connection disconnected through app termination');
+    logger.error('Mongoose connection disconnected through app termination');
     process.exit(0);
   });
 });
