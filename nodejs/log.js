@@ -1,10 +1,10 @@
-var winston = require('winston');
+const winston = require('winston');
 
-var logLevel = process.env.LOG_LEVEL || 'debug';
+const logLevel = process.env.LOG_LEVEL || 'debug';
 winston.level = logLevel;
 winston.info('Log level:' + logLevel);
 
-var logger = new (winston.Logger)({
+const logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
       timestamp: true,

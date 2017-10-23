@@ -12,7 +12,7 @@ var db = mongoose.connection;
 
 // When successfully connected
 db.on('connected', function () {
-  console.log('Mongoose connection open to ' + url);
+  logger.warn('Mongoose connection open to ' + url);
 });
 
 // If the connection throws an error
@@ -22,7 +22,7 @@ db.on('error',function (err) {
 
 // When the connection is disconnected
 db.on('disconnected', function () {
-  console.log('Mongoose disconnected');
+  logger.error('Mongoose disconnected');
 });
 
 // If the Node process ends, close the Mongoose connection

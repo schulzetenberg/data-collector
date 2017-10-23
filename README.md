@@ -11,14 +11,14 @@ Features
 - MVC Project Structure
 - Bootstrap 3
 - Contact Form
-**Account Management**
+- **Account Management**
  - Profile picture
  - Profile Details
  - Change Password
  - Forgot Password
  - Reset Password
  - Delete Account
-**Security**
+- **Security**
  - CSRF protection
  - Brute force protection
  - Secure cookies

@@ -45,7 +45,7 @@ function apiCall(params) {
   var defer = Q.defer();
 
   var options = {
-    url: 'https://api.github.com' + params.url + '?access_token=' + params.config.token,
+    url: 'https://api.github.com' + params.url + '?access_token=' + params.config.token +'&per_page=100',
     headers: { 'User-Agent': 'GitHub User:' + params.config.user }
   };
 
