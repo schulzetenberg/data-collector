@@ -100,7 +100,7 @@ module.exports = function (grunt) {
         src: [
           'node_modules/jquery/dist/jquery.js',
           'node_modules/bootstrap/dist/js/bootstrap.js',
-          'node_modules/admin-lte/dist/js/app.js',
+          'node_modules/admin-lte/dist/js/adminlte.min.js',
           'node_modules/fastclick/lib/fastclick.js',
           'node_modules/alertify.js/dist/js/alertify.js',
           'node_modules/slimscroll/example/ssmaster/jquery.slimscroll.js',

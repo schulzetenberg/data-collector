@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="<%= _csrf %>">
     <!-- Concatenated CSS -->
     <link rel="stylesheet" href="<%= asset('build.css') %>">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -50,7 +51,7 @@
       </a>
 
       <nav class="navbar navbar-static-top" role="navigation">
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
           <span class="sr-only">Toggle navigation</span>
         </a>
         <% if(config.demo){ %>
@@ -230,7 +231,7 @@
           </div>
         </form> -->
 
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" data-widget="tree">
           <li class="header">NAVIGATION</li>
           <li class="<% if(title=='Application Configuration'){ %>active<% } %>"><a href="/"><i class="fa fa-home"></i> <span>App Config</span></a></li>
           <li class="<% if(title=='Account Management'){ %>active<% } %>"><a href="/account"><i class="fa fa-user"></i> <span>Account Management</span></a></li>
