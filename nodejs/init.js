@@ -1,9 +1,10 @@
-var appConfig = require('../models/app-config');
+const appConfig = require('../models/app-config');
+const logger = require('./log');
 
 exports.run = function() {
   var configDoc = new appConfig({ });
 
-  configDoc.save(function(err) {
-    if (err) console.log(err);
+  configDoc.save().catch(function(err) {
+    logger.error(err);
   });
 };

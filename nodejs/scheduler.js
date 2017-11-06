@@ -1,36 +1,37 @@
-var schedule = require('node-schedule');
+const schedule = require('node-schedule');
 
-var appConfig = require('./app-config');
+const appConfig = require('./app-config');
+const logger = require('./log');
 var scheduledJobs = [];
 
 exports.run = function(){
   // Clear out current jobs before scheduling new jobs
-  for(var i=0, x=scheduledJobs.length; i < x; i++){
+  for(let i=0, x=scheduledJobs.length; i < x; i++){
     scheduledJobs[i].cancel();
   }
 
   appConfig.get().then(function(config){
-    if(!config) return console.log("Scheduler not started. No config saved in db");
+    if(!config) return logger.error('Scheduler not started. No config saved in db');
     var appList = objectList(config);
 
-    for(var i=0, x=appList.length; i < x; i++){
-      var app = appList[i];
+    for(let i=0, x=appList.length; i < x; i++){
+      let app = appList[i];
 
       if(config[app].schedule && config[app].filePath && config[app].functionName){
         try {
-          var scheduledFunction = require('../' + config[app].filePath)[config[app].functionName];
+          let scheduledFunction = require('../' + config[app].filePath)[config[app].functionName];
           if(typeof scheduledFunction !== 'function') {
-            throw config[app].filePath + ".js " + config[app].functionName + "(), not a function";
+            throw config[app].filePath + '.js ' + config[app].functionName + '(), not a function';
           }
-          var job = schedule.scheduleJob(config[app].schedule, scheduledFunction);
+          let job = schedule.scheduleJob(config[app].schedule, scheduledFunction);
           scheduledJobs.push(job);
         } catch (err){
-          console.log("Error scheduling appplication. Error:", err);
+          logger.error('Error scheduling appplication. Error:', err);
         }
       }
     }
   }).catch(function(err){
-    console.log(err);
+    logger.error(err);
   });
 };
 

@@ -1,12 +1,12 @@
-var logger = require('./log');
-var request = require('request');
+const logger = require('./log');
 var Q = require('q');
 
-var appConfig = require('./app-config');
-var traktModel = require('../models/trakt-model.js');
+const appConfig = require('./app-config');
+const traktModel = require('../models/trakt-model.js');
+const api = require('./api');
 
 exports.save = function() {
-  logger.info("Starting Trakt");
+  logger.info('Starting Trakt');
 
   var traktConfig = {};
   var statsData;
@@ -14,7 +14,7 @@ exports.save = function() {
 
   appConfig.get().then(function(config){
     traktConfig = config && config.trakt;
-    if(!traktConfig) return logger.error("Missing trakt config");
+    if(!traktConfig) return logger.error('Missing trakt config');
     return userData(traktConfig);
   }).then(function(data) {
     statsData = data;
@@ -23,27 +23,27 @@ exports.save = function() {
     moviesData = data;
     return topRatings(traktConfig, 'shows');
   }).then(function(showsData){
-    var doc = new traktModel({
+    let doc = new traktModel({
       stats: statsData,
       topMovies: moviesData,
       topShows: showsData
     });
 
-    doc.save(function(err) {
-      if (err) logger.error(err);
-    });
+    return doc.save();
+  }).then(function(){
+    logger.info('Finished saving trakt data');
   }).catch(function(err){
-    logger.error("Caught trakt save error:", err);
+    logger.error('Caught trakt save error:', err);
   });
 };
 
 function userData(config){
-  var defer = Q.defer();
+  const defer = Q.defer();
 
   if(!config.user || !config.id){
-    defer.reject("Missing config");
+    defer.reject('Missing config');
   } else {
-    var options = {
+    const options = {
       url: 'https://api.trakt.tv/users/' + config.user + '/stats',
       headers: {
         'Content-Type': 'application/json',
@@ -52,17 +52,10 @@ function userData(config){
       }
     };
 
-    request(options, function (error, response, body) {
-      if (error || response.statusCode !== 200) {
-        defer.reject(error);
-      } else {
-        try {
-          body = JSON.parse(body);
-          defer.resolve(body);
-        } catch (err){
-          defer.reject("unable to parse trakt user stats response body", err);
-        }
-      }
+    api.get(options).then(function(body){
+      defer.resolve(body);
+    }).catch(function(err){
+        defer.reject(err);
     });
   }
 
@@ -71,12 +64,12 @@ function userData(config){
 
 // Type:  movies , shows , seasons , episodes , all
 function topRatings(config, type){
-  var defer = Q.defer();
+  const defer = Q.defer();
 
   if(!config.user || !config.id){
-    defer.reject("Missing config");
+    defer.reject('Missing config');
   } else {
-    var options = {
+    const options = {
       url: 'https://api.trakt.tv/users/' + config.user + '/ratings/' + type + '/,9,10', // Only items rated 9 or 10
       headers: {
         'Content-Type': 'application/json',
@@ -85,18 +78,11 @@ function topRatings(config, type){
       }
     };
 
-    request(options, function (error, response, body) {
-      if (error || response.statusCode !== 200) {
-        defer.reject(error);
-      } else {
-        try {
-          body = JSON.parse(body);
-          defer.resolve(body);
-        } catch (e){
-          defer.reject("unable to parse trakt ratings response body", e);
-        }
-      }
-    });
+    api.get(options).then(function(body){
+      defer.resolve(body);
+    }).catch(function(err){
+      defer.reject(err);
+    })
   }
 
   return defer.promise;

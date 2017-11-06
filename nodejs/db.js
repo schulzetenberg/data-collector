@@ -6,9 +6,9 @@ const logger = require('./log');
 // q promise library
 mongoose.Promise = require('q').Promise;
 
-var url = secrets.db;
+const url = secrets.db;
 mongoose.connect(url);
-var db = mongoose.connection;
+const db = mongoose.connection;
 
 // When successfully connected
 db.on('connected', function () {

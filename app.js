@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),
+const express = require('express'),
   lessMiddleware = require('less-middleware'),
   cookieParser = require('cookie-parser'),
   compress = require('compression'),
@@ -22,12 +22,12 @@ var express = require('express'),
 /**
 * Logging configuration
 */
-var logger = require('./nodejs/log.js');
+const logger = require('./nodejs/log.js');
 
 /**
  * Controllers (route handlers).
  */
-var homeController = require('./controllers/home'),
+const homeController = require('./controllers/home'),
   userController = require('./controllers/user'),
   settingsController = require('./controllers/settings'),
   appConfigController = require('./controllers/app-config'),
@@ -38,7 +38,7 @@ var homeController = require('./controllers/home'),
 /**
  * API keys and configuration.
  */
-var secrets = require('./config/secrets'),
+const secrets = require('./config/secrets'),
   passportConf = require('./config/passport'),
   webConfig = require('./config/web');
 
@@ -116,7 +116,7 @@ app.use(lusca({
   xssProtection: true
 }));
 
-var env = process.env.NODE_ENV || 'local';
+const env = process.env.NODE_ENV || 'local';
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   res.locals.user = req.user;
@@ -137,9 +137,9 @@ app.use( function (req, res, next) {
   next();
 });
 
-var scheduler = require('./nodejs/scheduler');
+const scheduler = require('./nodejs/scheduler');
 scheduler.run();
-var init = require('./nodejs/init');
+const init = require('./nodejs/init');
 
 /**
  * Primary app routes.
