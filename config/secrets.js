@@ -15,8 +15,12 @@ module.exports = {
   sessionSecret: process.env.SESSION_SECRET || 'Your Session Secret goes here',
 
   sendgrid: {
-    user: process.env.SENDGRID_USER || 'SGlogin',
-    password: process.env.SENDGRID_PASSWORD || 'SGpassword'
+    apiKey: process.env.SENDGRID_APIKEY || 'apiKey123'
+  },
+
+  defaults: {
+    emailTo: 'Jacob.Schulzetenberg@gmail.com',
+    emailFrom: 'Data.Collector@schulzetenberg.com'
   }
 
 };

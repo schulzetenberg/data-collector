@@ -26,6 +26,8 @@ exports.save = function() {
 
     Q.all(promiseArr).then(function(){
       defer.resolve();
+    }).then(function(){
+      logger.info('Done getting Fuelly data')
     }).catch(function(err){
       logger.error(err);
     });
@@ -116,7 +118,6 @@ function save(data) {
         if (err) {
           defer.reject(err);
         } else {
-          logger.info('Saved Fuelly data');
           defer.resolve();
         }
       });
