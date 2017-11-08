@@ -18,27 +18,26 @@ const transporter = nodemailer.createTransport(
 // Required Fields: to, subject, html (body)
 exports.send = function(mailOptions) {
   const defer = Q.defer();
-  var emailBody = '';
-  var body = mailOptions.body;
+  const body = mailOptions.html;
 
   if(typeof body === 'string' || body instanceof String) {
-    emailBody = body;
+    // Do nothing
   } else {
     try {
      if(body instanceof Error) {
        // JSON.stringify() errors outputs an empty object so we need to handle errors seperately
-       emailBody = JSON.stringify(body, ['message', 'arguments', 'type', 'name']);
+       mailOptions.html = JSON.stringify(body, ['message', 'arguments', 'type', 'name']);
      } else {
-       emailBody = JSON.stringify(body);
+       mailOptions.html = JSON.stringify(body);
      }
     } catch(err) {
      return defer.reject(err);
     }
   }
 
- // Email defaults from config
- if (!mailOptions.to) mailOptions.to = secrets.defaults.emailTo;
- if (!mailOptions.from) mailOptions.from = secrets.defaults.emailFrom;
+  // Email defaults from config
+  if (!mailOptions.to) mailOptions.to = secrets.defaults.emailTo;
+  if (!mailOptions.from) mailOptions.from = secrets.defaults.emailFrom;
 
   transporter.sendMail(mailOptions).then(function(info) {
     logger.info('Email sent. Message: ' + info.message);

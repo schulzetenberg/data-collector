@@ -6,6 +6,8 @@ const request = require('requestretry').defaults({
   retryDelay: 5000, // 5 seconds
 });
 
+const email = require('./email');
+
 /*
   params = {
     url: String,
@@ -32,8 +34,11 @@ exports.get = function(params) {
     form, {}, optional
     auth: {}, optional
     headers: {}, optional
+    emailTo: String, optional
+    emailSubject: String, optional
   }
 */
+// POST API call. If posting the data fails, fallback to email if email subject exists
 exports.post = function(params) {
   const options = {
     url: formatUrl(params.url),
@@ -46,7 +51,13 @@ exports.post = function(params) {
 
   return request.post(options).then(function(data){
     return data.body;
-  })
+  }).catch(function(err){
+    if(params.emailSubject) {
+      return email.send({to: params.emailTo, subject: params.emailSubject, html: params.body});
+    } else {
+      return Promise.reject(err);
+    }
+  });
 };
 
 // Add http to URL if it is missing
