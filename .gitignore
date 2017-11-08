@@ -1,5 +1,4 @@
 /public/bower_components
-/dist
 *.seed
 *.log
 *.csv
@@ -7,7 +6,6 @@
 *.pid
 *.gz
 *.swp
-/tmp
 .DS_Store
 .idea/
 .sass-cache
@@ -15,7 +13,13 @@
 node_modules
 *.out
 npm-debug.log
-.project
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
 
 # Windows image file caches
 Thumbs.db
@@ -75,3 +79,31 @@ public/js/header-plugins.js
 public/images
 public/d3.min.js
 config/tmdb.json
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
