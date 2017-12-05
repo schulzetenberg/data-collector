@@ -34,7 +34,7 @@ function booksRead(config){
   } else {
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - numDays);
-    const url = 'http://www.goodreads.com/review/list/' + id + '?format=xml&key=' + key + '&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200';
+    const url = 'https://www.goodreads.com/review/list/' + id + '?format=xml&key=' + key + '&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200';
 
     api.get({url}).then(function(body){
       try {
@@ -122,7 +122,7 @@ function topBooks(params){
   if(!id || !key){
     defer.reject('Missing goodreads config');
   } else {
-    const url = 'http://www.goodreads.com/review/list/' + id + '?format=xml&key=' + key + '&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200';
+    const url = 'https://www.goodreads.com/review/list/' + id + '?format=xml&key=' + key + '&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200';
 
     api.get({url}).then(function(body){
       try {
