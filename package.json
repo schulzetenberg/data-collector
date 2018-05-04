@@ -43,7 +43,7 @@
     "cheerio": "0.22.0",
     "compression": "1.7.1",
     "connect-assets": "5.4.0",
-    "connect-mongo": "2.0.0",
+    "connect-mongo": "2.0.1",
     "cookie-parser": "1.4.3",
     "core-js": "2.4.1",
     "cron-parser": "2.4.3",
