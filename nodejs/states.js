@@ -1,4 +1,4 @@
-var Q = require('q');
+const Q = require('q');
 
 const logger = require('./log');
 const appConfig = require('./app-config');

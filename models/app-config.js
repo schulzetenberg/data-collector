@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var appConfigSchema = new mongoose.Schema({
+const appConfigSchema = new mongoose.Schema({
   github: {
     filePath: { type: String, default: 'nodejs/github' },
     functionName: { type: String, default: 'save' },

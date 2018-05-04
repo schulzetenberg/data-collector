@@ -1,5 +1,5 @@
 const logger = require('./log');
-var Q = require('q');
+const Q = require('q');
 
 const appConfig = require('./app-config');
 const traktModel = require('../models/trakt-model.js');

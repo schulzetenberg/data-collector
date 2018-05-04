@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const Q = require('q');
+mongoose.Promise = Q.Promise;
 const secrets = require('../config/secrets');
 const logger = require('./log');
 

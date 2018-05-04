@@ -3,7 +3,7 @@ const http = require('http');
 const https = require('https');
 
 const logger = require('./log');
-var app = require('../app');
+const app = require('../app');
 
 const ipaddress = process.env.IP_ADDRESS || '127.0.0.1';
 const port = process.env.PORT || 8998;

@@ -53,7 +53,7 @@ var cookieOpts = { httpOnly: false, secure: false }, // Unsecure cookies
 /**
  * Create Express server.
  */
-var app = express();
+const app = express();
 
 /**
  * Connect to MongoDB.

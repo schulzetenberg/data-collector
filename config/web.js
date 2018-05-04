@@ -2,7 +2,7 @@ module.exports = {
   "version": "0.1",
   "siteTitle": "Data Collector",
   "siteAbbreviation": "DC",
-  "companyName": "Data Collector",
+  "companyName": "JS",
   "companyLocation": "Denver, CO",
   "demo": false
 };
