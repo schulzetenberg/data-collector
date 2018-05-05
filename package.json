@@ -15,7 +15,7 @@
     "e2e": "ng e2e"
   },
   "engines": {
-    "node": "6.3.1",
+    "node": "6.9.5",
     "npm": "3.10.7"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
@@ -108,7 +108,7 @@
     "@angular/compiler-cli": "4.0.0",
     "@angular/language-service": "4.0.0",
     "@types/jasmine": "2.5.45",
-    "@types/node": "6.0.60",
+    "@types/node": "6.0.108",
     "chai": "4.1.2",
     "cheerio": "0.22.0",
     "codelyzer": "3.0.1",
