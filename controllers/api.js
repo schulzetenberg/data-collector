@@ -6,6 +6,7 @@ const github = require('../models/github-model');
 const trakt = require('../models/trakt-model');
 const states = require('../nodejs/states');
 const fuelly = require('../models/fuelly-model');
+const playerFm = require('../models/player-fm-model');
 
 exports.getMusic = function(req, res, next) {
   music.findOne({}, {}, { sort: { '_id' : -1 } }).lean().then(function(data) {
@@ -17,6 +18,14 @@ exports.getMusic = function(req, res, next) {
 
 exports.getGoodreads = function(req, res, next) {
   goodreads.findOne({}, {}, { sort: { '_id' : -1 } }).lean().then(function(data) {
+    res.json(data);
+  }).catch(function(err) {
+    return next(err);
+  });
+};
+
+exports.getPlayerFm = function(req, res, next) {
+  playerFm.findOne({}, {}, { sort: { '_id' : -1 } }).lean().then(function(data) {
     res.json(data);
   }).catch(function(err) {
     return next(err);

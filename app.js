@@ -183,6 +183,7 @@ app.get('/api/trakt', apiController.getTrakt);
 app.get('/api/states', apiController.getStates);
 app.get('/api/fuelly', apiController.getFuelly);
 app.get('/api/fuelly-avg', apiController.getFuellyAvg);
+app.get('/api/player-fm', apiController.getPlayerFm);
 
 // Testing
 app.get('/404', function(req, res){ res.render('404.html', { title: '404' }); });
