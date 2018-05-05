@@ -60,6 +60,13 @@ const appConfigSchema = new mongoose.Schema({
     active: { type: Boolean, default: false },
     schedule: { type: String, default: '5 0 0 * * *' }
   },
+  playerFm: {
+    user: { type: String, default: 'waterland15' },
+    filePath: { type: String, default: 'nodejs/player-fm' },
+    functionName: { type: String, default: 'save' },
+    active: { type: Boolean, default: false },
+    schedule: { type: String, default: '45 0 0 * * *' }
+  },
   arrayObj: {
     arr: { type: [], default:
       [{

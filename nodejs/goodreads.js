@@ -3,7 +3,7 @@ const Q = require('q');
 const cheerio = require('cheerio');
 
 const logger = require('./log');
-const goodreadsModel = require('../models/goodreads-model.js');
+const goodreadsModel = require('../models/goodreads-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 
@@ -34,7 +34,7 @@ function booksRead(config) {
   } else {
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - numDays);
-    const url = 'https://www.goodreads.com/review/list/' + id + '?format=xml&key=' + key + '&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200';
+    const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200`;
 
     api.get({url}).then(function(body) {
       try {
