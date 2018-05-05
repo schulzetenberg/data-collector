@@ -62,7 +62,7 @@
     "express-validator": "4.2.1",
     "fastclick": "1.0.6",
     "font-awesome": "4.7.0",
-    "grunt": "1.0.1",
+    "grunt": "1.0.2",
     "grunt-bootlint": "0.10.2",
     "grunt-cli": "1.2.0",
     "grunt-concurrent": "2.3.1",
