@@ -1,5 +1,4 @@
 const logger = require('./log');
-const Q = require('q');
 
 const appConfig = require('./app-config');
 const traktModel = require('../models/trakt-model.js');
@@ -12,17 +11,17 @@ exports.save = function() {
   var statsData;
   var moviesData;
 
-  appConfig.get().then(function(config){
+  appConfig.get().then(function(config) {
     traktConfig = config && config.trakt;
     if(!traktConfig) return logger.error('Missing trakt config');
     return userData(traktConfig);
   }).then(function(data) {
     statsData = data;
     return topRatings(traktConfig, 'movies');
-  }).then(function(data){
+  }).then(function(data) {
     moviesData = data;
     return topRatings(traktConfig, 'shows');
-  }).then(function(showsData){
+  }).then(function(showsData) {
     let doc = new traktModel({
       stats: statsData,
       topMovies: moviesData,
@@ -30,60 +29,44 @@ exports.save = function() {
     });
 
     return doc.save();
-  }).then(function(){
+  }).then(function() {
     logger.info('Finished saving trakt data');
-  }).catch(function(err){
+  }).catch(function(err) {
     logger.error('Caught trakt save error:', err);
   });
 };
 
-function userData(config){
-  const defer = Q.defer();
-
-  if(!config.user || !config.id){
-    defer.reject('Missing config');
-  } else {
-    const options = {
-      url: 'https://api.trakt.tv/users/' + config.user + '/stats',
-      headers: {
-        'Content-Type': 'application/json',
-        'trakt-api-version': '2',
-        'trakt-api-key': config.id
-      }
-    };
-
-    api.get(options).then(function(body){
-      defer.resolve(body);
-    }).catch(function(err){
-        defer.reject(err);
-    });
+function userData(config) {
+  if (!config.user || !config.id) {
+    return Promise.reject('Missing config');
   }
 
-  return defer.promise;
+  const options = {
+    url: 'https://api.trakt.tv/users/' + config.user + '/stats',
+    headers: {
+      'Content-Type': 'application/json',
+      'trakt-api-version': '2',
+      'trakt-api-key': config.id
+    }
+  };
+
+  return api.get(options);
 }
 
 // Type:  movies , shows , seasons , episodes , all
-function topRatings(config, type){
-  const defer = Q.defer();
-
-  if(!config.user || !config.id){
-    defer.reject('Missing config');
-  } else {
-    const options = {
-      url: 'https://api.trakt.tv/users/' + config.user + '/ratings/' + type + '/,9,10', // Only items rated 9 or 10
-      headers: {
-        'Content-Type': 'application/json',
-        'trakt-api-version': '2',
-        'trakt-api-key': config.id
-      }
-    };
-
-    api.get(options).then(function(body){
-      defer.resolve(body);
-    }).catch(function(err){
-      defer.reject(err);
-    })
+function topRatings(config, type) {
+  if (!config.user || !config.id) {
+    return Promise.reject('Missing config');
   }
 
-  return defer.promise;
+  const options = {
+    url: 'https://api.trakt.tv/users/' + config.user + '/ratings/' + type + '/,9,10', // Only items rated 9 or 10
+    headers: {
+      'Content-Type': 'application/json',
+      'trakt-api-version': '2',
+      'trakt-api-key': config.id
+    }
+  };
+
+  return api.get(options);
 }

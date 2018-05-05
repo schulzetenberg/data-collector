@@ -1,9 +1,9 @@
-var _ = require('lodash');
-var moment = require('moment');
-var parser = require('cron-parser');
+const _ = require('lodash');
+const moment = require('moment');
+const parser = require('cron-parser');
 
-var configModel = require('../models/app-config');
-var appConfig = require('../nodejs/app-config');
+const configModel = require('../models/app-config');
+const appConfig = require('../nodejs/app-config');
 
 /**
  * GET /app-config-page
@@ -19,10 +19,10 @@ exports.getConfigPage = function(req, res) {
  */
 exports.getConfig = function(req, res, next) {
 
-  appConfig.get().then(function(data){
-    if(data) {
+  appConfig.get().then(function(data) {
+    if (data) {
       _.forIn(data, function(value, key) {
-        if(value && value.schedule){
+        if (value && value.schedule) {
           try {
             var interval = parser.parseExpression(value.schedule, {utc: true});
             var scheduleArr = [];
@@ -42,7 +42,7 @@ exports.getConfig = function(req, res, next) {
     }
 
     res.send({ config: data });
-  }).catch(function(err){
+  }).catch(function(err) {
     console.log(err);
     return next(err);
   });
@@ -53,16 +53,22 @@ exports.getConfig = function(req, res, next) {
  * Save application config
  */
 exports.saveConfig = function(req, res, next) {
-  var data = req.body;
-  if(!data) return next('No config data to save');
+  const data = req.body;
+
+  if(!data) {
+    return next('No config data to save');
+  }
+
   delete data.updatedAt;
   delete data.createdAt;
   delete data._id;
-  var doc = new configModel(data);
+  const doc = new configModel(data);
 
-  doc.save(function(err) {
-    if (err) return next('Error saving config');
-    res.sendStatus(200);
+  doc.save().then(function(){
+      res.sendStatus(200);
+  }).catch(function(err){
+    console.log(err);
+    return next('Error saving config');
   });
 };
 
@@ -71,21 +77,27 @@ exports.saveConfig = function(req, res, next) {
  * Manually run application
  */
 exports.runApp = function(req, res, next) {
-  var data = req.body;
-  if(!data || !data.app) return next('No App to run');
+  const data = req.body;
 
-  appConfig.get().then(function(config){
-    if(config[data.app].filePath && config[data.app].functionName){
+  if (!data || !data.app) {
+    return next('No App to run');
+  }
+
+  appConfig.get().then(function(config) {
+    if (config[data.app].filePath && config[data.app].functionName) {
       try {
-        var scheduledFunction = require('../' + config[data.app].filePath)[config[data.app].functionName];
-        if(typeof scheduledFunction !== 'function') {
+        const scheduledFunction = require('../' + config[data.app].filePath)[config[data.app].functionName];
+
+        if (typeof scheduledFunction !== 'function') {
           throw config[data.app].filePath + ".js " + config[data.app].functionName + "(), not a function";
         }
+
         scheduledFunction();
-      } catch (err){
+      } catch (err) {
         console.log("Error running appplication. Error:", err);
         return res.sendStatus(500);
       }
+
       res.sendStatus(200);
     } else {
       return next("App missing file path or function name");

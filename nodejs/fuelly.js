@@ -9,52 +9,54 @@ const api = require('./api');
 exports.save = function() {
   logger.info('Starting Fuelly');
 
-  appConfig.get().then(function(config){
-    var defer = Q.defer();
+  appConfig.get().then(function(config) {
+    const defer = Q.defer();
 
     var promiseArr = [];
     var numVehicles = config && config.fuelly && config.fuelly.vehicles && config.fuelly.vehicles.length;
 
-    if(!numVehicles){
+    if (!numVehicles) {
       defer.reject('No vehicles');
     } else {
-      for(let i=0, x=numVehicles; i < x; i++){
+      for (let i = 0, x=numVehicles; i < x; i++) {
         let vehicleConf = config.fuelly.vehicles[i];
         promiseArr.push(carData(vehicleConf));
       }
     }
 
-    Q.all(promiseArr).then(function(){
+    Q.all(promiseArr).then(function() {
       defer.resolve();
-    }).then(function(){
+    }).then(function() {
       logger.info('Done getting Fuelly data')
-    }).catch(function(err){
+    }).catch(function(err) {
       logger.error(err);
     });
 
     return defer.promise;
-  }).catch(function(err){
+  }).catch(function(err) {
     logger.error(err);
   });
 };
 
-function carData(config){
+function carData(config) {
   var defer = Q.defer();
   var url = config && config.url;
 
-  if(!url){
+  if (!url) {
     defer.reject('Missing fuelly config');
   } else {
-    api.get({url}).then(function(body){
+    api.get({url}).then(function(body) {
       try {
         var data = [];
         parseString(body, function (err, result) {
-          if (err) return defer.reject(err);
+          if (err) {
+            return defer.reject(err);
+          }
 
           var entries = result.rss.channel[0].item;
 
-          if(entries && entries.length){
-            for(let i=0, x=entries.length; i < x; i++){
+          if (entries && entries.length) {
+            for(let i=0, x=entries.length; i < x; i++) {
               let desc = entries[i].description[0];
 
               let milesIndex = desc.indexOf('Miles:');
@@ -67,7 +69,7 @@ function carData(config){
 
               let priceIndex = desc.indexOf('Price: $');
               let price = 0;
-              if(priceIndex > -1) {
+              if (priceIndex > -1) {
                 price = parseFloat(desc.substring(priceIndex + 8, priceIndex + 12));
               }
 
@@ -81,50 +83,46 @@ function carData(config){
         });
 
         let saveArray = [];
-        for(let j=0, x=data.length; j<x; j++){
+
+        for (let j = 0, x=data.length; j<x; j++) {
           saveArray.push(save(data[j]));
         }
+
         Q.all(saveArray).then(function(){
           defer.resolve();
         }).catch(function(err){
           defer.reject(err);
-        })
-      } catch(err){
+        });
+      } catch(err) {
         defer.reject(err);
       }
 
-    }).catch(function(err){
+    }).catch(function(err) {
       logger.error(err);
       defer.reject('Get fuelly data error');
-    })
+    });
   }
 
   return defer.promise;
 }
 
 function save(data) {
-  var defer = Q.defer();
+  const defer = Q.defer();
 
-  let filter = {
+  const filter = {
     name: data.name,
     fillTime: data.fillTime
   };
 
-  fuellyModel.findOne(filter, {}, {sort: { '_id' : -1 }}).lean().then(function(oldData){
+  fuellyModel.findOne(filter, {}, {sort: { '_id' : -1 }}).lean().then(function(oldData) {
     // If fillTime already exists in DB, do not save duplicate data
-    if(!oldData){
-      let doc = new fuellyModel(data);
-      doc.save(function(err) {
-        if (err) {
-          defer.reject(err);
-        } else {
-          defer.resolve();
-        }
-      });
+    if (!oldData) {
+      const doc = new fuellyModel(data);
+      return doc.save();
     } else {
       defer.resolve(); // Data already exists
     }
-  }).catch(function(err){
+  }).catch(function(err) {
     defer.reject(err);
   });
 

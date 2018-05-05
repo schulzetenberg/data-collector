@@ -20,11 +20,11 @@ exports.send = function(mailOptions) {
   const defer = Q.defer();
   const body = mailOptions.html;
 
-  if(typeof body === 'string' || body instanceof String) {
+  if (typeof body === 'string' || body instanceof String) {
     // Do nothing
   } else {
     try {
-     if(body instanceof Error) {
+     if (body instanceof Error) {
        // JSON.stringify() errors outputs an empty object so we need to handle errors seperately
        mailOptions.html = JSON.stringify(body, ['message', 'arguments', 'type', 'name']);
      } else {
@@ -36,13 +36,18 @@ exports.send = function(mailOptions) {
   }
 
   // Email defaults from config
-  if (!mailOptions.to) mailOptions.to = secrets.defaults.emailTo;
-  if (!mailOptions.from) mailOptions.from = secrets.defaults.emailFrom;
+  if (!mailOptions.to) {
+    mailOptions.to = secrets.defaults.emailTo;
+  }
+
+  if (!mailOptions.from) {
+    mailOptions.from = secrets.defaults.emailFrom;
+  }
 
   transporter.sendMail(mailOptions).then(function(info) {
     logger.info('Email sent. Message: ' + info.message);
     defer.resolve();
-  }).catch(function(err){
+  }).catch(function(err) {
     defer.reject(err);
   });
 

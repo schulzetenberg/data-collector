@@ -19,12 +19,12 @@ exports.get = function(params) {
     url: formatUrl(params.url),
     headers: params.headers || { 'Content-Type': 'application/json' }
   }).then(function(data){
-    if(data.statusCode !== 201 && data.statusCode !== 200){
+    if (data.statusCode !== 201 && data.statusCode !== 200) {
       return Promise.reject('API GET error for: ' + params.url + '. Status Code: ' + data.statusCode + '. Status Message: ' + data.statusMessage);
     }
 
     return data.body;
-  })
+  });
 };
 
 /*
@@ -47,11 +47,13 @@ exports.post = function(params) {
     headers: params.headers || { 'Content-Type': 'application/json' }
   };
 
-  if(params.form) options.form = params.form;
+  if (params.form) {
+    options.form = params.form;
+  }
 
-  return request.post(options).then(function(data){
+  return request.post(options).then(function(data) {
     return data.body;
-  }).catch(function(err){
+  }).catch(function(err) {
     if(params.emailSubject) {
       return email.send({to: params.emailTo, subject: params.emailSubject, html: params.body});
     } else {
@@ -63,6 +65,10 @@ exports.post = function(params) {
 // Add http to URL if it is missing
 function formatUrl(url) {
   let pattern = /^((http|https):\/\/)/;
-  if(!pattern.test(url)) url = 'http://' + url;
+
+  if(!pattern.test(url)) {
+    url = 'http://' + url;
+  }
+
   return url;
 }

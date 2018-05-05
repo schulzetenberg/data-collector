@@ -1,7 +1,7 @@
 Data Collector Web App
 ----------------------------------
 
- - Using AdminLTE website template 2.3
+ - Using AdminLTE website template 2.4
 
 Features
 --------
@@ -25,7 +25,8 @@ Features
 
 Requirements
 -------
-node v6.3 (or above)
+Node (Tested on v8)
+MongoDB (Tested on 3.4)
 
 Install
 -------
