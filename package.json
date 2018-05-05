@@ -77,7 +77,7 @@
     "jquery": "3.2.1",
     "less-middleware": "2.2.1",
     "load-grunt-tasks": "3.5.2",
-    "lodash": "4.17.4",
+    "lodash": "4.17.10",
     "lusca": "1.5.2",
     "method-override": "2.3.10",
     "mocha": "4.0.1",
