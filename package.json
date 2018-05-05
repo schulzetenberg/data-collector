@@ -82,7 +82,7 @@
     "method-override": "2.3.10",
     "mocha": "4.0.1",
     "moment": "2.19.1",
-    "mongodb": "2.2.33",
+    "mongodb": "2.2.35",
     "mongoose": "4.12.4",
     "morgan": "1.9.0",
     "node-sass-middleware": "0.11.0",
