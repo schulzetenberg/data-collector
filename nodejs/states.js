@@ -2,10 +2,10 @@ const Q = require('q');
 
 const logger = require('./log');
 const appConfig = require('./app-config');
+const defaultConfig = require('../config/states');
 
 exports.get = function() {
   const defer = Q.defer();
-  const defaultConfig = require('../config/states');
 
   appConfig.get().then(function(config) {
     const lived = config && config.states && config.states.lived;
@@ -15,26 +15,26 @@ exports.get = function() {
       return logger.error('States config missing');
     }
 
-    updateStates(defaultConfig, visited, 1);
-    updateStates(defaultConfig, lived, 2);
+    const dataArr = [['State', 'Value']];
 
-    defer.resolve(defaultConfig);
+    for (let i = 0; i < lived.length; i++) {
+      dataArr.push([ `US-${lived[i]}`, 2 ]);
+    }
+
+    for (let i = 0; i < visited.length; i++) {
+      dataArr.push([ `US-${visited[i]}`, 1 ]);
+    }
+
+    for (let i = 0; i < defaultConfig.length; i++) {
+      if ((lived.indexOf(defaultConfig[i]) === -1) && (visited.indexOf(defaultConfig[i]) === -1)) {
+        dataArr.push([ `US-${defaultConfig[i]}`, 0 ]);
+      }
+    }
+
+    defer.resolve(dataArr);
   }).catch(function(err) {
     defer.reject(err);
   });
 
   return defer.promise;
 };
-
-// 0: never visited
-// 1: visited
-// 2: lived
-function updateStates(states, update, value) {
-  for (let i = 0, x = states.length; i < x; i++) {
-    for (let j = 0, y = update.length; j < y; j++) {
-      if ((states[i][0].v === ('US-' + update[j])) || (states[i][0].f === update[j])){
-        states[i][1] = value;
-      }
-    }
-  }
-}
