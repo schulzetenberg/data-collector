@@ -113,7 +113,7 @@
     "supertest-session": "3.2.0",
     "ts-node": "3.0.4",
     "tslint": "5.3.2",
-    "typescript": "2.3.3"
+    "typescript": "2.9.2"
   },
   "main": "./nodejs/server.js"
 }
