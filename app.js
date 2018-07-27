@@ -77,6 +77,13 @@ app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
 
+// Disable CORS
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 function requireHTTPS(req, res, next) {
   if (!req.secure) {
     return res.redirect('https://' + req.get('host') + req.url);
