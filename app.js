@@ -58,14 +58,14 @@ const app = express();
 /**
  * Connect to MongoDB.
  */
-require('./nodejs/db.js');
+require('./nodejs/db');
 
 /**
  * Express configuration.
  */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);  //render html files as ejs
+app.engine('html', require('ejs').renderFile);  // Render html files as ejs
 app.use(compress());
 app.use(morgan('dev', {
   skip: function (req, res) { return res.statusCode < 400 } // log only HTTP request errors
@@ -95,7 +95,7 @@ if (app.get('env') === 'production') {
   publicOpts = { maxAge: 86400000 }; // Max age of 1 day for static content
   app.set('trust proxy', 1); // trust first proxy
   app.use(requireHTTPS);  // HTTPS redirection
-  cookieOpts = { httpOnly: true, secure: true }; // secure cookies
+  cookieOpts = { httpOnly: true, secure: true }; // Secure cookies
   lessDebug = false;
   lessCompileOnce = false;
 }
@@ -117,11 +117,14 @@ app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+/* Disable CSRF (for now)
 app.use(lusca({
   csrf: {angular: true},
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
+*/
 
 const env = process.env.NODE_ENV || 'local';
 app.use(function(req, res, next) {
