@@ -10,7 +10,6 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   morgan = require('morgan'),
   errorHandler = require('errorhandler'),
-  lusca = require('lusca'),
   methodOverride = require('method-override'),
   MongoStore = require('connect-mongo')(session),
   flash = require('express-flash'),
@@ -20,8 +19,8 @@ const express = require('express'),
   assets = require('express-asset-versions');
 
 /**
-* Logging configuration
-*/
+ * Logging configuration
+ */
 const logger = require('./nodejs/log.js');
 
 /**
@@ -45,8 +44,13 @@ const secrets = require('./config/secrets'),
 /**
  * Development options
  */
-var cookieOpts = { httpOnly: false, secure: false }, // Unsecure cookies
-  publicOpts = { maxAge: 0 }, // No cached content
+var cookieOpts = {
+    httpOnly: false,
+    secure: false
+  }, // Unsecure cookies
+  publicOpts = {
+    maxAge: 0
+  }, // No cached content
   lessDebug = true,
   lessCompileOnce = true;
 
@@ -65,23 +69,27 @@ require('./nodejs/db');
  */
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);  // Render html files as ejs
+app.engine('html', require('ejs').renderFile); // Render html files as ejs
 app.use(compress());
 app.use(morgan('dev', {
-  skip: function (req, res) { return res.statusCode < 400 } // log only HTTP request errors
+  skip: function (req, res) {
+    return res.statusCode < 400
+  } // log only HTTP request errors
 }));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
 
 // Disable CORS
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-xsrf-token");
-    next();
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-xsrf-token");
+  next();
 });
 
 function requireHTTPS(req, res, next) {
@@ -92,15 +100,20 @@ function requireHTTPS(req, res, next) {
 }
 
 if (app.get('env') === 'production') {
-  publicOpts = { maxAge: 86400000 }; // Max age of 1 day for static content
+  publicOpts = {
+    maxAge: 86400000
+  }; // Max age of 1 day for static content
   app.set('trust proxy', 1); // trust first proxy
-  app.use(requireHTTPS);  // HTTPS redirection
-  cookieOpts = { httpOnly: true, secure: true }; // Secure cookies
+  app.use(requireHTTPS); // HTTPS redirection
+  cookieOpts = {
+    httpOnly: true,
+    secure: true
+  }; // Secure cookies
   lessDebug = false;
   lessCompileOnce = false;
 }
 
-app.use(lessMiddleware(path.join(__dirname, 'build','less'), {
+app.use(lessMiddleware(path.join(__dirname, 'build', 'less'), {
   dest: path.join(__dirname, 'public'),
   once: lessCompileOnce,
   debug: lessDebug
@@ -109,7 +122,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   secret: secrets.sessionSecret,
-  store: new MongoStore({ url: secrets.db, autoReconnect: true }),
+  store: new MongoStore({
+    url: secrets.db,
+    autoReconnect: true
+  }),
   cookie: cookieOpts
 }));
 app.use(express.static(path.join(__dirname, 'public'), publicOpts));
@@ -118,16 +134,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-/* Disable CSRF (for now)
-app.use(lusca({
-  csrf: {angular: true},
-  xframe: 'SAMEORIGIN',
-  xssProtection: true
-}));
-*/
-
 const env = process.env.NODE_ENV || 'local';
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.user = req.user;
   res.locals.user = req.user;
   res.locals.config = webConfig;
@@ -136,9 +144,9 @@ app.use(function(req, res, next) {
 });
 
 //Remember me on login page
-app.use( function (req, res, next) {
-  if ( req.method == 'POST' && req.url == '/login' ) {
-    if ( req.body.rememberMe ) {
+app.use(function (req, res, next) {
+  if (req.method == 'POST' && req.url == '/login') {
+    if (req.body.rememberMe) {
       req.session.cookie.maxAge = 2592000000; // Remember for 30 days
     } else {
       req.session.cookie.expires = false; // Else, cookie expires at end of session
@@ -160,15 +168,25 @@ app.get('/app-config', passportConf.isAuthenticated, appConfigController.getConf
 app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
 app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
 app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
-app.get('/app-config/scheduler', passportConf.isAuthenticated, function(req, res){ scheduler.run(); res.sendStatus(200); });
-app.get('/app-config/init', passportConf.isAuthenticated, function(req, res){ init.run(); res.sendStatus(200); });
+app.get('/app-config/scheduler', passportConf.isAuthenticated, function (req, res) {
+  scheduler.run();
+  res.sendStatus(200);
+});
+app.get('/app-config/init', passportConf.isAuthenticated, function (req, res) {
+  init.run();
+  res.sendStatus(200);
+});
 
 app.get('/settings', passportConf.isAuthenticated, settingsController.getSettings);
 
 app.get('/login', userController.getLogin);
 app.post('/login',
   bruteforceController.globalBruteforce.prevent,
-  bruteforceController.userBruteforce.getMiddleware({key: function(req, res, next){ next(req.body.email); }}),
+  bruteforceController.userBruteforce.getMiddleware({
+    key: function (req, res, next) {
+      next(req.body.email);
+    }
+  }),
   userController.postLogin);
 app.get('/logout', userController.logout);
 app.get('/forgot', userController.getForgot);
@@ -196,22 +214,36 @@ app.get('/api/fuelly-avg', apiController.getFuellyAvg);
 app.get('/api/player-fm', apiController.getPlayerFm);
 
 // Testing
-app.get('/404', function(req, res){ res.render('404.html', { title: '404' }); });
-app.get('/500', function(req, res){ res.render('500.html', { message: 'Test Error!', error: {}, title : '500' }); });
+app.get('/404', function (req, res) {
+  res.render('404.html', {
+    title: '404'
+  });
+});
+app.get('/500', function (req, res) {
+  res.render('500.html', {
+    message: 'Test Error!',
+    error: {},
+    title: '500'
+  });
+});
 
 if (app.get('env') === 'production') {
   //catch 404 and forward to error handler
-  app.use(function(req, res) {
+  app.use(function (req, res) {
     if (req.accepts('html')) {
-      res.render('404.html', {title: '404'}); // Respond with HTML
+      res.render('404.html', {
+        title: '404'
+      }); // Respond with HTML
     } else if (req.accepts('json')) {
-      res.send({error: 'Not found'}); // Respond with JSON
+      res.send({
+        error: 'Not found'
+      }); // Respond with JSON
     } else {
       res.type('txt').send('Not found'); // Fall back to plain text
     }
   });
   // production error handler, no stacktraces shown
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     logger.error('500 error: ' + err);
 
     res.status(err.status || 500);
@@ -221,10 +253,12 @@ if (app.get('env') === 'production') {
       res.render('500.html', {
         message: err.message,
         error: {},
-        title : '500'
+        title: '500'
       });
     } else if (req.accepts('json')) {
-      res.send({error: 'Internal Server Error'}); // Respond with JSON
+      res.send({
+        error: 'Internal Server Error'
+      }); // Respond with JSON
     } else {
       res.type('txt').send('Internal Server Error'); // Fall back to plain text
     }

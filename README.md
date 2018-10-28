@@ -19,7 +19,6 @@ Features
  - Reset Password
  - Delete Account
 - **Security**
- - CSRF protection
  - Brute force protection
  - Secure cookies
 
