@@ -35,9 +35,7 @@ function booksRead(config) {
     const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200`;
 
     api
-      .get({
-        url,
-      })
+      .get({ url })
       .then(function(body) {
         try {
           var promises = [];
@@ -65,7 +63,9 @@ function booksRead(config) {
                 pages: book.num_pages[0],
                 link: book.link[0],
                 dateRead: books[i].read_at && new Date(books[i].read_at[0]),
-                readCount: books[i].read_count && parseInt(books[i].read_count[0]), // NOTE: This is currently not being used, but could be useful in the future
+                rating: books[i].rating && parseInt(books[i].rating[0]),
+                // NOTE: Currently not being used, but could be useful in the future
+                readCount: books[i].read_count && parseInt(books[i].read_count[0]),
               };
 
               promises.push(getPhoto(ret));

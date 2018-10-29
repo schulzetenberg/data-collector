@@ -14,9 +14,7 @@ exports.getMusic = function(req, res, next) {
       {},
       {},
       {
-        sort: {
-          _id: -1,
-        },
+        sort: { _id: -1 },
       }
     )
     .lean()
@@ -29,27 +27,17 @@ exports.getMusic = function(req, res, next) {
 };
 
 exports.getGoodreads = function(req, res, next) {
-  if (!req.query.start || !req.query.end) return next('Start and end time parameters required');
-
-  const by = {
-    dateRead: {
-      $gte: req.query.start,
-      $lte: req.query.end,
-    },
-  };
-
   goodreads
     .findOne(
-      by,
+      {},
       {},
       {
-        sort: {
-          _id: -1,
-        },
+        sort: { _id: -1 },
       }
     )
     .lean()
     .then(function(data) {
+      console.log('data!', data);
       res.json(data);
     })
     .catch(function(err) {
@@ -63,9 +51,7 @@ exports.getPlayerFm = function(req, res, next) {
       {},
       {},
       {
-        sort: {
-          _id: -1,
-        },
+        sort: { _id: -1 }
       }
     )
     .lean()
@@ -83,9 +69,7 @@ exports.getGithub = function(req, res, next) {
       {},
       {},
       {
-        sort: {
-          _id: -1,
-        },
+        sort: { _id: -1 },
       }
     )
     .lean()
