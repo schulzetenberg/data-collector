@@ -102,7 +102,7 @@
     "@angular/cli": "1.7.4",
     "@angular/compiler-cli": "4.0.0",
     "@angular/language-service": "4.0.0",
-    "@types/jasmine": "2.8.7",
+    "@types/jasmine": "2.8.16",
     "@types/node": "6.0.60",
     "chai": "4.1.2",
     "codelyzer": "3.2.2",
