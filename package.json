@@ -43,7 +43,7 @@
     "connect-assets": "5.4.0",
     "connect-mongo": "2.0.1",
     "cookie-parser": "1.4.3",
-    "core-js": "2.5.5",
+    "core-js": "2.6.5",
     "cron-parser": "2.5.0",
     "d3": "3.5.17",
     "datatables.net": "2.1.1",
