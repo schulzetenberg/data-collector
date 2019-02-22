@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "chai": "4.1.2",
-    "codelyzer": "3.2.2",
+    "codelyzer": "4.5.0",
     "grunt-contrib-watch": "1.0.1",
     "htmlhint": "0.9.13",
     "husky": "1.1.0",
