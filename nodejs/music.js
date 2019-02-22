@@ -28,7 +28,7 @@ function topArtists(config) {
   const key = config && config.music && config.music.lastFmKey;
 
   if(key){
-    const url = 'http://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=' + key + '&format=json&period=12month';
+    const url = 'https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=' + key + '&format=json&period=12month';
     var temp = [];
 
     api.get({url}).then(function(data) {
@@ -70,7 +70,7 @@ function recentTracks(promiseData) {
   const defer = Q.defer();
   const fromDate = moment().subtract(1, 'years').unix();
   const toDate = moment().unix();
-  const url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=' +
+  const url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=' +
     promiseData.key + '&format=json&from=' + fromDate + '&to=' + toDate;
 
   api.get({url}).then(function(data) {

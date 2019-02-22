@@ -36,7 +36,7 @@ After installing Node.js & npm:
 
 Run
 -------
-- $ node nodejs/server.js
+- $ npm start
 
 Sign Up
 -------
