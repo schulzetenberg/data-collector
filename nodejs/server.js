@@ -4,13 +4,14 @@ const https = require('https');
 
 const logger = require('./log');
 const app = require('../app');
+const secrets = require('../config/secrets');
 
-const ipaddress = process.env.IP_ADDRESS || '127.0.0.1';
-const port = process.env.PORT || 8998;
+const ipaddress = secrets.ipaddress;
+const port = secrets.PORT;
 var server;
 
 // Create HTTP(S) server.
-if (!process.env.SSL) {
+if (!secrets.SSL) {
   server = http.createServer(app);
 } else {
   const privateKey  = fs.readFileSync('./key.pem', 'utf8');

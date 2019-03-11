@@ -10,7 +10,15 @@
 
 module.exports = {
 
+  ipAddress: process.env.IP_ADDRESS || '127.0.0.1',
+
+  port: process.env.PORT || '3000',
+
+  SSL: process.env.ssl || false,
+
   db: process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost:27017/data-collector',
+
+  logLevel: process.env.LOG_LEVEL || 'debug',
 
   sessionSecret: process.env.SESSION_SECRET || 'Your Session Secret goes here',
 

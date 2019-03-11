@@ -1,6 +1,8 @@
 const winston = require('winston');
 
-const logLevel = process.env.LOG_LEVEL || 'debug';
+const secrets = require('../config/secrets');
+
+const logLevel = secrets.logLevel;
 winston.level = logLevel;
 winston.info('Log level:' + logLevel);
 
