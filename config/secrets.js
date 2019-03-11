@@ -16,7 +16,7 @@ module.exports = {
 
   SSL: process.env.ssl || false,
 
-  db: process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost:27017/data-collector',
+  db: process.env.DB || 'mongodb://localhost:27017/data-collector',
 
   logLevel: process.env.LOG_LEVEL || 'debug',
 
