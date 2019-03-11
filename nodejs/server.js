@@ -6,8 +6,8 @@ const logger = require('./log');
 const app = require('../app');
 const secrets = require('../config/secrets');
 
-const ipaddress = secrets.ipaddress;
-const port = secrets.PORT;
+const ipAddress = secrets.ipAddress;
+const port = secrets.port;
 var server;
 
 // Create HTTP(S) server.
@@ -22,8 +22,8 @@ if (!secrets.SSL) {
 }
 
 // Listen on provided port
-server.listen(port, ipaddress, function () {
-  logger.warn('%s: Node server started on %s:%d ...', Date(Date.now()), ipaddress, port);
+server.listen(port, ipAddress, function () {
+  logger.warn('%s: Node server started on %s:%d ...', Date(Date.now()), ipAddress, port);
 });
 
 server.on('error', onError);
