@@ -30,8 +30,8 @@ MongoDB (Tested on 3.4)
 Install
 -------
 After installing Node.js & npm:
-- $ npm install -g grunt-cli
-- $ npm install
+- $ npm i -g grunt-cli
+- $ npm i
 - $ grunt build
 
 Run
@@ -45,3 +45,13 @@ Sign Up
 Packages
 --------
 - See package.json
+
+Deployment on Google Cloud Platform - Compute
+--------
+- See this  [link](https://cloud.google.com/community/tutorials/deploy-mean-app-mongodb-replication) for instructions setting up a MEAN application on Google Cloud
+
+Re-deploy on GCP
+--------
+SSH into the VM
+$ sudo su - bitnami
+$ ./home/bitnami/apps/collector/htdocs/start-data-collector.sh
