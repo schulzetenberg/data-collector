@@ -67,6 +67,13 @@ const appConfigSchema = new mongoose.Schema({
     active: { type: Boolean, default: false },
     schedule: { type: String, default: '45 0 0 * * *' }
   },
+  feedly: {
+    opml: { type: String, default: '' }, // https://feedly.com/i/opml
+    filePath: { type: String, default: 'nodejs/feedly' },
+    functionName: { type: String, default: 'save' },
+    active: { type: Boolean, default: false },
+    schedule: { type: String, default: '50 0 0 * * *' }
+  },
   arrayObj: {
     arr: { type: [], default:
       [{

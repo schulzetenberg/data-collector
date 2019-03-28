@@ -54,4 +54,4 @@ Re-deploy on GCP
 --------
 SSH into the VM
 $ sudo su - bitnami
-$ ./home/bitnami/apps/collector/htdocs/start-data-collector.sh
+$ /home/bitnami/apps/collector/htdocs/start-data-collector.sh
