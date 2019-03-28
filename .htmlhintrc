@@ -12,5 +12,6 @@
     // Custom rules
     "doctype-first": false,
     "attr-lowercase": false,
-    "space-tab-mixed-disabled": "space"
+    "space-tab-mixed-disabled": "space",
+    "spec-char-escape": false
 }

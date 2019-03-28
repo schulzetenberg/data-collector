@@ -1,5 +1,4 @@
-module.exports = function (grunt) {
-
+module.exports = function(grunt) {
   'use strict';
 
   require('load-grunt-tasks')(grunt);
@@ -8,7 +7,7 @@ module.exports = function (grunt) {
     watch: {
       // If any files change, run tasks
       files: ['build/less/*.less', 'build/less/skins/*.less', 'dist/js/*.js'],
-      tasks: ['less:development', 'uglify:jsDev', 'uglify:angularDev', 'concat']
+      tasks: ['less:development', 'uglify:jsDev', 'uglify:angularDev', 'concat'],
     },
 
     // 'less'-task configuration
@@ -17,7 +16,7 @@ module.exports = function (grunt) {
       // Development not compressed
       development: {
         options: {
-          compress: false
+          compress: false,
         },
         files: {
           // compilation.css  :  source.less
@@ -37,13 +36,13 @@ module.exports = function (grunt) {
           'dist/css/skins/skin-green-light.css': 'build/less/skins/skin-green-light.less',
           'dist/css/skins/skin-red-light.css': 'build/less/skins/skin-red-light.less',
           'dist/css/skins/skin-purple-light.css': 'build/less/skins/skin-purple-light.less',
-          'dist/css/skins/_all-skins.css': 'build/less/skins/_all-skins.less'
-        }
+          'dist/css/skins/_all-skins.css': 'build/less/skins/_all-skins.less',
+        },
       },
       // Production compresses version
       production: {
         options: {
-          compress: true
+          compress: true,
         },
         files: {
           // compilation.css  :  source.less
@@ -63,9 +62,9 @@ module.exports = function (grunt) {
           'dist/css/skins/skin-green-light.min.css': 'build/less/skins/skin-green-light.less',
           'dist/css/skins/skin-red-light.min.css': 'build/less/skins/skin-red-light.less',
           'dist/css/skins/skin-purple-light.min.css': 'build/less/skins/skin-purple-light.less',
-          'dist/css/skins/_all-skins.min.css': 'build/less/skins/_all-skins.less'
-        }
-      }
+          'dist/css/skins/_all-skins.min.css': 'build/less/skins/_all-skins.less',
+        },
+      },
     },
 
     // Concatenate CSS files into build.css
@@ -79,11 +78,11 @@ module.exports = function (grunt) {
           'dist/css/override.min.css',
           'dist/css/skins/skin-red.min.css',
           'node_modules/font-awesome/css/font-awesome.min.css',
-          'node_modules/datatables.net-bs/css/dataTables.bootstrap.css'
+          'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
           // ,'node_modules/ionicons/dist/css/ionicons.min.css'
         ],
         dest: 'public/build.css',
-        nonull: true
+        nonull: true,
       },
       angular: {
         src: [
@@ -91,10 +90,10 @@ module.exports = function (grunt) {
           'build/app/main.js',
           'build/app/filters/*.js',
           'build/app/services/*.js',
-          'build/app/components/**/*.js'
+          'build/app/components/**/*.js',
         ],
         dest: 'public/ng.min.js',
-        nonull: true
+        nonull: true,
       },
       plugins: {
         src: [
@@ -111,73 +110,42 @@ module.exports = function (grunt) {
           'node_modules/angular-dimple/dist/angular-dimple.js',
           'node_modules/datatables.net/js/jquery.dataTables.js',
           'node_modules/datatables.net-bs/js/dataTables.bootstrap.js',
-          'node_modules/angular-datatables/dist/angular-datatables.js'
+          'node_modules/angular-datatables/dist/angular-datatables.js',
         ],
         dest: 'public/plugins.min.js',
-        nonull: true
-      }
+        nonull: true,
+      },
     },
 
     // Minified js files
-    'uglify': {
+    uglify: {
       angular: {
         options: {
-          mangle: false
+          mangle: false,
         },
         src: 'public/ng.min.js',
-        dest: 'public/ng.min.js'
+        dest: 'public/ng.min.js',
       },
       plugins: {
         options: {
-          mangle: false
+          mangle: false,
         },
         src: 'public/plugins.min.js',
-        dest: 'public/plugins.min.js'
-      }
+        dest: 'public/plugins.min.js',
+      },
     },
 
     // Minified css files
-    'cssmin': {
+    cssmin: {
       options: {
         shorthandCompacting: false,
-        roundingPrecision: -1
+        roundingPrecision: -1,
       },
       build: {
         files: {
-          'public/build.css': 'public/build.css'
-        }
-      }
-    },
-
-    // Validate JS code
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
+          'public/build.css': 'public/build.css',
+        },
       },
-      core: {
-        src: 'public/js/app.js'
-      },
-      demo: {
-        src: 'public/js/demo.js'
-      }
-    },
-
-    // Validate CSS files
-    csslint: {
-      options: {
-        csslintrc: 'build/less/.csslintrc'
-      },
-      dist: [
-        'dist/css/AdminLTE.css'
-      ]
-    },
-
-    // Validate Bootstrap HTML
-    bootlint: {
-      options: {
-        relaxerror: ['W005','E001','W001','W002','W003']
-      },
-      files: ['views/*.html', 'views/**/*.html']
     },
 
     // Copy dependencies to public folder
@@ -185,55 +153,45 @@ module.exports = function (grunt) {
       d3: {
         nonull: true,
         src: 'node_modules/d3/d3.min.js',
-        dest: 'public/d3.min.js'
+        dest: 'public/d3.min.js',
       },
       fa: {
         nonull: true,
         expand: true,
         cwd: 'node_modules/font-awesome/fonts/',
         src: ['*.eot', '*.svg', '*.ttf', '*.woff', '*.woff2', '*.otf'],
-        dest: 'public/fonts/'
+        dest: 'public/fonts/',
       },
-      /*
-      ion: {
-        nonull: true,
-        expand: true,
-        cwd: 'node_modules/ionicons/dist/fonts',
-        src: ['*.eot', '*.svg', '*.ttf', '*.woff', '*.woff2'],
-        dest: 'public/fonts/'
-      },
-      */
       icheck: {
         nonull: true,
         expand: true,
         cwd: 'node_modules/icheck/skins/flat',
         src: ['blue*.png'],
-        dest: 'public/'
+        dest: 'public/',
       },
       bs: {
         nonull: true,
         expand: true,
         cwd: 'node_modules/bootstrap/fonts/',
         src: '**',
-        dest: 'public/fonts/'
-      }
+        dest: 'public/fonts/',
+      },
     },
 
-    'concurrent': {
+    concurrent: {
       concat: {
         tasks: ['concat:css', 'concat:angular', 'concat:plugins'],
         options: {
-          logConcurrentOutput: true
-        }
+          logConcurrentOutput: true,
+        },
       },
       compress: {
         tasks: ['uglify:angular', 'uglify:plugins', 'cssmin:build'],
         options: {
-          logConcurrentOutput: true
-        }
-      }
-    }
-
+          logConcurrentOutput: true,
+        },
+      },
+    },
   });
 
   // Linting task
@@ -244,5 +202,4 @@ module.exports = function (grunt) {
 
   // Dev task. Dont compress files
   grunt.registerTask('dev', ['less:development', 'concurrent:concat', 'copy']);
-
 };
