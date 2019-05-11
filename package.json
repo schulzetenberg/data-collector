@@ -28,7 +28,7 @@
     "cheerio": "0.22.0",
     "compression": "1.7.2",
     "connect-assets": "5.4.0",
-    "connect-mongo": "2.0.1",
+    "connect-mongo": "2.0.3",
     "cookie-parser": "1.4.3",
     "cron-parser": "2.5.0",
     "d3": "3.5.17",
