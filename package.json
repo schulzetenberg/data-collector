@@ -24,7 +24,7 @@
     "async": "2.6.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.2",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "cheerio": "0.22.0",
     "compression": "1.7.2",
     "connect-assets": "5.4.0",
