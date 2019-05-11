@@ -43,7 +43,7 @@
     "express-brute-mongo": "1.0.0",
     "express-flash": "0.0.2",
     "express-session": "1.15.6",
-    "express-validator": "4.3.0",
+    "express-validator": "5.3.1",
     "fastclick": "1.0.6",
     "font-awesome": "4.7.0",
     "grunt": "1.0.2",
