@@ -19,7 +19,7 @@
     "admin-lte": "2.4.3",
     "alertify.js": "1.0.12",
     "angular": "1.6.10",
-    "angular-datatables": "0.6.2",
+    "angular-datatables": "0.6.4",
     "angular-dimple": "git+https://github.com/schulzetenberg/angular-dimple.git#2caabd6faef6275dcb55137662ca82f476b66bdc",
     "async": "2.6.0",
     "bcrypt-nodejs": "0.0.3",
