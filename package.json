@@ -31,7 +31,7 @@
     "connect-mongo": "2.0.1",
     "cookie-parser": "1.4.3",
     "cron-parser": "2.5.0",
-    "d3": "3.5.17",
+    "d3": "5.9.2",
     "datatables.net": "2.1.1",
     "datatables.net-bs": "2.1.1",
     "dimple": "git+http://github.com/PMSI-AlignAlytics/dimple.git#2.2.0",
