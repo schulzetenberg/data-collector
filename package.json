@@ -11,7 +11,7 @@
     "precommit": "lint-staged"
   },
   "engines": {
-    "node": "8.11.1"
+    "node": "8.16.0"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
