@@ -16,7 +16,7 @@
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "admin-lte": "2.4.3",
+    "admin-lte": "2.4.10",
     "alertify.js": "1.0.12",
     "angular": "1.6.10",
     "angular-datatables": "0.6.2",
