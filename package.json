@@ -82,6 +82,10 @@
   "devDependencies": {
     "chai": "4.1.2",
     "codelyzer": "3.2.2",
+    "eslint": "5.16.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-config-prettier": "4.2.0",
+    "eslint-plugin-import": "2.17.2",
     "grunt-contrib-watch": "1.0.1",
     "htmlhint": "0.9.13",
     "husky": "1.1.0",
@@ -93,6 +97,10 @@
     "supertest-session": "3.2.0"
   },
   "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint",
+      "git add"
+    ],
     "*.ts": [
       "tslint --project tsconfig.json -e 'src/test/**'",
       "git add"

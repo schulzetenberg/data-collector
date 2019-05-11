@@ -2,24 +2,25 @@ const Q = require('q');
 const moment = require('moment');
 
 const logger = require('./log');
-const musicModel = require('../models/music-model');
+const MusicModel = require('../models/music-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 
-exports.save = function() {
+exports.save = () => {
   logger.info('Starting music save');
 
-  appConfig.get('music')
-  .then(topArtists)
-  .then(recentTracks)
-  .then(topArtistGenres)
-  .then(save)
-  .then(function(){
-    logger.info('Saved music data');
-  })
-  .catch(function(err){
-    logger.error('Caught music error', err);
-  });
+  appConfig
+    .get('music')
+    .then(topArtists)
+    .then(recentTracks)
+    .then(topArtistData)
+    .then(save)
+    .then(() => {
+      logger.info('Saved music data');
+    })
+    .catch((err) => {
+      logger.error('Caught music error', err);
+    });
 };
 
 // Get the top 15 artists & total artists listened to in the past 12 months
@@ -27,37 +28,47 @@ function topArtists(config) {
   const defer = Q.defer();
   const key = config && config.music && config.music.lastFmKey;
 
-  if(key){
-    const url = 'https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=' + key + '&format=json&period=12month';
-    var temp = [];
+  if (key) {
+    const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=${key}&format=json&period=12month`;
 
-    api.get({url}).then(function(data) {
-      if (!data || !data.topartists || !data.topartists.artist || !data.topartists.artist.length || !data.topartists['@attr']) {
-        return defer.reject('Could not parse top artist data');
-      }
+    api
+      .get({ url })
+      .then((data) => {
+        if (
+          !data ||
+          !data.topartists ||
+          !data.topartists.artist ||
+          !data.topartists.artist.length ||
+          !data.topartists['@attr']
+        ) {
+          return defer.reject('Could not parse top artist data');
+        }
 
-      const artistData = data.topartists.artist;
-      const artistCount = data.topartists['@attr'].total;
+        const artistData = data.topartists.artist;
+        const artistCount = data.topartists['@attr'].total;
+        const temp = [];
 
-      for (let i = 0; i < artistData.length; i++) {
-        temp.push({
-          artist: artistData[i].name,
-          img: artistData[i].image[2]['#text'] // IMAGE SIZES: 0 = S, 1 = M, 2 = L, 3 = XL, 4 = Mega
+        artistData.forEach((artist) => {
+          temp.push({
+            artist: artist.name,
+            // NOTE: Do not get the artist images from last.fm because their API is unreliable. We are going to use Spotify instead
+            // img: artist.image[2]['#text'] // IMAGE SIZES: 0 = S, 1 = M, 2 = L, 3 = XL, 4 = Mega
+          });
         });
-      }
 
-      const res = {
-        config: config,
-        key: key,
-        artistCount: artistCount,
-        topArtists: temp
-      };
+        const res = {
+          config,
+          key,
+          artistCount,
+          topArtists: temp,
+        };
 
-      defer.resolve(res);
-    }).catch(function(err){
-      logger.error(err);
-      defer.reject('Get LastFM top artists error');
-    });
+        return defer.resolve(res);
+      })
+      .catch((err) => {
+        logger.error(err);
+        defer.reject('Get LastFM top artists error');
+      });
   } else {
     defer.reject('Missing LastFM key');
   }
@@ -68,83 +79,115 @@ function topArtists(config) {
 // Get song count (past year)
 function recentTracks(promiseData) {
   const defer = Q.defer();
-  const fromDate = moment().subtract(1, 'years').unix();
+  const fromDate = moment()
+    .subtract(1, 'years')
+    .unix();
   const toDate = moment().unix();
-  const url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=' +
-    promiseData.key + '&format=json&from=' + fromDate + '&to=' + toDate;
+  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=${
+    promiseData.key
+  }&format=json&from=${fromDate}&to=${toDate}`;
 
-  api.get({url}).then(function(data) {
-    if(!data || !data.recenttracks || !data.recenttracks['@attr']) return defer.reject('Could not parse recent tracks data');
-    promiseData.songCount = data.recenttracks['@attr'].total;
-    defer.resolve(promiseData);
-  }).catch(function(err) {
-    logger.error(err);
-    defer.reject('Get LastFM recent tracks error');
-  });
+  api
+    .get({ url })
+    .then((data) => {
+      if (!data || !data.recenttracks || !data.recenttracks['@attr']) {
+        return defer.reject('Could not parse recent tracks data');
+      }
+
+      const tracksData = {
+        ...promiseData,
+        songCount: data.recenttracks['@attr'].total,
+      };
+
+      return defer.resolve(tracksData);
+    })
+    .catch((err) => {
+      logger.error(err);
+      defer.reject('Get LastFM recent tracks error');
+    });
 
   return defer.promise;
 }
 
-function topArtistGenres(promiseData) {
+function topArtistData(promiseData) {
   const defer = Q.defer();
-  var promises = [];
+  const promises = [];
 
-  for (let i = 0, x=promiseData.topArtists.length; i<x; i++) {
-    promises.push(getArtistGenres(promiseData.config, promiseData.topArtists[i]));
-  }
-
-  Q.all(promises).then(function(data) {
-    promiseData.topArtists = data;
-    defer.resolve(promiseData);
-  }).catch(function(err) {
-    defer.reject(err);
+  promiseData.topArtists.forEach((artist) => {
+    promises.push(getSpotifyArtist(promiseData.config, artist));
   });
+
+  Q.all(promises)
+    .then((data) => {
+      const topArtistsData = {
+        ...promiseData,
+        topArtists: data,
+      };
+
+      defer.resolve(topArtistsData);
+    })
+    .catch((err) => {
+      defer.reject(err);
+    });
 
   return defer.promise;
 }
 
-function getArtistGenres(config, artist) {
+function getSpotifyArtist(config, artist) {
   const defer = Q.defer();
 
   const postOptions = {
     url: 'https://accounts.spotify.com/api/token',
-    form: { grant_type: "client_credentials" },
+    form: { grant_type: 'client_credentials' },
     auth: {
       user: config.music.spotifyId,
-      password: config.music.spotifySecret
-    }
+      password: config.music.spotifySecret,
+    },
   };
 
-  api.post(postOptions).then(function(data) {
-    const accessToken = data && data.access_token;
+  api
+    .post(postOptions)
+    .then((data) => {
+      const accessToken = data && data.access_token;
 
-    if (accessToken) {
-      const getOptions = {
-        url: 'https://api.spotify.com/v1/search?q=' + artist.artist + '&type=artist&market=' + 'US' + '&limit=1&offset=' + '0',
-        headers: { Authorization: 'Bearer ' + accessToken }
+      if (accessToken) {
+        const getOptions = {
+          url: `https://api.spotify.com/v1/search?q=${artist.artist}&type=artist&market=US&limit=1&offset=0`,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+
+        return getOptions;
+      }
+
+      return Promise.reject('Error parsing access token');
+    })
+    .then(api.get)
+    .then((data) => {
+      if (!data || !data.artists || !data.artists.items || !data.artists.items[0] || !data.artists.items[0].genres) {
+        return defer.reject('Could not parse genre data');
+      }
+
+      const artistData = data.artists.items[0];
+      const img320 = artistData.images.find((img) => img.width === 320);
+
+      const updatedArtist = {
+        ...artist,
+        // If we can't find the 320x320 image, use the first image in the array (640x640 most likely)
+        img: img320 ? img320.url : artistData.images[0].url,
+        genres: artistData.genres,
       };
 
-      return getOptions;
-    } else {
-      return Promise.reject('Error parsing access token');
-    }
-  }).then(api.get).then(function(data) {
-    if(!data || !data.artists || !data.artists.items || !data.artists.items[0] || !data.artists.items[0].genres){
-      return defer.reject('Could not parse genre data');
-    }
-
-    artist.genres = data.artists.items[0].genres;
-
-    defer.resolve(artist);
-  }).catch(function(err){
-    logger.error(err);
-    defer.reject('Get Spotify data error');
-  });
+      return defer.resolve(updatedArtist);
+    })
+    .catch((err) => {
+      logger.error(err);
+      defer.reject('Get Spotify data error');
+    });
 
   return defer.promise;
 }
 
 function save(data) {
-  const doc = new musicModel(data);
+  const doc = new MusicModel(data);
   return doc.save();
 }
