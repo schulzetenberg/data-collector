@@ -55,7 +55,7 @@
     "grunt-contrib-less": "1.4.1",
     "grunt-contrib-uglify": "3.3.0",
     "icheck": "1.0.2",
-    "jquery": "3.2.1",
+    "jquery": "3.4.1",
     "less-middleware": "2.2.1",
     "load-grunt-tasks": "3.5.2",
     "lodash": "4.17.10",
