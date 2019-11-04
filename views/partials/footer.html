@@ -72,28 +72,30 @@
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
-</div>
+  </div>
 
-<!-- Leave D3 out of plugins file because of its size -->
-<script src="<%= asset('d3.min.js') %>"></script>
-<script src="<%= asset('plugins.min.js') %>"></script>
+  <!-- Leave D3 out of plugins file because of its size -->
+  <script src="<%= asset('d3.min.js') %>"></script>
+  <script src="<%= asset('plugins.min.js') %>"></script>
 
-<!-- Concatenated JS from Grunt -->
-<script src="<%= asset('build.js') %>"></script>
+  <!-- Concatenated JS from Grunt -->
+  <script src="<%= asset('build.js') %>"></script>
 
-<!-- Angular app -->
-<script src ="<%= asset('ng.min.js') %>"></script>
+  <!-- Angular app -->
+  <script src="<%= asset('ng.min.js') %>"></script>
 
-<script>
-  alertify.logPosition("bottom right");
-</script>
+  <script>
+    alertify.logPosition("bottom right");
 
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<!--
+  </script>
+
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <!--
 <script>
   $.widget.bridge('uibutton', $.ui.button);
 </script>
 -->
 
-</body>
-</html>
+  </body>
+
+  </html>

@@ -52,6 +52,10 @@ const appConfigSchema = new mongoose.Schema(
       visited: { type: [] },
       active: { type: Boolean, default: false },
     },
+    apiKeys: {
+      keys: { type: [] },
+      active: { type: Boolean, default: false },
+    },
     fuelly: {
       vehicles: {
         type: [],

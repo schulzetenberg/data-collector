@@ -16,9 +16,7 @@ passport.deserializeUser((id, done) => {
 // Sign in using Email and Password.
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-    const emailLowerCase = email.toLowerCase();
-
-    User.findOne({ emailLowerCase }, (err, user) => {
+    User.findOne({ email: email.toLowerCase() }, (err, user) => {
       if (!user) return done(null, false, { message: `Email ${email} not found` });
       user.comparePassword(password, (err, isMatch) => {
         if (isMatch) {

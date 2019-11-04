@@ -6,7 +6,8 @@
     "url": "https://github.com/schulzetenberg/Data-Collector.git"
   },
   "scripts": {
-    "postinstall": "export HOME=app-root/runtime/repo; ./node_modules/grunt-cli/bin/grunt",
+		"postinstall": "export HOME=app-root/runtime/repo; ./node_modules/grunt-cli/bin/grunt",
+		"watch": "grunt watch",
     "start": "node nodejs/server.js",
     "precommit": "lint-staged"
   },

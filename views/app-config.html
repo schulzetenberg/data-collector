@@ -1,262 +1,289 @@
 <% include ./partials/header.html %>
 
-  <div class="content-wrapper" ng-controller="appConfigCtrl">
-    <section class="content-header">
-      <h1>
-        <%=title%>
-      </h1>
-      <% if(config.demo){ %>
-      <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i>Home</a></li>
-        <li class="active"><%=title%></li>
-      </ol>
-      <% } %>
-    </section>
+<div class="content-wrapper" ng-controller="appConfigCtrl">
+  <section class="content-header">
+    <h1>
+      <%=title%>
+    </h1>
+    <% if(config.demo){ %>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-dashboard"></i>Home</a></li>
+      <li class="active"><%=title%></li>
+    </ol>
+    <% } %>
+  </section>
 
-    <section class="content" ng-cloak>
-      <%- include ./partials/flash.html %>
+  <section class="content" ng-cloak>
+    <%- include ./partials/flash.html %>
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">Application Scheduler</h3>
-            </div>
-            <div class="box-body">
-              <div class="row">
-                <div class="col-md-8">
-                  <p class="text-center">
-                    <strong>Schedule (Next 24 Hours)</strong>
-                  </p>
-                  <graph data="scheduleList" height="400px" autoresize="true">
-                    <x field="schedule"></x>
-                    <y field="value" title="null" hide="true"></y>
-                    <graph-legend></graph-legend>
-                    <scatter-plot field="app"></scatter-plot>
-                  </graph>
-                </div>
-                <div class="col-md-4">
-                  <p class="text-center">
-                    <strong>Scheduler Options</strong>
-                  </p>
-                  <form class="form-horizontal" style="padding-top:20px;">
-                    <div class="form-group">
-                      <div class="text-center">
-                        <button type="submit" class="btn btn btn-primary" ng-click="restartScheduler()">Restart Scheduler</button>
-                      </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">Application Scheduler</h3>
+          </div>
+          <div class="box-body">
+            <div class="row">
+              <div class="col-md-8">
+                <p class="text-center">
+                  <strong>Schedule (Next 24 Hours)</strong>
+                </p>
+                <graph data="scheduleList" height="400px" autoresize="true">
+                  <x field="schedule"></x>
+                  <y field="value" title="null" hide="true"></y>
+                  <graph-legend></graph-legend>
+                  <scatter-plot field="app"></scatter-plot>
+                </graph>
+              </div>
+              <div class="col-md-4">
+                <p class="text-center">
+                  <strong>Scheduler Options</strong>
+                </p>
+                <form class="form-horizontal" style="padding-top:20px;">
+                  <div class="form-group">
+                    <div class="text-center">
+                      <button type="submit" class="btn btn btn-primary" ng-click="restartScheduler()">
+                        Restart Scheduler
+                      </button>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#addApp" data-toggle="tab" aria-expanded="true"><b>Add Application</b></a></li>
-              <li class="capitalize" ng-repeat="app in appList.existingApp"><a href="#{{app}}" data-toggle="tab" aria-expanded="false" ng-bind="::app | camelCaseToHuman"></a></li>
-            </ul>
-            <div class="tab-content">
-              <div class="tab-pane" id="{{app}}" ng-repeat="app in appList.existingApp">
-                <form class="form-horizontal" style="padding-top:20px;">
-                    <h3 class="capitalize" ng-bind="::app | camelCaseToHuman"></h3>
-                    <div class="form-group" ng-repeat="(key, value) in config[app]">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="nav-tabs-custom">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#addApp" data-toggle="tab" aria-expanded="true">
+                <b>Add Application</b>
+              </a>
+            </li>
+            <li class="capitalize" ng-repeat="app in appList.existingApp">
+              <a href="#{{app}}" data-toggle="tab" aria-expanded="false" ng-bind="::app | camelCaseToHuman"></a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane" id="{{app}}" ng-repeat="app in appList.existingApp">
+              <form class="form-horizontal" style="padding-top:20px;">
+                <h3 class="capitalize" ng-bind="::app | camelCaseToHuman"></h3>
+                <div class="form-group" ng-repeat="(key, value) in config[app]">
 
-                      <span ng-if="getTypeof(value) === 'string'">
-                        <div class="form-group">
-                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                          <div class="col-sm-7">
-                            <input type="text" ng-model="config[app][key]" class="form-control"/>
-                          </div>
-                        </div>
-                      </span>
-
-                      <span ng-if="getTypeof(value) === 'boolean'">
-                        <div class="form-group">
-                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                          <div class="col-sm-7">
-                            <div class="checkbox">
-                              <label></label>
-                              <input type="checkbox" ng-model="config[app][key]">
-                            </div>
-                          </div>
-                        </div>
-                      </span>
-
-                      <span ng-if="getTypeof(value) === 'number'">
-                        <div class="form-group">
-                          <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                          <div class="col-sm-7">
-                            <input type="number" ng-model="config[app][key]" class="form-control"/>
-                          </div>
-                        </div>
-                      </span>
-
-                      <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
-                        <div class="form-group">
-                          <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                          <div class="col-sm-7">
-                            <input type="text" class="form-control" ng-model="added">
-                          </div>
-                          <button type="button" class="col-sm-1 btn btn-success" ng-click="addArrItem(app, key, added); added = ''">Add</button>
-                        </div>
-                        <div class="form-group">
-                          <label class="control-label col-sm-3"></label>
-                          <div class="col-sm-7">
-                            <select class="form-control" ng-model="removed" ng-options="option for option in value"></select>
-                          </div>
-                          <button type="button" class="col-sm-1 btn btn-danger" ng-click="removeArrItem(app, key, removed)">Remove</button>
-                        </div>
-                      </span>
-
-                      <div ng-if="getTypeof(value) === 'arrayObj'" class="table-responsive col-sm-offset-3 col-sm-7">
-                        <table datatable="ng" class="table table-hover table-bordered">
-                          <thead>
-                            <tr>
-                              <th class="capitalize" ng-repeat="(key3, value3) in value[0]" ng-bind="::key3 | camelCaseToHuman"></th>
-                              <th></th>
-                            </tr>
-                            <tr ng-init="addObj = {}">
-                              <th ng-repeat="(key2, value2) in value[0]">
-                                <input class="form-control" type="text" ng-model="addObj[key2]" ng-init="addObj[key2] = ''">
-                              </th>
-                              <th class="text-center">
-                                <button ng-click="addObject(app, key, addObj)" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr ng-repeat="entry in value track by $index">
-                              <td ng-repeat="(key4, value4) in entry" ng-bind="::value4"></td>
-                              <td class="text-center">
-                                <button type="button" ng-click="removeObject(app, key, $index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-
-                      <span ng-if="key === 'scheduleList'">
-                        <div class="form-group">
-                          <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                          <div class="col-sm-7">
-                            <div class="box box-border">
-                              <div class="box-body">
-                                <span ng-repeat="option in value">{{option}} <br></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </span>
-                    </div>
-                  <div class="form-group">
-                    <div class="col-sm-offset-3 col-sm-4">
-                      <button class="btn btn btn-warning" ng-click="runApp(app)">Manually Run</button>
-                      <button class="btn btn btn-primary" ng-click="saveAppConfig()">Update Config</button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-              <div class="tab-pane active" id="addApp">
-                <form class="form-horizontal" style="padding-top:20px;">
-                  <div class="form-group" ng-show="init">
-                    <label class="col-sm-3 control-label"></label>
-                    <div class="col-sm-7">
-                      <button class="btn btn btn-primary" ng-click="initApps()">Initialize Applications</button>
-                    </div>
-                  </div>
-                  <div class="form-group" ng-hide="init">
-                    <label class="col-sm-3 control-label">Application</label>
-                    <div class="col-sm-7">
-                      <select class="form-control" ng-model="selectedNewApp">
-                        <option ng-repeat="option in appList.newApp" value="{{option}}" ng-bind="::option | camelCaseToHuman"></option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group" ng-repeat="(key, value) in config[selectedNewApp]">
-                    <span ng-if="getTypeof(value) === 'string' || value == null">
+                  <span ng-if="getTypeof(value) === 'string'">
+                    <div class="form-group">
                       <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
-                        <input type="text" ng-model="config[selectedNewApp][key]" class="form-control"/>
+                        <input type="text" ng-model="config[app][key]" class="form-control" />
                       </div>
-                    </span>
-                    <span ng-if="getTypeof(value) === 'boolean'">
+                    </div>
+                  </span>
+
+                  <span ng-if="getTypeof(value) === 'boolean'">
+                    <div class="form-group">
                       <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
                         <div class="checkbox">
                           <label></label>
-                          <input type="checkbox" ng-model="config[selectedNewApp][key]">
+                          <input type="checkbox" ng-model="config[app][key]">
                         </div>
                       </div>
-                    </span>
-                    <span ng-if="getTypeof(value) === 'number'">
+                    </div>
+                  </span>
+
+                  <span ng-if="getTypeof(value) === 'number'">
+                    <div class="form-group">
                       <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
                       <div class="col-sm-7">
-                        <input type="number" ng-model="config[selectedNewApp][key]" class="form-control"/>
+                        <input type="number" ng-model="config[app][key]" class="form-control" />
                       </div>
-                    </span>
-                    <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
-                      <div class="form-group">
-                        <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
-                        <div class="col-sm-7">
-                          <input type="text" class="form-control" ng-model="added">
-                        </div>
-                        <button type="button" class="col-sm-1 btn btn-success" ng-click="addArrItem(selectedNewApp, key, added); added = ''">Add</button>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-sm-3"></label>
-                        <div class="col-sm-7">
-                          <select class="form-control" ng-model="removed" ng-options="option for option in value"></select>
-                        </div>
-                        <button type="button" class="col-sm-1 btn btn-danger" ng-click="removeArrItem(selectedNewApp, key, removed)">Remove</button>
-                      </div>
-                    </span>
-                    <div ng-if="getTypeof(value) === 'arrayObj'" class="table-responsive col-sm-offset-3 col-sm-7">
-                      <table datatable="ng" class="table table-hover table-bordered">
-                        <thead>
-                          <tr>
-                            <th class="capitalize" ng-repeat="(key3, value3) in value[0]" ng-bind="::key3 | camelCaseToHuman"></th>
-                            <th></th>
-                          </tr>
-                          <tr ng-init="addObj = {}">
-                            <th ng-repeat="(key2, value2) in value[0]">
-                              <input class="form-control" type="text" ng-model="addObj[key2]">
-                            </th>
-                            <th class="text-center">
-                              <button ng-click="addObject(selectedNewApp, key, addObj)" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr ng-repeat="entry in value track by $index">
-                            <td ng-repeat="(key4, value4) in entry" ng-bind="::value4"></td>
-                            <td class="text-center">
-                              <!-- <button type="button" ng-click="removeObject(selectedNewApp, key, $index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button> -->
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
                     </div>
-                  </div>
-                  <div class="form-group" ng-hide="init">
-                    <div class="col-sm-offset-3 col-sm-4">
-                      <button class="btn btn btn-danger"  ng-click="getData()">Cancel</button>
-                      <button type="submit" class="btn btn btn-primary" ng-click="saveAppConfig()">Save Application</button>
+                  </span>
+
+                  <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
+                    <div class="form-group">
+                      <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control" ng-model="added">
+                      </div>
+                      <button type="button" class="col-sm-1 btn btn-success"
+                          ng-click="addArrItem(app, key, added); added = ''">Add</button>
                     </div>
+                    <div class="form-group">
+                      <label class="control-label col-sm-3"></label>
+                      <div class="col-sm-7">
+                        <select class="form-control" ng-model="removed"
+                            ng-options="option for option in value"></select>
+                      </div>
+                      <button type="button" class="col-sm-1 btn btn-danger"
+                          ng-click="removeArrItem(app, key, removed)">Remove</button>
+                    </div>
+                  </span>
+
+                  <div ng-if="getTypeof(value) === 'arrayObj'" class="table-responsive col-sm-offset-3 col-sm-7">
+                    <table datatable="ng" class="table table-hover table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="capitalize" ng-repeat="(key3, value3) in value[0]"
+                              ng-bind="::key3 | camelCaseToHuman"></th>
+                          <th></th>
+                        </tr>
+                        <tr ng-init="addObj = {}">
+                          <th ng-repeat="(key2, value2) in value[0]">
+                            <input class="form-control" type="text" ng-model="addObj[key2]" ng-init="addObj[key2] = ''">
+                          </th>
+                          <th class="text-center">
+                            <button ng-click="addObject(app, key, addObj)" class="btn btn-success">
+                              <i class="fa fa-plus"></i>
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="entry in value track by $index">
+                          <td ng-repeat="(key4, value4) in entry" ng-bind="::value4"></td>
+                          <td class="text-center">
+                            <button type="button" ng-click="removeObject(app, key, $index)" class="btn btn-danger">
+                              <i class="fa fa-trash-o"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </form>
-              </div>
+
+                  <span ng-if="key === 'scheduleList'">
+                    <div class="form-group">
+                      <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                      <div class="col-sm-7">
+                        <div class="box box-border">
+                          <div class="box-body">
+                            <span ng-repeat="option in value">{{option}} <br></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-offset-3 col-sm-4">
+                    <button class="btn btn btn-warning" ng-click="runApp(app)">Manually Run</button>
+                    <button class="btn btn btn-primary" ng-click="saveAppConfig()">Update Config</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="tab-pane active" id="addApp">
+              <form class="form-horizontal" style="padding-top:20px;">
+                <div class="form-group" ng-show="init">
+                  <label class="col-sm-3 control-label"></label>
+                  <div class="col-sm-7">
+                    <button class="btn btn btn-primary" ng-click="initApps()">
+                      Initialize Applications
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group" ng-hide="init">
+                  <label class="col-sm-3 control-label">Application</label>
+                  <div class="col-sm-7">
+                    <select class="form-control" ng-model="selectedNewApp">
+                      <option ng-repeat="option in appList.newApp" value="{{option}}"
+                          ng-bind="::option | camelCaseToHuman"></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" ng-repeat="(key, value) in config[selectedNewApp]">
+                  <span ng-if="getTypeof(value) === 'string' || value == null">
+                    <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                    <div class="col-sm-7">
+                      <input type="text" ng-model="config[selectedNewApp][key]" class="form-control" />
+                    </div>
+                  </span>
+                  <span ng-if="getTypeof(value) === 'boolean'">
+                    <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                    <div class="col-sm-7">
+                      <div class="checkbox">
+                        <label></label>
+                        <input type="checkbox" ng-model="config[selectedNewApp][key]">
+                      </div>
+                    </div>
+                  </span>
+                  <span ng-if="getTypeof(value) === 'number'">
+                    <label class="col-sm-3 control-label capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                    <div class="col-sm-7">
+                      <input type="number" ng-model="config[selectedNewApp][key]" class="form-control" />
+                    </div>
+                  </span>
+                  <span ng-if="getTypeof(value) === 'array' && key !== 'scheduleList'">
+                    <div class="form-group">
+                      <label class="control-label col-sm-3 capitalize" ng-bind="::key | camelCaseToHuman"></label>
+                      <div class="col-sm-7">
+                        <input type="text" class="form-control" ng-model="added">
+                      </div>
+                      <button type="button" class="col-sm-1 btn btn-success"
+                          ng-click="addArrItem(selectedNewApp, key, added); added = ''">Add</button>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-sm-3"></label>
+                      <div class="col-sm-7">
+                        <select class="form-control" ng-model="removed"
+                            ng-options="option for option in value"></select>
+                      </div>
+                      <button type="button" class="col-sm-1 btn btn-danger"
+                          ng-click="removeArrItem(selectedNewApp, key, removed)">Remove</button>
+                    </div>
+                  </span>
+                  <div ng-if="getTypeof(value) === 'arrayObj'" class="table-responsive col-sm-offset-3 col-sm-7">
+                    <table datatable="ng" class="table table-hover table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="capitalize" ng-repeat="(key3, value3) in value[0]"
+                              ng-bind="::key3 | camelCaseToHuman"></th>
+                          <th></th>
+                        </tr>
+                        <tr ng-init="addObj = {}">
+                          <th ng-repeat="(key2, value2) in value[0]">
+                            <input class="form-control" type="text" ng-model="addObj[key2]">
+                          </th>
+                          <th class="text-center">
+                            <button ng-click="addObject(selectedNewApp, key, addObj)" class="btn btn-success">
+                              <i class="fa fa-plus"></i>
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="entry in value track by $index">
+                          <td ng-repeat="(key4, value4) in entry" ng-bind="::value4"></td>
+                          <td class="text-center">
+                            <!-- <button type="button" ng-click="removeObject(selectedNewApp, key, $index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button> -->
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="form-group" ng-hide="init">
+                  <div class="col-sm-offset-3 col-sm-4">
+                    <button class="btn btn btn-danger" ng-click="getData()">Cancel</button>
+                    <button type="submit" class="btn btn btn-primary" ng-click="saveAppConfig()">
+                      Save Application
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-    </section>
-  </div>
+  </section>
+</div>
 
 <% include ./partials/footer.html %>

@@ -2,6 +2,8 @@ const async = require('async');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
+const moment = require('moment');
+
 const User = require('../models/User');
 const secrets = require('../config/secrets');
 
@@ -358,4 +360,17 @@ exports.postForgot = (req, res, next) => {
       res.redirect('/forgot');
     }
   );
+};
+
+exports.getNewApiKey = (req, res, next) => {
+  crypto.randomBytes(16, (err, buf) => {
+    if (err) return next(err);
+
+    const tokenObject = {
+      token: buf.toString('hex'),
+      createdAt: moment(),
+    };
+
+    res.json(tokenObject);
+  });
 };

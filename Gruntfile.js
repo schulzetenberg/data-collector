@@ -1,13 +1,12 @@
-module.exports = function(grunt) {
-  'use strict';
-
+module.exports = (grunt) => {
+  // eslint-disable-next-line global-require
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
     watch: {
       // If any files change, run tasks
-      files: ['build/less/*.less', 'build/less/skins/*.less', 'dist/js/*.js'],
-      tasks: ['less:development', 'uglify:jsDev', 'uglify:angularDev', 'concat'],
+      files: ['build/less/**/*.less', 'dist/js/*.js'],
+      tasks: ['dev'],
     },
 
     // 'less'-task configuration
@@ -23,7 +22,7 @@ module.exports = function(grunt) {
           'dist/css/AdminLTE.css': 'build/less/AdminLTE.less',
           'dist/css/custom.css': 'build/less/custom/custom.less',
           'dist/css/override.css': 'build/less/custom/override.less',
-          //Non minified skin files
+          // Non minified skin files
           'dist/css/skins/skin-blue.css': 'build/less/skins/skin-blue.less',
           'dist/css/skins/skin-black.css': 'build/less/skins/skin-black.less',
           'dist/css/skins/skin-yellow.css': 'build/less/skins/skin-yellow.less',

@@ -41,14 +41,16 @@
           <span ng-show="form.email.$error.email">Email address is invalid</span>
         </div>
         <div class="form-group has-feedback">
-          <input type="email" name="email" placeholder="Email" autofocus="autofocus" required class="form-control" ng-model="email" ng-model-options="{updateOn: 'blur'}" />
+          <input type="email" name="email" placeholder="Email" autofocus="autofocus" required class="form-control"
+              ng-model="email" ng-model-options="{updateOn: 'blur'}" />
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
         </div>
         <div ng-show="form.$submitted || form.password.$touched">
           <span ng-show="form.password.$error.required">Please enter your password</span>
         </div>
         <div class="form-group has-feedback">
-          <input type="password" name="password" placeholder="Password" required class="form-control" ng-model="password" ng-model-options="{updateOn: 'blur'}" />
+          <input type="password" name="password" placeholder="Password" required class="form-control"
+              ng-model="password" ng-model-options="{updateOn: 'blur'}" />
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="row">
@@ -89,7 +91,7 @@
   </script>
 
   <script>
-    $(function () {
+    $(() => {
       $('input').iCheck({
         checkboxClass: 'icheckbox_flat-blue',
         radioClass: 'iradio_flat-blue',
