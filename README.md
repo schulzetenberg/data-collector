@@ -30,9 +30,11 @@ MongoDB (Tested on 3.4)
 Install
 -------
 After installing Node.js & npm:
-- $ npm i -g grunt-cli
-- $ npm i
-- $ grunt build
+```console
+$ npm i -g grunt-cli
+$ npm i
+$ grunt build
+```
 
 Run
 -------
@@ -52,6 +54,10 @@ Deployment on Google Cloud Platform - Compute
 
 Re-deploy on GCP
 --------
-SSH into the VM
+SSH into the GCP VM
+```console
 $ sudo su - bitnami
-$ /home/bitnami/apps/collector/htdocs/start-data-collector.sh
+$ cd /home/bitnami/apps/collector/htdocs/
+$ git pull
+$ ./start-data-collector.sh
+```
