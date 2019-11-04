@@ -1,36 +1,37 @@
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var secrets = require('./secrets');
-var User = require('../models/User');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+// const secrets = require('./secrets');
+const User = require('../models/User');
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
     done(err, user);
   });
 });
 
+// Sign in using Email and Password.
+passport.use(
+  new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+    const emailLowerCase = email.toLowerCase();
 
-//Sign in using Email and Password.
-passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
-  email = email.toLowerCase();
-  User.findOne({ email: email }, function(err, user) {
-    if (!user) return done(null, false, { message: 'Email ' + email + ' not found'});
-    user.comparePassword(password, function(err, isMatch) {
-      if (isMatch) {
-        return done(null, user);
-      } else {
+    User.findOne({ emailLowerCase }, (err, user) => {
+      if (!user) return done(null, false, { message: `Email ${email} not found` });
+      user.comparePassword(password, (err, isMatch) => {
+        if (isMatch) {
+          return done(null, user);
+        }
         return done(null, false, { message: 'Invalid email or password.' });
-      }
+      });
     });
-  });
-}));
+  })
+);
 
 // Login Required middleware.
-exports.isAuthenticated = function(req, res, next) {
+exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) return next();
   req.session.returnTo = req.originalUrl; // Save requested URL
   res.redirect('/login');
