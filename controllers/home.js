@@ -1,3 +1,5 @@
+const path = require('path');
+
 /**
  * GET /
  * Home page.
@@ -8,4 +10,8 @@ exports.index = (req, res) => {
   req.flash('warning', { msg: 'Warning messages go here' });
   req.flash('success', { msg: 'Success messages go here' });
   res.render('home.html', { title: 'Home' });
+};
+
+exports.getReactPage = (req, res) => {
+	res.sendFile(path.join(__dirname, '../frontend/build/index.html'), { title: 'React' });
 };

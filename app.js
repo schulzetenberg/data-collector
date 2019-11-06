@@ -26,7 +26,7 @@ const logger = require('./nodejs/log.js');
 /**
  * Controllers (route handlers).
  */
-// const homeController = require('./controllers/home');
+const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const settingsController = require('./controllers/settings');
 const appConfigController = require('./controllers/app-config');
@@ -79,7 +79,7 @@ app.use(
     }, // log only HTTP request errors
   })
 );
-app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
+app.use(favicon(path.join(__dirname, 'frontend/build', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -138,6 +138,7 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'public'), publicOpts));
+app.use('/react', express.static(path.join(__dirname, 'frontend/build'), publicOpts));
 app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
@@ -174,6 +175,7 @@ const init = require('./nodejs/init');
  */
 // app.get('/', homeController.index); // Default home page
 app.get('/', passportConf.isAuthenticated, appConfigController.getConfigPage);
+app.get('/react', homeController.getReactPage);
 app.get('/app-config', passportConf.isAuthenticated, appConfigController.getConfigPage);
 app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
 app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);

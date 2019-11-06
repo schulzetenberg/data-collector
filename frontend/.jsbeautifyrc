@@ -1,0 +1,18 @@
+{
+	"html": {
+	  "indent_handlebars": true,
+	  "indent_inner_html": false,
+	  "indent_scripts": "normal",
+	  "indent_size": 2,
+	  "indent_char": " ",
+	  "indent_with_tabs": false,
+	  "eol": "\n",
+	  "end_with_newline": true,
+	  "preserve_newlines": true,
+	  "max_preserve_newlines": 2,
+	  "brace_style": "collapse",
+	  "wrap_line_length": 120,
+	  "wrap_attributes": "auto",
+	  "wrap_attributes_indent_size": 4
+	}
+  }

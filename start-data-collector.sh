@@ -3,6 +3,11 @@ export IP_ADDRESS=0.0.0.0
 export PORT=3000
 export DB=mongodb://root:PASSWORDHERE!!!!!!!@localhost:27017/data-collector?authSource=admin
 
+cd frontend
+npm i
+npm run build
+
+cd ..
 npm i
 
 forever stopall

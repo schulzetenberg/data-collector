@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-prettier"
+  ],
+  "ignoreFiles": [],
+  "rules": {
+    # Override defaults
+    "no-empty-source": null,
+    "at-rule-no-unknown": [true, {
+      "ignoreAtRules": [
+        "last",
+        "extend",
+        "debug",
+        "warn",
+        "error",
+        "if",
+        "else",
+        "for",
+        "each",
+        "while",
+        "mixin",
+        "include",
+        "return",
+        "function"
+      ]
+    }]
+  }
+}
