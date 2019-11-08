@@ -23,12 +23,13 @@ module.exports = {
   sessionSecret: process.env.SESSION_SECRET || 'Your Session Secret goes here',
 
   sendgrid: {
-    apiKey: process.env.SENDGRID_APIKEY || 'apiKey123'
+    apiKey: process.env.SENDGRID_APIKEY || 'apiKey123',
   },
 
   defaults: {
-    emailTo: 'Jacob.Schulzetenberg@gmail.com',
-    emailFrom: 'Data.Collector@schulzetenberg.com'
+		emailTo: 'me@gmail.com',
+		emailFrom: 'Data_Collector@me.com',
+		emailFromName: 'Data Collector',
   }
 
 };
