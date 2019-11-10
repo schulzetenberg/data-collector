@@ -16,15 +16,15 @@ const Routes: React.FC = () => {
       <Route path="/sign-in">
         <SignIn />
       </Route>
-			<Route path="/sign-up">
+      <Route path="/sign-up">
         <SignUp />
       </Route>
-			<Route path="/forgot-password">
+      <Route path="/forgot-password">
         <ForgotPassword />
       </Route>
-			<Route>
-				<NotFound />
-			</Route>
+      <Route>
+        <NotFound />
+      </Route>
     </Switch>
   );
 };

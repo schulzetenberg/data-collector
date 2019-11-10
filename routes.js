@@ -48,7 +48,7 @@ module.exports = (app) => {
 		}),
 		userController.postSignin
 	);
-	app.get('/logout', userController.logout);
+	app.post('/logout', userController.logout);
 	app.get('/forgot', userController.getForgot);
 	app.post('/forgot', userController.postForgot);
 	app.get('/reset/:token', userController.getReset);

@@ -81,8 +81,11 @@ exports.postSignin = (req, res, next) => {
 				return response.serverError(res, 'Error logging in user');
 			}
 
-			const data = { name: user.profile.name, email: user.email };
-			response.success(res, { data });
+			// Reset the failure counter for this user
+			req.brute.reset(() => {
+				const data = { name: user.profile.name, email: user.email };
+				response.success(res, { data });
+			});
 		});
   })(req, res, next);
 };

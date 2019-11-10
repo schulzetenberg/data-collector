@@ -94,7 +94,6 @@ const SignIn: React.FC = () => {
   return (
     (loginSuccess && <Redirect to="/" />) || (
       <Container component="main" maxWidth="xs">
-        <div>{state.name}</div>
         <Box mt={5}>
           <Link variant="button" component={RouterLink} to="/" color="textPrimary">
             <Typography variant="h4" align="center" gutterBottom>
