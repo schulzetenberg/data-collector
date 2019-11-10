@@ -10,7 +10,6 @@ Features
 - Flash notifications
 - MVC Project Structure
 - Bootstrap 3
-- Contact Form
 - **Account Management**
  - Profile picture
  - Profile Details

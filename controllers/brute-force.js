@@ -1,10 +1,9 @@
-/**
- * Brute force attack prevention
- */
 const moment = require('moment');
 const ExpressBrute = require('express-brute');
 const MongoStore = require('express-brute-mongo');
 const { MongoClient } = require('mongodb');
+
+const response = require('../nodejs/response');
 const secrets = require('../config/secrets');
 
 const store = new MongoStore((ready) => {
@@ -13,17 +12,16 @@ const store = new MongoStore((ready) => {
     ready(db.collection('bruteforce-store'));
   });
 });
-const bruteforce = new ExpressBrute(store);
+
+new ExpressBrute(store);
 
 const failCallback = (req, res, next, nextValidRequestDate) => {
-  req.flash('error', {
-    msg: `You've made too many failed attempts, please try again ${moment(nextValidRequestDate).fromNow()}`,
-  });
-  res.redirect('/login'); // brute force protection triggered, send them back to the login page
+	response.userError(res, `You've made too many failed login attempts, please try again ${moment(nextValidRequestDate).fromNow()}`);
 };
 
 const handleStoreError = (error) => {
-  console.log(error); // log this error so we can figure out what went wrong
+	console.log(error);
+
   // cause node to exit, hopefully restarting the process fixes the problem
   throw {
     message: error.message,
@@ -31,7 +29,7 @@ const handleStoreError = (error) => {
   };
 };
 
-// Start slowing requests after 5 failed attempts to do something for the same user
+// Start slowing requests after 5 failed attempts for the same user
 exports.userBruteforce = new ExpressBrute(store, {
   freeRetries: 5,
   proxyDepth: 1,

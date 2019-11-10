@@ -1,6 +1,4 @@
-/**
- * Module dependencies.
- */
+// Module dependencies
 const express = require('express');
 const lessMiddleware = require('less-middleware');
 const cookieParser = require('cookie-parser');
@@ -18,32 +16,14 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const assets = require('express-asset-versions');
 
-/**
- * Logging configuration
- */
+// Logging configuration
 const logger = require('./nodejs/log.js');
 
-/**
- * Controllers (route handlers).
- */
-const homeController = require('./controllers/home');
-const userController = require('./controllers/user');
-const settingsController = require('./controllers/settings');
-const appConfigController = require('./controllers/app-config');
-const contactController = require('./controllers/contact');
-const apiController = require('./controllers/api');
-const bruteforceController = require('./controllers/brute-force');
-
-/**
- * API keys and configuration.
- */
+// API keys and configuration.
 const secrets = require('./config/secrets');
-const passportConf = require('./config/passport');
 const webConfig = require('./config/web');
 
-/**
- * Development options
- */
+// Development options
 let cookieOpts = {
   httpOnly: false,
   secure: false,
@@ -54,19 +34,10 @@ let publicOpts = {
 let lessDebug = true;
 let lessCompileOnce = true;
 
-/**
- * Create Express server.
- */
 const app = express();
-
-/**
- * Connect to MongoDB.
- */
 require('./nodejs/db');
 
-/**
- * Express configuration.
- */
+// Express configuration
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -153,83 +124,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Remember me on login page
-app.use((req, res, next) => {
-  if (req.method === 'POST' && req.url === '/login') {
-    if (req.body.rememberMe) {
-      req.session.cookie.maxAge = 2592000000; // Remember for 30 days
-    } else {
-      req.session.cookie.expires = false; // Else, cookie expires at end of session
-    }
-  }
-  next();
-});
-
 const scheduler = require('./nodejs/scheduler');
-
 scheduler.run();
-const init = require('./nodejs/init');
 
-/**
- * Primary app routes.
- */
-// app.get('/', homeController.index); // Default home page
-app.get('/', passportConf.isAuthenticated, appConfigController.getConfigPage);
-app.get('/react', homeController.getReactPage);
-app.get('/app-config', passportConf.isAuthenticated, appConfigController.getConfigPage);
-app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
-app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
-app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
-app.get('/app-config/scheduler', passportConf.isAuthenticated, (req, res) => {
-  scheduler.run();
-  res.sendStatus(200);
-});
-app.get('/app-config/init', passportConf.isAuthenticated, (req, res) => {
-  init.run();
-  res.sendStatus(200);
-});
+// App routes
+require('./routes')(app);
 
-app.get('/settings', passportConf.isAuthenticated, settingsController.getSettings);
-
-app.get('/login', userController.getLogin);
-app.post(
-  '/login',
-  bruteforceController.globalBruteforce.prevent,
-  bruteforceController.userBruteforce.getMiddleware({
-    key(req, res, next) {
-      next(req.body.email);
-    },
-  }),
-  userController.postLogin
-);
-app.get('/logout', userController.logout);
-app.get('/forgot', userController.getForgot);
-app.post('/forgot', userController.postForgot);
-app.get('/reset/:token', userController.getReset);
-app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
-app.post('/signup', userController.postSignup);
-app.get('/api-key', userController.getNewApiKey);
-
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
-
-app.get('/account', passportConf.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
-app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
-app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
-
-app.get('/api/music', apiController.getMusic);
-app.get('/api/goodreads', apiController.getGoodreads);
-app.get('/api/github', apiController.getGithub);
-app.get('/api/trakt', apiController.getTrakt);
-app.get('/api/states', apiController.getStates);
-app.get('/api/countries', apiController.getCountries);
-app.get('/api/fuelly', apiController.getFuelly);
-app.get('/api/fuelly-avg', apiController.getFuellyAvg);
-app.get('/api/player-fm', apiController.getPlayerFm);
-
-// Testing
+// Used for testing
 app.get('/404', (req, res) => {
   res.render('404.html', {
     title: '404',
@@ -273,11 +174,13 @@ if (app.get('env') === 'production') {
         title: '500',
       });
     } else if (req.accepts('json')) {
+			// Respond with JSON
       res.send({
         error: 'Internal Server Error',
-      }); // Respond with JSON
+      });
     } else {
-      res.type('txt').send('Internal Server Error'); // Fall back to plain text
+			// Fall back to plain text
+      res.type('txt').send('Internal Server Error');
     }
   });
 } else {

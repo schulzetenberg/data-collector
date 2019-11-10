@@ -33,36 +33,6 @@ before(function(done) {
   });
 });
 
-describe('Contact page', function () {
-  var session;
-  var csrfToken;
-
-  beforeEach(function (done) {
-    session = new Session();
-    session.get('/contact')
-    .end(function (err, res) {
-      if (err) return done(err);
-      csrfToken = extractCsrfToken(res);
-      done();
-    });
-  });
-
-  describe('POST /contact', function () {
-    it('should be unauthorized', function (done) {
-      session
-        .post('/contact')
-        .send({
-          name:"Tester",
-          email:"testing@1.com",
-          body:"Test body.",
-          _csrf: csrfToken })
-        .expect(302)
-        .expect('Location', '/contact')
-        .end(done)
-    });
-  });
-});
-
 describe('GET: user not logged in', function () {
 
   var session;
@@ -91,14 +61,6 @@ describe('GET: user not logged in', function () {
     it('should return 200 OK', function(done) {
       session
         .get('/forgot')
-        .expect(200, done);
-    });
-  });
-
-  describe('GET /contact', function() {
-    it('should return 200 OK', function(done) {
-      session
-        .get('/contact')
         .expect(200, done);
     });
   });

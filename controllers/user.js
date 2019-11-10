@@ -1,16 +1,14 @@
 const async = require('async');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const passport = require('passport');
 const moment = require('moment');
 
+const logger = require('../nodejs/log');
+const email = require('../nodejs/email');
 const User = require('../models/User');
-const secrets = require('../config/secrets');
+const response = require('../nodejs/response');
 
-/**
- * GET /login
- * Login page.
- */
+// Login page
 exports.getLogin = (req, res) => {
   if (req.user) {
     res.redirect(req.session.returnTo || '/');
@@ -21,11 +19,12 @@ exports.getLogin = (req, res) => {
 };
 
 /**
+ * TODO: Delete after move to React
  * POST /login
  * Sign in using email and password.
  */
 exports.postLogin = (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password cannot be blank').notEmpty();
 
   const errors = req.validationErrors();
@@ -52,19 +51,49 @@ exports.postLogin = (req, res, next) => {
   })(req, res, next);
 };
 
-/**
- * GET /logout
- * Log out.
- */
-exports.logout = (req, res) => {
-  req.logout();
-  res.redirect('/');
+exports.postSignin = (req, res, next) => {
+  req.assert('email', 'Email address is not valid').isEmail();
+  req.assert('password', 'Password cannot be blank').notEmpty();
+
+  const errors = req.validationErrors();
+  if (errors)	return response.userError(res, errors);
+
+  return passport.authenticate('local', async (err, user, info) => {
+		if(err) {
+			logger.error(err);
+			return response.serverError(res, 'Error authenticating user');
+		}
+
+    if (!user) {
+			return response.userError(res, info.message);
+		}
+
+		// TODO: Test this
+		if (req.body.remember) {
+      req.session.cookie.maxAge = 2592000000; // Remember for 30 days
+    } else {
+      req.session.cookie.expires = false; // Else, cookie expires at end of session
+    }
+
+		req.logIn(user, (err) => {
+			if(err) {
+				logger.error(err);
+				return response.serverError(res, 'Error logging in user');
+			}
+
+			const data = { name: user.profile.name, email: user.email };
+			response.success(res, { data });
+		});
+  })(req, res, next);
 };
 
-/**
- * GET /signup
- * Signup page.
- */
+// Log out
+exports.logout = (req, res) => {
+  req.logout();
+	response.success(res);
+};
+
+// Signup page
 exports.getSignup = (req, res) => {
   if (req.user) return res.redirect('/');
   res.render('account/signup.html', {
@@ -72,60 +101,64 @@ exports.getSignup = (req, res) => {
   });
 };
 
-/**
- * POST /signup
- * Create a new local account.
- */
-exports.postSignup = (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
+// Create a new local account
+exports.postSignup = async (req, res, next) => {
+  req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
   // Allow only one account (For now)
-  req.assert('email', 'Only admin@1.com is allowed').equals('admin@1.com');
+  // req.assert('email', 'Only admin@1.com is allowed').equals('admin@1.com');
 
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
-    return res.redirect('/signup');
+		return response.userError(res, errors);
   }
 
   const user = new User({
     profile: { name: req.body.name },
     email: req.body.email,
     password: req.body.password,
-  });
+	});
 
-  User.findOne({ email: req.body.email }, (err, existingUser) => {
-    if (existingUser) {
-      req.flash('error', { msg: 'Account with that email address already exists.' });
-      return res.redirect('/signup');
-    }
-    user.save((err) => {
-      if (err) return next(err);
-      req.logIn(user, (err) => {
-        if (err) return next(err);
-        res.redirect('/');
-      });
-    });
-  });
+	try {
+		const existingUser = await User.findOne({ email: req.body.email });
+
+		if (existingUser) {
+			return response.userError(res, 'Account with that email address already exists');
+		}
+	} catch (e) {
+		logger.error(e);
+		return response.serverError(res, 'Error performing user lookup');
+	}
+
+	try {
+		await user.save();
+	} catch (e) {
+		logger.error(err);
+		return response.serverError(res, 'Error saving new user');
+	}
+
+	req.logIn(user, (err) => {
+		if(err) {
+			logger.error(err);
+			return response.serverError(res, 'Error logging in user');
+		}
+
+		const data = { name: user.profile.name, email: user.email };
+		response.success(res, { data });
+	});
 };
 
-/**
- * GET /account
- * Profile page.
- */
+// Profile page
 exports.getAccount = (req, res) => {
   res.render('account/profile.html', {
     title: 'Account Management',
   });
 };
 
-/**
- * POST /account/profile
- * Update profile information.
- */
+// Update profile information
 exports.postUpdateProfile = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) return next(err);
@@ -149,10 +182,7 @@ exports.postUpdateProfile = (req, res, next) => {
   });
 };
 
-/**
- * POST /account/password
- * Update current password.
- */
+// Update current password
 exports.postUpdatePassword = (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -177,10 +207,7 @@ exports.postUpdatePassword = (req, res, next) => {
   });
 };
 
-/**
- * POST /account/delete
- * Delete user account.
- */
+// Delete the user account
 exports.postDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) return next(err);
@@ -190,10 +217,7 @@ exports.postDeleteAccount = (req, res, next) => {
   });
 };
 
-/**
- * GET /reset/:token
- * Reset Password page.
- */
+// Reset Password page
 exports.getReset = (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect('/');
@@ -203,7 +227,7 @@ exports.getReset = (req, res) => {
     .gt(Date.now())
     .exec((err, user) => {
       if (!user) {
-        req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
+        req.flash('error', { msg: 'Password reset token is invalid or has expired' });
         return res.redirect('/forgot');
       }
       res.render('account/reset.html', {
@@ -212,13 +236,10 @@ exports.getReset = (req, res) => {
     });
 };
 
-/**
- * POST /reset/:token
- * Process the reset password request.
- */
-exports.postReset = (req, res, next) => {
-  req.assert('password', 'Password must be at least 4 characters long.').len(4);
-  req.assert('confirm', 'Passwords must match.').equals(req.body.password);
+// Process the reset password request
+exports.postReset = async (req, res) => {
+  req.assert('password', 'Password must be at least 4 characters long').len(4);
+  req.assert('confirm', 'Passwords must match').equals(req.body.password);
 
   const errors = req.validationErrors();
 
@@ -227,63 +248,63 @@ exports.postReset = (req, res, next) => {
     return res.redirect('back');
   }
 
-  async.waterfall(
-    [
-      (done) => {
-        User.findOne({ resetPasswordToken: req.params.token })
-          .where('resetPasswordExpires')
-          .gt(Date.now())
-          .exec((err, user) => {
-            if (!user) {
-              req.flash('error', { msg: 'Password reset token is invalid or has expired.' });
-              return res.redirect('back');
-            }
+	let user;
 
-            user.password = req.body.password;
-            user.resetPasswordToken = undefined;
-            user.resetPasswordExpires = undefined;
+	try {
+		user = await User.findOne({
+			resetPasswordToken: req.params.token,
+			resetPasswordExpires: { $gt: Date.now() },
+		});
+	} catch (e) {
+		logger.error('Error finding user', e);
+		return res.sendStatus(500);
+	}
 
-            user.save((err) => {
-              if (err) return next(err);
-              req.logIn(user, (err) => {
-                done(err, user);
-              });
-            });
-          });
-      },
-      (user, done) => {
-        const transporter = nodemailer.createTransport({
-          service: 'SendGrid',
-          auth: {
-            user: secrets.sendgrid.user,
-            pass: secrets.sendgrid.password,
-          },
-        });
-        const mailOptions = {
-          to: user.email,
-          from: 'hackathon@starter.com',
-          subject: 'Your Hackathon Starter password has been changed',
-          text: `${'Hello,\n\n' + 'This is a confirmation that the password for your account '}${
-            user.email
-          } has just been changed.\n`,
-        };
-        transporter.sendMail(mailOptions, (err) => {
-          req.flash('success', { msg: 'Success! Your password has been changed.' });
-          done(err);
-        });
-      },
-    ],
-    (err) => {
-      if (err) return next(err);
-      res.redirect('/');
-    }
-  );
+	if (!user) {
+		return res.status(400).send('Password reset token is invalid or has expired');
+	}
+
+	user.password = req.body.password;
+	user.resetPasswordToken = undefined;
+	user.resetPasswordExpires = undefined;
+
+	try {
+		await user.save();
+	} catch (e) {
+		logger.error('Error saving password reset', e);
+		return res.sendStatus(500);
+	}
+
+	req.logIn(user, (err) => {
+		if(err) {
+			logger.error('Error logging in user', e);
+		}
+		// Send 200 either way, since it is not critical the user gets logged in
+		res.sendStatus(200);
+	});
+
+	const mailOptions = {
+		to: user.email,
+		subject: 'Your Data Collector password has been changed',
+		html: `
+			Hello,
+			<br /><br />
+			This is a confirmation that the password for your account ${user.email} has just been changed.
+			<br />
+		`,
+	};
+
+	try {
+		await email.send(mailOptions);
+	} catch (e) {
+		logger.error('Error sending password change email', e);
+		return res.sendStatus(500);
+	}
+
+	res.sendStatus(200);
 };
 
-/**
- * GET /forgot
- * Forgot Password page.
- */
+// Forgot Password page
 exports.getForgot = (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect('/');
@@ -293,84 +314,79 @@ exports.getForgot = (req, res) => {
   });
 };
 
-/**
- * POST /forgot
- * Create a random token, then the send user an email with a reset link.
- */
-exports.postForgot = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+// Create a random token, then send the user an email with a reset link
+exports.postForgot = async (req, res) => {
+  req.assert('email', 'Please enter a valid email address').isEmail();
 
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
-    return res.redirect('/forgot');
-  }
+		return response.userError(res, errors);
+	}
 
-  async.waterfall(
-    [
-      (done) => {
-        crypto.randomBytes(16, (err, buf) => {
-          const token = buf.toString('hex');
-          done(err, token);
-        });
-      },
-      (token, done) => {
-        User.findOne({ email: req.body.email.toLowerCase() }, (err, user) => {
-          if (!user) {
-            req.flash('error', { msg: 'No account with that email address exists.' });
-            return res.redirect('/forgot');
-          }
+	let token;
+	let user;
 
-          user.resetPasswordToken = token;
-          user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+	try {
+		token = await crypto.randomBytes(16).toString('hex');
+	} catch (e) {
+		logger.error(e);
+		return response.serverError(res, 'Error generating token');
+	}
 
-          user.save((err) => {
-            done(err, token, user);
-          });
-        });
-      },
-      (token, user, done) => {
-        const transporter = nodemailer.createTransport({
-          service: 'SendGrid',
-          auth: {
-            user: secrets.sendgrid.user,
-            pass: secrets.sendgrid.password,
-          },
-        });
+	try {
+		user = await User.findOne({ email: req.body.email.toLowerCase() });
+	} catch (e) {
+		return response.serverError(res, 'Error finding user');
 
-        const mailOptions = {
-          to: user.email,
-          from: 'hackathon@starter.com',
-          subject: 'Reset your password on Hackathon Starter',
-          text:
-            `${'You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n' +
-              'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-              'http://'}${req.headers.host}/reset/${token}\n\n` +
-            `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
-        };
-        transporter.sendMail(mailOptions, (err) => {
-          req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
-          done(err, 'done');
-        });
-      },
-    ],
-    (err) => {
-      if (err) return next(err);
-      res.redirect('/forgot');
-    }
-  );
+	}
+
+	if (!user) {
+		return response.userError(res, 'No account with that email address found');
+	}
+
+	user.resetPasswordToken = token;
+	user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+	try {
+		await user.save();
+	} catch (e) {
+		logger.error(e);
+		return response.serverError(res, 'Error saving reset token');
+	}
+
+	const mailOptions = {
+		to: user.email,
+		subject: 'Reset your password on Data Collector',
+		html: `
+			You are receiving this email because you (or someone else) have requested a password reset for your account.
+			<br /><br />
+			Please click on the following link, or paste the link into your browser to complete the process:
+			<br /><br />
+			http://${req.headers.host}/reset/${token}
+			<br /><br />
+			This link expires in one hour. If you did not request a password reset, please ignore this email and your password will remain unchanged.
+			<br />
+		`,
+	};
+
+	try {
+		await email.send(mailOptions);
+	} catch (e) {
+		logger.error(e);
+		return response.serverError(res, 'Error sending email reset token');
+	}
+
+	response.success(res);
 };
 
-exports.getNewApiKey = (req, res, next) => {
-  crypto.randomBytes(16, (err, buf) => {
-    if (err) return next(err);
-
-    const tokenObject = {
-      token: buf.toString('hex'),
-      createdAt: moment(),
-    };
-
-    res.json(tokenObject);
-  });
+// Create a 16 digit unique key
+exports.getNewApiKey = async (req, res) => {
+	try {
+		const token = await crypto.randomBytes(16).toString('hex');
+		response.success(res, { token, createdAt: moment() });
+	} catch (e) {
+		logger.error(e);
+		return response.serverError(res, 'Error generating token');
+	}
 };

@@ -6,8 +6,8 @@
     "url": "https://github.com/schulzetenberg/Data-Collector.git"
   },
   "scripts": {
-		"postinstall": "export HOME=app-root/runtime/repo; ./node_modules/grunt-cli/bin/grunt",
-		"watch": "grunt watch",
+    "postinstall": "export HOME=app-root/runtime/repo; ./node_modules/grunt-cli/bin/grunt",
+    "watch": "grunt watch",
     "start": "node nodejs/server.js",
     "precommit": "lint-staged"
   },
@@ -17,6 +17,7 @@
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@sendgrid/mail": "6.4.0",
     "admin-lte": "2.4.3",
     "alertify.js": "1.0.12",
     "angular": "1.6.10",
@@ -38,7 +39,7 @@
     "dimple": "git+http://github.com/PMSI-AlignAlytics/dimple.git#2.2.0",
     "ejs": "2.5.9",
     "errorhandler": "1.5.0",
-    "express": "4.16.3",
+    "express": "4.17.1",
     "express-asset-versions": "0.1.2",
     "express-brute": "1.0.1",
     "express-brute-mongo": "1.0.0",
@@ -67,8 +68,6 @@
     "morgan": "1.9.0",
     "node-sass-middleware": "0.11.0",
     "node-schedule": "1.3.0",
-    "nodemailer": "4.6.4",
-    "nodemailer-sendgrid-transport": "0.2.0",
     "opml-to-json": "0.0.3",
     "pace-progress": "1.0.2",
     "passport": "0.4.0",
@@ -83,7 +82,7 @@
   "devDependencies": {
     "chai": "4.1.2",
     "codelyzer": "3.2.2",
-		"eslint": "6.5.0",
+    "eslint": "6.5.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-prettier": "4.2.0",
     "eslint-plugin-import": "2.17.2",
@@ -102,10 +101,6 @@
       "./node_modules/.bin/eslint",
       "git add"
     ],
-    "*.ts": [
-      "tslint --project tsconfig.json -e 'src/test/**'",
-      "git add"
-    ],
     "*.html": [
       "htmlhint --config .htmlhintrc",
       "js-beautify --config .jsbeautifyrc --type html -r",
@@ -114,7 +109,7 @@
     "*.scss": [
       "stylelint --syntax=scss"
     ],
-    "*.{js,ts,css,scss}": [
+    "*.{js,css,scss}": [
       "prettier --write",
       "git add"
     ]

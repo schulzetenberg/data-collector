@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 
+import UserContext from '../user-context/user-context';
+
 const useStyles = makeStyles((theme) => ({
   toolbar: {
     flexWrap: 'wrap',
@@ -22,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC = () => {
   const classes = useStyles();
+  const { state }: any = React.useContext(UserContext);
+  const isLoggedIn = !!state.name;
 
   return (
     <AppBar position="static" color="default" elevation={1}>
@@ -41,9 +45,16 @@ const Header: React.FC = () => {
             Help
           </Link>
         </nav>
-        <Button component={RouterLink} to="/sign-in" color="primary" variant="outlined" className={classes.link}>
-          Login
-        </Button>
+        {isLoggedIn && (
+          <Button component={RouterLink} to="/sign-out" color="primary" variant="outlined" className={classes.link}>
+            Logout
+          </Button>
+        )}
+        {!isLoggedIn && (
+          <Button component={RouterLink} to="/sign-in" color="primary" variant="outlined" className={classes.link}>
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

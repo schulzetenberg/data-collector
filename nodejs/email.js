@@ -1,19 +1,10 @@
-const nodemailer = require('nodemailer');
-const sendgridTransport = require('nodemailer-sendgrid-transport');
+const sgMail = require('@sendgrid/mail');
 const Q = require('q');
 
 const logger = require('./log');
 const secrets = require('../config/secrets');
 
-// Configure Nodemailer SendGrid Transporter
-const transporter = nodemailer.createTransport(
-  sendgridTransport({
-    auth: {
-       api_key: secrets.sendgrid.apiKey
-     },
-  })
-);
-
+sgMail.setApiKey(secrets.sendgrid.apiKey);
 
 // Required Fields: to, subject, html (body)
 exports.send = function(mailOptions) {
@@ -38,16 +29,18 @@ exports.send = function(mailOptions) {
   // Email defaults from config
   if (!mailOptions.to) {
     mailOptions.to = secrets.defaults.emailTo;
-  }
+	}
 
-  if (!mailOptions.from) {
-    mailOptions.from = secrets.defaults.emailFrom;
-  }
+	mailOptions.from = {
+		email: mailOptions.from || secrets.defaults.emailFrom,
+		name: secrets.defaults.emailFromName
+	};
 
-  transporter.sendMail(mailOptions).then(function(info) {
-    logger.info('Email sent. Message: ' + info.message);
+  sgMail.send(mailOptions).then(function(info) {
+    logger.debug('Email sent. Message: ' + info.message);
     defer.resolve();
   }).catch(function(err) {
+		logger.error(err);
     defer.reject(err);
   });
 

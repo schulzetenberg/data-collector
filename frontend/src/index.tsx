@@ -11,7 +11,7 @@ import App from './app';
 import * as serviceWorker from './service-worker';
 
 ReactDOM.render(
-  <Router  basename={process.env.PUBLIC_URL}>
+  <Router basename={process.env.PUBLIC_URL}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <App />

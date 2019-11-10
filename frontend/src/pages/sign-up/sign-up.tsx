@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -15,7 +13,6 @@ import { Link as RouterLink, Redirect } from 'react-router-dom';
 
 import Form from '../../components/form/form';
 import Request from '../../components/request/request';
-import UserContext from '../../components/user-context/user-context';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -46,33 +43,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const classes = useStyles();
-  const { state, dispatch }: any = React.useContext(UserContext);
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [loginErrors, setLoginErrors] = useState<string[]>([]);
-  const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
+  const [signupErrors, setSignupErrors] = useState<string[]>([]);
 
   const submit = (inputs: { email: string; password: string }): void => {
-    setLoginErrors([]);
+    setSignupErrors([]);
     setLoading(true);
 
-    Request.post({ url: 'signin', body: inputs })
+    Request.post({ url: 'signup', body: inputs })
       .then((response: ServerResponse) => {
         if (!response.error) {
-          setUserState(response.data.name, response.data.email);
-          setLoginSuccess(true);
+          setSignupSuccess(true);
         } else if (Array.isArray(response.error)) {
           const errorList = response.error.map((x) => x.msg);
-          setLoginErrors(errorList);
+          setSignupErrors(errorList);
         } else {
-          setLoginErrors([response.error]);
+          setSignupErrors([response.error]);
         }
       })
       .catch((err) => {
         console.log(err);
-        setLoginErrors(['Error signing in']);
+        setSignupErrors(['Error signing up']);
       })
       .finally(() => {
         setLoading(false);
@@ -82,19 +76,16 @@ const SignIn: React.FC = () => {
   const {
     inputs,
     handleInputChange,
-    handleCheckboxChange,
     handleSubmit,
   }: {
-    inputs: { email: string; password: string; remember: boolean };
+    inputs: { name: string; email: string; password: string; confirmPassword: string };
     handleInputChange: any;
-    handleCheckboxChange: any;
     handleSubmit: any;
-  } = Form({ email: '', password: '', remember: false }, submit);
+  } = Form({ name: '', email: '', password: '', confirmPassword: '' }, submit);
 
   return (
-    (loginSuccess && <Redirect to="/" />) || (
+    (signupSuccess && <Redirect to="/" />) || (
       <Container component="main" maxWidth="xs">
-        <div>{state.name}</div>
         <Box mt={5}>
           <Link variant="button" component={RouterLink} to="/" color="textPrimary">
             <Typography variant="h4" align="center" gutterBottom>
@@ -106,9 +97,9 @@ const SignIn: React.FC = () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign In
+              Sign Up
             </Typography>
-            {loginErrors.map((error, index) => (
+            {signupErrors.map((error, index) => (
               <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
                 {error}
               </Typography>
@@ -119,12 +110,26 @@ const SignIn: React.FC = () => {
                 margin="normal"
                 required
                 fullWidth
+                type="text"
+                id="name"
+                label="Name"
+                name="name"
+                autoComplete="name"
+                autoFocus
+                value={inputs.name}
+                disabled={isLoading}
+                onChange={handleInputChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
                 type="email"
                 id="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                autoFocus
                 value={inputs.email}
                 disabled={isLoading}
                 onChange={handleInputChange}
@@ -143,17 +148,19 @@ const SignIn: React.FC = () => {
                 disabled={isLoading}
                 onChange={handleInputChange}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="remember"
-                    color="primary"
-                    value={inputs.remember}
-                    disabled={isLoading}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Remember me"
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="current-password"
+                value={inputs.confirmPassword}
+                disabled={isLoading}
+                onChange={handleInputChange}
               />
               <Button
                 type="submit"
@@ -163,7 +170,7 @@ const SignIn: React.FC = () => {
                 disabled={isLoading}
                 className={classes.submit}
               >
-                Sign In
+                Create Account
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -172,8 +179,8 @@ const SignIn: React.FC = () => {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link component={RouterLink} to="/sign-up" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link component={RouterLink} to="/sign-in" variant="body2">
+                    {'Already have an account? Sign In'}
                   </Link>
                 </Grid>
               </Grid>
@@ -185,4 +192,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
