@@ -11,11 +11,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 import Form from '../../components/form/form';
 import Request from '../../components/request/request';
-import UserContext from '../../components/user-context/user-context';
+import UserContext from '../../util/user-context';
+import { SessionContext } from '../../util/session-context';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -48,35 +49,36 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn: React.FC = () => {
   const classes = useStyles();
-  const { state, dispatch }: any = React.useContext(UserContext);
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const history = useHistory();
+  const { dispatch }: any = React.useContext(UserContext);
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
+  const { setSession }: any = React.useContext(SessionContext);
   const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
 
-  const submit = (inputs: { email: string; password: string }): void => {
+  const submit = async (inputs: { email: string; password: string }) => {
     setLoginErrors([]);
     setLoading(true);
 
-    Request.post({ url: 'signin', body: inputs })
-      .then((response: ServerResponse) => {
-        if (!response.error) {
-          setUserState(response.data.name, response.data.email);
-          setLoginSuccess(true);
-        } else if (Array.isArray(response.error)) {
-          const errorList = response.error.map((x) => x.msg);
-          setLoginErrors(errorList);
-        } else {
-          setLoginErrors([response.error]);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoginErrors(['Error signing in']);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const response: ServerResponse = await Request.post({ url: 'signin', body: inputs });
+      setLoading(false);
+
+      if (!response.error) {
+        setSession({ email: response.data.email });
+        setUserState(response.data.name, response.data.email);
+        history.push('/');
+      } else if (Array.isArray(response.error)) {
+        const errorList = response.error.map((x) => x.msg);
+        setLoginErrors(errorList);
+      } else {
+        setLoginErrors([response.error]);
+      }
+    } catch (e) {
+      console.log(e);
+      setLoginErrors(['Error signing in']);
+      setLoading(false);
+    }
   };
 
   const {
@@ -92,95 +94,93 @@ const SignIn: React.FC = () => {
   } = Form({ email: '', password: '', remember: false }, submit);
 
   return (
-    (loginSuccess && <Redirect to="/" />) || (
-      <Container component="main" maxWidth="xs">
-        <Box mt={5}>
-          <Link variant="button" component={RouterLink} to="/" color="textPrimary">
-            <Typography variant="h4" align="center" gutterBottom>
-              Data Collector
+    <Container component="main" maxWidth="xs">
+      <Box mt={5}>
+        <Link variant="button" component={RouterLink} to="/" color="textPrimary">
+          <Typography variant="h4" align="center" gutterBottom>
+            Data Collector
+          </Typography>
+        </Link>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign In
+          </Typography>
+          {loginErrors.map((error, index) => (
+            <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
+              {error}
             </Typography>
-          </Link>
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
+          ))}
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              type="email"
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={inputs.email}
+              disabled={isLoading}
+              onChange={handleInputChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={inputs.password}
+              disabled={isLoading}
+              onChange={handleInputChange}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="remember"
+                  color="primary"
+                  value={inputs.remember}
+                  disabled={isLoading}
+                  onChange={handleCheckboxChange}
+                />
+              }
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={isLoading}
+              className={classes.submit}
+            >
               Sign In
-            </Typography>
-            {loginErrors.map((error, index) => (
-              <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
-                {error}
-              </Typography>
-            ))}
-            <form className={classes.form} onSubmit={handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                type="email"
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={inputs.email}
-                disabled={isLoading}
-                onChange={handleInputChange}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={inputs.password}
-                disabled={isLoading}
-                onChange={handleInputChange}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="remember"
-                    color="primary"
-                    value={inputs.remember}
-                    disabled={isLoading}
-                    onChange={handleCheckboxChange}
-                  />
-                }
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={isLoading}
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link component={RouterLink} to="/forgot-password" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link component={RouterLink} to="/sign-up" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link component={RouterLink} to="/forgot-password" variant="body2">
+                  Forgot password?
+                </Link>
               </Grid>
-            </form>
-          </div>
-        </Box>
-      </Container>
-    )
+              <Grid item>
+                <Link component={RouterLink} to="/sign-up" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Box>
+    </Container>
   );
 };
 

@@ -11,11 +11,10 @@ const response = require('../nodejs/response');
 // Login page
 exports.getLogin = (req, res) => {
   if (req.user) {
-    res.redirect(req.session.returnTo || '/');
+    res.redirect('/');
   } else {
     res.render('account/login.html', { title: 'Login' });
   }
-  delete req.session.returnTo;
 };
 
 /**
@@ -45,7 +44,7 @@ exports.postLogin = (req, res, next) => {
       // reset the failure counter so next time they log in they get 5 tries again before the delays kick in
       req.brute.reset(() => {
         req.flash('success', { msg: 'Success! You are logged in.' });
-        res.redirect(req.session.returnTo || '/');
+        res.redirect('/');
       });
     });
   })(req, res, next);

@@ -2,8 +2,10 @@ const _ = require('lodash');
 const moment = require('moment');
 const parser = require('cron-parser');
 
+const logger = require('../nodejs/log');
 const configModel = require('../models/app-config');
 const appConfig = require('../nodejs/app-config');
+const response = require('../nodejs/response');
 
 /**
  * GET /app-config-page
@@ -47,11 +49,12 @@ exports.getConfig = (req, res, next) => {
         });
       }
 
-      res.send({ config: data });
+			response.success(res, { data });
     })
     .catch((err) => {
-      console.log(err);
-      return next(err);
+      logger.error(err);
+			response.serverError(res, 'Error getting application config');
+
     });
 };
 

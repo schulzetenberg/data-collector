@@ -52,29 +52,28 @@ const ForgotPassword: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
 
-  const submit = (inputs: { email: string }): void => {
+  const submit = async (inputs: { email: string }) => {
     setLoginErrors([]);
     setResetSuccess(false);
     setLoading(true);
 
-    Request.post({ url: 'forgot', body: inputs })
-      .then((response: ServerResponse) => {
-        if (!response.error) {
-          setResetSuccess(true);
-        } else if (Array.isArray(response.error)) {
-          const errorList = response.error.map((x) => x.msg);
-          setLoginErrors(errorList);
-        } else {
-          setLoginErrors([response.error]);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoginErrors(['Error creating sending reset instructions']);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const response: ServerResponse = await Request.post({ url: 'forgot', body: inputs });
+      setLoading(false);
+
+      if (!response.error) {
+        setResetSuccess(true);
+      } else if (Array.isArray(response.error)) {
+        const errorList = response.error.map((x) => x.msg);
+        setLoginErrors(errorList);
+      } else {
+        setLoginErrors([response.error]);
+      }
+    } catch (e) {
+      console.log(e);
+      setLoginErrors(['Error creating sending reset instructions']);
+      setLoading(false);
+    }
   };
 
   const { inputs, handleInputChange, handleSubmit } = Form({ email: '' }, submit);

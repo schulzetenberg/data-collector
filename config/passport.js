@@ -1,7 +1,8 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-// const secrets = require('./secrets');
+
 const User = require('../models/User');
+const response = require('../nodejs/response');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -13,7 +14,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-// Sign in using Email and Password.
+// Sign in using Email and Password
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     User.findOne({ email: email.toLowerCase() }, (err, user) => {
@@ -28,9 +29,8 @@ passport.use(
   })
 );
 
-// Login Required middleware.
+// Login Required middleware
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) return next();
-  req.session.returnTo = req.originalUrl; // Save requested URL
-  res.redirect('/login');
+	response.loginRequired(res);
 };

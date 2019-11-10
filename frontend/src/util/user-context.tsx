@@ -3,6 +3,7 @@ import React from 'react';
 const initialValues = {
   name: '',
   email: '',
+  session: '',
 };
 
 const UserContext = React.createContext<{
@@ -19,6 +20,7 @@ const reducer = (state: any, action: any) => {
         ...state,
         name: action.payload.name,
         email: action.payload.email,
+        session: action.payload.session,
       };
     default:
       console.log(`Invalid action type of ${action.type}`);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Icon from '@material-ui/core/Icon';
 import Box from '@material-ui/core/Box';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -19,27 +19,27 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   icon: {
-		marginBottom: theme.spacing(4),
-		width: 80,
-		height: 80,
-		textAlign: 'center',
-	},
-	iconSvg: {
-		width: '100%',
-		height: '100%',
-		fill: theme.palette.error.main,
-	}
+    marginBottom: theme.spacing(4),
+    width: 80,
+    height: 80,
+    textAlign: 'center',
+  },
+  iconSvg: {
+    width: '100%',
+    height: '100%',
+    fill: theme.palette.error.main,
+  },
 }));
 
 const NotFound: React.FC = () => {
-	const classes = useStyles();
+  const classes = useStyles();
 
-	return (
+  return (
     <Container component="main" maxWidth="xs">
       <Box mt={5}>
-				<Typography variant="h1" component="h1" align="center" gutterBottom>
-					404
-				</Typography>
+        <Typography variant="h1" component="h1" align="center" gutterBottom>
+          404
+        </Typography>
         <div className={classes.paper}>
           <Icon className={classes.icon}>
             <ErrorIcon className={classes.iconSvg} />
