@@ -7,16 +7,19 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import theme from './theme';
 import './index.scss';
 import App from './app';
+import { SessionProvider } from './util/session-context';
 
 import * as serviceWorker from './service-worker';
 
 ReactDOM.render(
-  <Router basename={process.env.PUBLIC_URL}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </Router>,
+  <SessionProvider>
+    <Router basename={process.env.PUBLIC_URL}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </Router>
+  </SessionProvider>,
   document.getElementById('root')
 );
 

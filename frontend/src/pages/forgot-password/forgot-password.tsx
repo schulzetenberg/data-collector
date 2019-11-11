@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
 
-import Request from '../../components/request/request';
+import Request from '../../util/request';
 import Form from '../../components/form/form';
 
 const useStyles = makeStyles((theme) => ({

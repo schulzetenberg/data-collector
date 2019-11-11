@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 import Form from '../../components/form/form';
-import Request from '../../components/request/request';
+import Request from '../../util/request';
 import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
 

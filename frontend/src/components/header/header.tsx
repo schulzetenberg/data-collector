@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,7 +9,7 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { Box, Snackbar, SnackbarContent } from '@material-ui/core';
 
 import { SessionContext } from '../../util/session-context';
-import Request from '../../components/request/request';
+import Request from '../../util/request';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -91,14 +91,17 @@ const Header: React.FC = () => {
         </Link>
         <Box className={classes.fillSpace} />
 
-        <nav>
-          <Link variant="button" component={RouterLink} to="/app-config" color="textPrimary" className={classes.link}>
-            App Config
-          </Link>
-          <Link variant="button" component={RouterLink} to="/" color="textPrimary" className={classes.link}>
-            Settings
-          </Link>
-        </nav>
+        {isLoggedIn && (
+          <nav>
+            <Link variant="button" component={RouterLink} to="/app-config" color="textPrimary" className={classes.link}>
+              App Config
+            </Link>
+            <Link variant="button" component={RouterLink} to="/" color="textPrimary" className={classes.link}>
+              Settings
+            </Link>
+          </nav>
+        )}
+
         {isLoggedIn && (
           <Button
             onClick={handleLogout}
@@ -110,6 +113,7 @@ const Header: React.FC = () => {
             Logout
           </Button>
         )}
+
         {!isLoggedIn && (
           <Button component={RouterLink} to="/sign-in" color="primary" variant="outlined" className={classes.link}>
             Login
