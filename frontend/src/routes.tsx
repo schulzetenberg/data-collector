@@ -13,7 +13,7 @@ const AuthenticatedRoute = ({ component: C, session, ...rest }: any): any => {
   return (
     <Route
       {...rest}
-      render={(props: any) =>
+      render={(props: any): any =>
         session ? <C {...props} /> : <Redirect to={`/sign-in?redirect=${props.location.pathname}`} />
       }
     />
