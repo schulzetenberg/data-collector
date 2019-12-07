@@ -8,13 +8,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
-import { Grid, Menu, MenuItem } from '@material-ui/core';
+import { Grid, Menu, MenuItem, Box } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 
 import Switch from '../../components/switch/switch';
 
@@ -37,75 +35,134 @@ const useStyles = makeStyles((theme: Theme) =>
     expandOpen: {
       transform: 'rotate(180deg)',
     },
-    avatar: {
-      backgroundColor: red[500],
-      fontSize: '.8rem',
-      borderRadius: '50%',
-    },
   })
 );
 
-const AppCard: React.FC = ({ handleUpdateStataus }: any) => {
+interface AppCardProps {
+  appKey: string;
+  isLoading: boolean;
+  title: string;
+  active?: boolean;
+  image: string;
+  lastUpdated?: string;
+  summary: string;
+  description?: string;
+  updateSettings: Function;
+  updateStatus: Function;
+  manuallyUpdate: Function;
+}
+
+const AppCard: React.FC<AppCardProps> = ({
+  appKey,
+  isLoading,
+  title,
+  active,
+  image,
+  lastUpdated,
+  summary,
+  description,
+  updateSettings,
+  updateStatus,
+  manuallyUpdate,
+}) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setAnchorEl(null);
+  };
+
+  const handleEditSettings = (): void => {
+    handleClose();
+    updateSettings(appKey);
+  };
+
+  const handleManualUpdate = (): void => {
+    handleClose();
+    manuallyUpdate(appKey);
   };
 
   const handleExpandClick = (): void => {
     setExpanded(!expanded);
   };
 
+  const handleActiveChange = (e: any): void => {
+    updateStatus(appKey, e.target.checked);
+  };
+
   return (
     <Grid item sm={12} md={6}>
       <Card className={classes.card}>
         <CardHeader
-          avatar={<Switch />}
-          action={
-            <div>
-              <IconButton aria-label="settings" onClick={handleClick}>
-                <MoreVertIcon />
-              </IconButton>
-              <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Edit Settings</MenuItem>
-                <MenuItem onClick={handleClose}>Run Manual Update</MenuItem>
-              </Menu>
-            </div>
+          avatar={
+            isLoading ? (
+              <Skeleton variant="circle" width={40} height={30} />
+            ) : (
+              active !== undefined && <Switch onChange={handleActiveChange} checked={active} />
+            )
           }
-          title="Music"
-          subheader="Data updated 1 day ago"
+          action={
+            !isLoading && (
+              <div>
+                <IconButton aria-label="settings" onClick={handleClick}>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                  <MenuItem onClick={handleEditSettings}>Edit Settings</MenuItem>
+                  <MenuItem onClick={handleManualUpdate}>Run Manual Update</MenuItem>
+                </Menu>
+              </div>
+            )
+          }
+          title={isLoading ? <Skeleton height={10} width="80%" style={{ marginBottom: 6 }} /> : title}
+          subheader={isLoading ? <Skeleton height={10} width="40%" /> : lastUpdated && `Data updated ${lastUpdated}`}
         />
-        <CardMedia className={classes.media} image="/img/music.jpg" title="Music Image" />
+
+        {isLoading ? (
+          <Skeleton variant="rect" className={classes.media} />
+        ) : (
+          <CardMedia className={classes.media} image={image} title={`${title} image`} />
+        )}
+
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Collect music listening habits from Spotify & LastFM
-          </Typography>
+          {isLoading ? (
+            <>
+              <Skeleton height={10} style={{ marginBottom: 10 }} />
+              <Skeleton height={10} width="80%" />
+            </>
+          ) : (
+            <Typography variant="body2" color="textSecondary" component="p">
+              {summary}
+            </Typography>
+          )}
         </CardContent>
+
         <CardActions disableSpacing>
-          <IconButton
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded,
-            })}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </IconButton>
+          {description &&
+            (isLoading ? (
+              <Box my={4} />
+            ) : (
+              <IconButton
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            ))}
         </CardActions>
+
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>
-              The data being collected includes the top 15 artists, total number of artists, and number of songs
-              listened to in the past 12 months.
-            </Typography>
+            <Typography paragraph>{description}</Typography>
           </CardContent>
         </Collapse>
       </Card>
@@ -114,5 +171,3 @@ const AppCard: React.FC = ({ handleUpdateStataus }: any) => {
 };
 
 export default AppCard;
-
-// TODO: make this generic and expose these props: Image, title, lastUpdated, description

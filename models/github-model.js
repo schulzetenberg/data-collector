@@ -1,5 +1,5 @@
 module.exports = require('mongoose').model('github', {
-  timestamp : { type: Date, default: Date.now, expires: 60*60*24*30 }, // Delete documents after 30 days
+  timestamp: { type: Date, default: Date.now, expires: 60*60*24*30 }, // Delete documents after 30 days
   repos: { type: Number },
   contribSvg: { type: String },
   following: [{

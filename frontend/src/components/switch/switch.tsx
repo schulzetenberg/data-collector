@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Switch: React.FC = (props: any) => {
+const Switch: React.FC<any> = (props: any) => {
   const classes = useStyles();
 
   return (
