@@ -94,10 +94,10 @@ const Header: React.FC = () => {
         {isLoggedIn && (
           <nav>
             <Link variant="button" component={RouterLink} to="/app-config" color="textPrimary" className={classes.link}>
-              App Config
-            </Link>
-            <Link variant="button" component={RouterLink} to="/" color="textPrimary" className={classes.link}>
               Settings
+            </Link>
+            <Link variant="button" component={RouterLink} to="/account" color="textPrimary" className={classes.link}>
+              Account
             </Link>
           </nav>
         )}
