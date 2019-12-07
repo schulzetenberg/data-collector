@@ -37,7 +37,7 @@ $ grunt build
 
 Run
 -------
-- $ npm start
+- $ npm run start
 
 Sign Up
 -------

@@ -6,6 +6,7 @@ const logger = require('../nodejs/log');
 const configModel = require('../models/app-config');
 const appConfig = require('../nodejs/app-config');
 const response = require('../nodejs/response');
+const mongoUtils = require('../nodejs/mongo-utils');
 
 /**
  * GET /app-config-page
@@ -19,26 +20,24 @@ exports.getConfigPage = (req, res) => {
  * GET /app-config/config
  * Get application config
  */
-exports.getConfig = (req, res, next) => {
+exports.getConfig = async (req, res, next) => {
+  const lastUpdateData = await mongoUtils.getLatestDocTimestamps();
+
   appConfig
     .get()
     .then((data) => {
       if (data) {
         _.forIn(data, (value, key) => {
+          data[key].lastUpdated = lastUpdateData[key] ? lastUpdateData[key] : null;
+
           if (value && value.schedule) {
             try {
               const interval = parser.parseExpression(value.schedule, { utc: true });
               const scheduleArr = [];
-              let next = interval.next();
 
-              while (
-                next.toDate() <=
-                moment()
-                  .add(1, 'days')
-                  .toDate()
-              ) {
+              for (let i = 0; i < 5; i += 1) {
+                const next = interval.next();
                 scheduleArr.push(next.toString());
-                next = interval.next();
               }
 
               data[key].scheduleList = scheduleArr;
@@ -49,12 +48,11 @@ exports.getConfig = (req, res, next) => {
         });
       }
 
-			response.success(res, { data });
+      response.success(res, { data });
     })
     .catch((err) => {
       logger.error(err);
-			response.serverError(res, 'Error getting application config');
-
+      response.serverError(res, 'Error getting application config');
     });
 };
 
@@ -78,7 +76,7 @@ exports.saveConfig = (req, res, next) => {
   doc
     .save()
     .then(() => {
-      res.sendStatus(200);
+      return exports.getConfig(req, res, next);
     })
     .catch((err) => {
       console.log(err);

@@ -85,21 +85,6 @@ const appConfigSchema = new mongoose.Schema(
       active: { type: Boolean, default: false },
       schedule: { type: String, default: '50 0 0 * * *' },
     },
-    arrayObj: {
-      arr: {
-        type: [],
-        default: [
-          {
-            obj1: '',
-            obj2: '',
-          },
-        ],
-      },
-      filePath: { type: String, default: '' },
-      functionName: { type: String, default: '' },
-      active: { type: Boolean, default: false },
-      schedule: { type: String, default: '' },
-    },
   },
   { timestamps: true }, // Save createdAt and updatedAt fields
   { minimize: false }, // Save empty objects

@@ -14,7 +14,7 @@ const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): an
   return (
     <Route
       {...rest}
-      render={(props: any) =>
+      render={(props: any): any =>
         session ? <Component {...props} /> : <Redirect to={`/sign-in?redirect=${props.location.pathname}`} />
       }
     />
@@ -22,7 +22,7 @@ const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): an
 };
 
 const PublicRoute = ({ component: Component, ...rest }: any): any => {
-  return <Route {...rest} render={ (props: any) =>  <Component {...props} /> } />
+  return <Route {...rest} render={(props: any) => <Component {...props} />} />;
 };
 
 const Routes: React.FC = () => {
@@ -30,15 +30,15 @@ const Routes: React.FC = () => {
 
   return (
     <Switch>
-			<PublicRoute component={Home} path="/" exact />
-			<PublicRoute component={SignIn} path="/sign-in" />
-			<PublicRoute component={SignUp} path="/sign-up" />
-			<PublicRoute component={ForgotPassword} path="/forgot-password" />
+      <PublicRoute component={Home} path="/" exact />
+      <PublicRoute component={SignIn} path="/sign-in" />
+      <PublicRoute component={SignUp} path="/sign-up" />
+      <PublicRoute component={ForgotPassword} path="/forgot-password" />
 
-			<AuthenticatedRoute component={Account} session={session} path="/account" />
+      <AuthenticatedRoute component={Account} session={session} path="/account" />
       <AuthenticatedRoute component={AppConfig} session={session} path="/app-config" />
 
-			<PublicRoute component={NotFound} />
+      <PublicRoute component={NotFound} />
     </Switch>
   );
 };
