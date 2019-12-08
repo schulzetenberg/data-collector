@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardActions, CardContent, Avatar, Typography, Divider, Button } from '@material-ui/core';
+import { Card, CardActions, CardContent, Avatar, Typography, Divider, Button, Grid } from '@material-ui/core';
 
 import Modal from '../../components/modal/modal';
 
@@ -65,9 +65,11 @@ const AccountProfile = () => {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button className={classes.uploadButton} color="primary" variant="contained" onClick={handleDelete}>
-          Delete Account
-        </Button>
+        <Grid container alignItems="flex-start" justify="flex-end" direction="row">
+          <Button className={classes.uploadButton} color="primary" variant="contained" onClick={handleDelete}>
+            Delete Account
+          </Button>
+        </Grid>
       </CardActions>
       {open && (
         <Modal title="Delete Account" open={open} handleClose={handleClose}>
