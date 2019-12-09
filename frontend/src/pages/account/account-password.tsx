@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, CardContent, CardActions, Divider, Grid, Button, TextField } from '@material-ui/core';
+
+import Request from '../../util/request';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -8,16 +10,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountPassword = () => {
+const AccountPassword: React.FC = () => {
   const classes = useStyles();
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleChange = (event: any) => {
-    console.log('TODO', event.target);
-  };
+  const handleSubmit = async () => {
+    try {
+      const response: ServerResponse = await Request.post({
+        url: 'account/password',
+        body: { password, confirmPassword },
+      });
 
-  const values = {
-    password: 'Test',
-    confirmPassword: 'Test',
+      // TODO: add toast messages & error handling
+      alert('Updated');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -33,9 +42,10 @@ const AccountPassword = () => {
                 label="New Password"
                 margin="dense"
                 name="password"
-                onChange={handleChange}
+                type="password"
+                onChange={(e: any): void => setPassword(e.target.value)}
                 required
-                value={values.password}
+                value={password}
                 variant="outlined"
               />
             </Grid>
@@ -45,18 +55,18 @@ const AccountPassword = () => {
                 label="Confirm Password"
                 margin="dense"
                 name="confirmPassword"
-                onChange={handleChange}
+                type="password"
+                onChange={(e: any): void => setConfirmPassword(e.target.value)}
                 required
-                value={values.confirmPassword}
+                value={confirmPassword}
                 variant="outlined"
               />
             </Grid>
           </Grid>
         </CardContent>
-        <Divider />
         <CardActions>
-          <Button color="primary" variant="contained">
-            Save Changes
+          <Button color="primary" variant="contained" onClick={handleSubmit}>
+            Update Password
           </Button>
         </CardActions>
       </form>

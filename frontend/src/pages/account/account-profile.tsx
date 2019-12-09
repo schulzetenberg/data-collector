@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountProfile = () => {
+const AccountProfile: React.FC = () => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);

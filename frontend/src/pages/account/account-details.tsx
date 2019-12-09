@@ -4,67 +4,64 @@ import { Card, CardHeader, CardContent, CardActions, Divider, Grid, Button, Text
 
 const useStyles = makeStyles(() => ({}));
 
-const AccountDetails = () => {
+const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any; saveData: any }> = ({
+  data,
+  updateProfile,
+  updateData,
+  saveData,
+}) => {
   const classes = useStyles();
-
-  const handleChange = (event: any) => {
-    console.log('TODO', event.target);
-  };
-
-  const values = {
-    firstName: 'Test',
-    lastName: 'Tester',
-    email: 'test@test.com',
-  };
 
   return (
     <Card>
-      <form autoComplete="off" noValidate>
+      <form>
         <CardHeader title="Profile" />
         <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="First Name"
-                margin="dense"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={values.firstName}
-                variant="outlined"
-              />
+        {data && (
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  margin="dense"
+                  name="firstName"
+                  onChange={updateProfile}
+                  required
+                  value={data.profile.firstName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  margin="dense"
+                  name="lastName"
+                  onChange={updateProfile}
+                  required
+                  value={data.profile.lastName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email Address"
+                  margin="dense"
+                  name="email"
+                  type="email"
+                  onChange={updateData}
+                  required
+                  value={data.email}
+                  variant="outlined"
+                />
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                margin="dense"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                margin="dense"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
+          </CardContent>
+        )}
         <CardActions>
-          <Button color="primary" variant="contained">
+          <Button color="primary" variant="contained" onClick={saveData}>
             Save Changes
           </Button>
         </CardActions>

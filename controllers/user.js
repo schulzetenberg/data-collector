@@ -55,44 +55,44 @@ exports.postSignin = (req, res, next) => {
   req.assert('password', 'Password cannot be blank').notEmpty();
 
   const errors = req.validationErrors();
-  if (errors)	return response.userError(res, errors);
+  if (errors) return response.userError(res, errors);
 
   return passport.authenticate('local', async (err, user, info) => {
-		if(err) {
-			logger.error(err);
-			return response.serverError(res, 'Error authenticating user');
-		}
+    if (err) {
+      logger.error(err);
+      return response.serverError(res, 'Error authenticating user');
+    }
 
     if (!user) {
-			return response.userError(res, info.message);
-		}
+      return response.userError(res, info.message);
+    }
 
-		// TODO: Test this
-		if (req.body.remember) {
+    // TODO: Test this
+    if (req.body.remember) {
       req.session.cookie.maxAge = 2592000000; // Remember for 30 days
     } else {
       req.session.cookie.expires = false; // Else, cookie expires at end of session
     }
 
-		req.logIn(user, (err) => {
-			if(err) {
-				logger.error(err);
-				return response.serverError(res, 'Error logging in user');
-			}
+    req.logIn(user, (err) => {
+      if (err) {
+        logger.error(err);
+        return response.serverError(res, 'Error logging in user');
+      }
 
-			// Reset the failure counter for this user
-			req.brute.reset(() => {
-				const data = { name: user.profile.name, email: user.email };
-				response.success(res, { data });
-			});
-		});
+      // Reset the failure counter for this user
+      req.brute.reset(() => {
+        const data = { name: user.profile.name, email: user.email };
+        response.success(res, { data });
+      });
+    });
   })(req, res, next);
 };
 
 // Log out
 exports.logout = (req, res) => {
   req.logout();
-	response.success(res);
+  response.success(res);
 };
 
 // Signup page
@@ -115,42 +115,42 @@ exports.postSignup = async (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-		return response.userError(res, errors);
+    return response.userError(res, errors);
   }
 
   const user = new User({
     profile: { name: req.body.name },
     email: req.body.email,
     password: req.body.password,
-	});
+  });
 
-	try {
-		const existingUser = await User.findOne({ email: req.body.email });
+  try {
+    const existingUser = await User.findOne({ email: req.body.email });
 
-		if (existingUser) {
-			return response.userError(res, 'Account with that email address already exists');
-		}
-	} catch (e) {
-		logger.error(e);
-		return response.serverError(res, 'Error performing user lookup');
-	}
+    if (existingUser) {
+      return response.userError(res, 'Account with that email address already exists');
+    }
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error performing user lookup');
+  }
 
-	try {
-		await user.save();
-	} catch (e) {
-		logger.error(err);
-		return response.serverError(res, 'Error saving new user');
-	}
+  try {
+    await user.save();
+  } catch (e) {
+    logger.error(err);
+    return response.serverError(res, 'Error saving new user');
+  }
 
-	req.logIn(user, (err) => {
-		if(err) {
-			logger.error(err);
-			return response.serverError(res, 'Error logging in user');
-		}
+  req.logIn(user, (err) => {
+    if (err) {
+      logger.error(err);
+      return response.serverError(res, 'Error logging in user');
+    }
 
-		const data = { name: user.profile.name, email: user.email };
-		response.success(res, { data });
-	});
+    const data = { name: user.profile.name, email: user.email };
+    response.success(res, { data });
+  });
 };
 
 // Profile page
@@ -160,26 +160,38 @@ exports.getAccount = (req, res) => {
   });
 };
 
+exports.getProfile = (req, res) => {
+  // We dont want to expose private user data such as the password hash
+  const data = {
+    createdAt: req.user.createdAt,
+    updatedAt: req.user.updatedAt,
+    email: req.user.email,
+    gravatar: req.user.gravatar(),
+    profile: { ...req.user.profile },
+  };
+
+  response.success(res, { data });
+};
+
 // Update profile information
 exports.postUpdateProfile = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
     if (err) return next(err);
     user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
+    user.profile.firstName = req.body.profile.firstName || '';
+    user.profile.lastName = req.body.profile.lastName || '';
 
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
-          req.flash('error', { msg: 'Email address already in use.' });
-          return res.redirect('/account');
+          return response.userError(res, 'email address already in use');
         }
-        return next(err);
+
+        logger.error(err);
+        return response.serverError(res, 'Error saving profile updates');
       }
-      req.flash('success', { msg: 'Profile information updated.' });
-      res.redirect('/account');
+
+      response.success(res);
     });
   });
 };
@@ -192,19 +204,24 @@ exports.postUpdatePassword = (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
-    return res.redirect('/account');
+    return response.userError(res, errors);
   }
 
   User.findById(req.user.id, (err, user) => {
-    if (err) return next(err);
+    if (err) {
+      logger.error(err);
+      return response.serverError(res, 'Error finding user profile');
+    }
 
     user.password = req.body.password;
 
     user.save((err) => {
-      if (err) return next(err);
-      req.flash('success', { msg: 'Password has been changed.' });
-      res.redirect('/account');
+      if (err) {
+        logger.error(err);
+        return response.serverError(res, 'Error saving updated password');
+      }
+
+      response.success(res);
     });
   });
 };
@@ -212,9 +229,12 @@ exports.postUpdatePassword = (req, res, next) => {
 // Delete the user account
 exports.postDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
-    if (err) return next(err);
+    if (err) {
+      logger.error(err);
+      return response.serverError(res, 'Error deleting account');
+    }
+
     req.logout();
-    req.flash('info', { msg: 'Your account has been deleted.' });
     res.redirect('/');
   });
 };
@@ -224,6 +244,7 @@ exports.getReset = (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
+
   User.findOne({ resetPasswordToken: req.params.token })
     .where('resetPasswordExpires')
     .gt(Date.now())
@@ -246,64 +267,63 @@ exports.postReset = async (req, res) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
-    return res.redirect('back');
+    return response.userError(res, errors);
   }
 
-	let user;
+  let user;
 
-	try {
-		user = await User.findOne({
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() },
-		});
-	} catch (e) {
-		logger.error('Error finding user', e);
-		return res.sendStatus(500);
-	}
+  try {
+    user = await User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+  } catch (e) {
+    logger.error('Error finding user', e);
+    return res.sendStatus(500);
+  }
 
-	if (!user) {
-		return res.status(400).send('Password reset token is invalid or has expired');
-	}
+  if (!user) {
+    return res.status(400).send('Password reset token is invalid or has expired');
+  }
 
-	user.password = req.body.password;
-	user.resetPasswordToken = undefined;
-	user.resetPasswordExpires = undefined;
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
 
-	try {
-		await user.save();
-	} catch (e) {
-		logger.error('Error saving password reset', e);
-		return res.sendStatus(500);
-	}
+  try {
+    await user.save();
+  } catch (e) {
+    logger.error('Error saving password reset', e);
+    return res.sendStatus(500);
+  }
 
-	req.logIn(user, (err) => {
-		if(err) {
-			logger.error('Error logging in user', e);
-		}
-		// Send 200 either way, since it is not critical the user gets logged in
-		res.sendStatus(200);
-	});
+  req.logIn(user, (err) => {
+    if (err) {
+      logger.error('Error logging in user', e);
+    }
+    // Send 200 either way, since it is not critical the user gets logged in
+    res.sendStatus(200);
+  });
 
-	const mailOptions = {
-		to: user.email,
-		subject: 'Your Data Collector password has been changed',
-		html: `
+  const mailOptions = {
+    to: user.email,
+    subject: 'Your Data Collector password has been changed',
+    html: `
 			Hello,
 			<br /><br />
 			This is a confirmation that the password for your account ${user.email} has just been changed.
 			<br />
 		`,
-	};
+  };
 
-	try {
-		await email.send(mailOptions);
-	} catch (e) {
-		logger.error('Error sending password change email', e);
-		return res.sendStatus(500);
-	}
+  try {
+    await email.send(mailOptions);
+  } catch (e) {
+    logger.error('Error sending password change email', e);
+    return res.sendStatus(500);
+  }
 
-	res.sendStatus(200);
+  res.sendStatus(200);
 };
 
 // Forgot Password page
@@ -323,44 +343,43 @@ exports.postForgot = async (req, res) => {
   const errors = req.validationErrors();
 
   if (errors) {
-		return response.userError(res, errors);
-	}
+    return response.userError(res, errors);
+  }
 
-	let token;
-	let user;
+  let token;
+  let user;
 
-	try {
-		token = await crypto.randomBytes(16).toString('hex');
-	} catch (e) {
-		logger.error(e);
-		return response.serverError(res, 'Error generating token');
-	}
+  try {
+    token = await crypto.randomBytes(16).toString('hex');
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error generating token');
+  }
 
-	try {
-		user = await User.findOne({ email: req.body.email.toLowerCase() });
-	} catch (e) {
-		return response.serverError(res, 'Error finding user');
+  try {
+    user = await User.findOne({ email: req.body.email.toLowerCase() });
+  } catch (e) {
+    return response.serverError(res, 'Error finding user');
+  }
 
-	}
+  if (!user) {
+    return response.userError(res, 'No account with that email address found');
+  }
 
-	if (!user) {
-		return response.userError(res, 'No account with that email address found');
-	}
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-	user.resetPasswordToken = token;
-	user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+  try {
+    await user.save();
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error saving reset token');
+  }
 
-	try {
-		await user.save();
-	} catch (e) {
-		logger.error(e);
-		return response.serverError(res, 'Error saving reset token');
-	}
-
-	const mailOptions = {
-		to: user.email,
-		subject: 'Reset your password on Data Collector',
-		html: `
+  const mailOptions = {
+    to: user.email,
+    subject: 'Reset your password on Data Collector',
+    html: `
 			You are receiving this email because you (or someone else) have requested a password reset for your account.
 			<br /><br />
 			Please click on the following link, or paste the link into your browser to complete the process:
@@ -370,25 +389,25 @@ exports.postForgot = async (req, res) => {
 			This link expires in one hour. If you did not request a password reset, please ignore this email and your password will remain unchanged.
 			<br />
 		`,
-	};
+  };
 
-	try {
-		await email.send(mailOptions);
-	} catch (e) {
-		logger.error(e);
-		return response.serverError(res, 'Error sending email reset token');
-	}
+  try {
+    await email.send(mailOptions);
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error sending email reset token');
+  }
 
-	response.success(res);
+  response.success(res);
 };
 
 // Create a 16 digit unique key
 exports.getNewApiKey = async (req, res) => {
-	try {
-		const token = await crypto.randomBytes(16).toString('hex');
-		response.success(res, { token, createdAt: moment() });
-	} catch (e) {
-		logger.error(e);
-		return response.serverError(res, 'Error generating token');
-	}
+  try {
+    const token = await crypto.randomBytes(16).toString('hex');
+    response.success(res, { token, createdAt: moment() });
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error generating token');
+  }
 };
