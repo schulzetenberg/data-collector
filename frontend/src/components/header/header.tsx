@@ -42,7 +42,7 @@ const Header: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: 'logout' });
+      const response: ServerResponse = await Request.post({ url: '/logout' });
       setLoading(false);
 
       if (!response.error) {

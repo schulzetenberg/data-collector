@@ -9,6 +9,7 @@ import SignUp from './pages/sign-up/sign-up';
 import AppConfig from './pages/app-config/app-config';
 import { SessionContext } from './util/session-context';
 import Account from './pages/account/account';
+import PasswordReset from './pages/account/password-reset';
 
 const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): any => {
   return (
@@ -34,6 +35,7 @@ const Routes: React.FC = () => {
       <PublicRoute component={SignIn} path="/sign-in" />
       <PublicRoute component={SignUp} path="/sign-up" />
       <PublicRoute component={ForgotPassword} path="/forgot-password" />
+      <PublicRoute component={PasswordReset} path="/reset-password/:token" />
 
       <AuthenticatedRoute component={Account} session={session} path="/account" />
       <AuthenticatedRoute component={AppConfig} session={session} path="/app-config" />

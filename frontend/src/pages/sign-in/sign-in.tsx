@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SignIn: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { dispatch }: any = React.useContext(UserContext);
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
+
+  const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
   const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
 
@@ -61,8 +62,7 @@ const SignIn: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: 'signin', body: inputs });
-      setLoading(false);
+      const response: ServerResponse = await Request.post({ url: '/signin', body: inputs });
 
       if (!response.error) {
         setSession({ email: response.data.email });
@@ -77,6 +77,7 @@ const SignIn: React.FC = () => {
     } catch (e) {
       console.log(e);
       setLoginErrors(['Error signing in']);
+    } finally {
       setLoading(false);
     }
   };

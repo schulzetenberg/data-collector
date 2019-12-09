@@ -50,9 +50,9 @@ module.exports = (app) => {
   );
   app.post('/logout', userController.logout);
   app.get('/forgot', userController.getForgot);
-  app.post('/forgot', userController.postForgot);
+	app.post('/forgot', userController.postForgot);
   app.get('/reset/:token', userController.getReset);
-  app.post('/reset/:token', userController.postReset);
+  app.post('/reset', userController.postReset);
   app.get('/signup', userController.getSignup);
   app.post('/signup', userController.postSignup);
   app.get('/api-key', userController.getNewApiKey);

@@ -49,8 +49,23 @@ const Account: React.FC = () => {
 
   const handleSaveData = async () => {
     try {
-      const response: ServerResponse = await Request.post({ url: 'account/profile', body: data });
+      const response: ServerResponse = await Request.post({ url: '/account/profile', body: data });
       alert('saved!');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleSubmit = async (body: { password: string; confirmPassword: string }) => {
+    try {
+      const response: ServerResponse = await Request.post({
+        url: '/account/password',
+        body,
+      });
+
+      // TODO: add toast messages & error handling
+      alert('Updated');
+      // TODO: Clear out password fields
     } catch (e) {
       console.log(e);
     }
@@ -66,7 +81,8 @@ const Account: React.FC = () => {
             updateData={handleUpdateData}
             saveData={handleSaveData}
           />
-          <AccountPassword />
+          {/* TODO: Add isLoading logic */}
+          <AccountPassword handleSubmit={handleSubmit} isLoading={false} />
         </Grid>
         <Grid item lg={4} md={6} xl={4} xs={12}>
           <AccountProfile />

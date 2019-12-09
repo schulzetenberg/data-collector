@@ -29,21 +29,18 @@ exports.postLogin = (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    req.flash('error', errors);
     return res.redirect('/login');
   }
 
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (!user) {
-      req.flash('error', { msg: info.message });
       return res.redirect('/login');
     }
     req.logIn(user, (err) => {
       if (err) return next(err);
       // reset the failure counter so next time they log in they get 5 tries again before the delays kick in
       req.brute.reset(() => {
-        req.flash('success', { msg: 'Success! You are logged in.' });
         res.redirect('/');
       });
     });
@@ -252,8 +249,9 @@ exports.getReset = (req, res) => {
       if (!user) {
         req.flash('error', { msg: 'Password reset token is invalid or has expired' });
         return res.redirect('/forgot');
-      }
-      res.render('account/reset.html', {
+			}
+
+      res.render('reset.html', {
         title: 'Password Reset',
       });
     });
@@ -262,7 +260,7 @@ exports.getReset = (req, res) => {
 // Process the reset password request
 exports.postReset = async (req, res) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
-  req.assert('confirm', 'Passwords must match').equals(req.body.password);
+  req.assert('confirmPassword', 'Passwords must match').equals(req.body.password);
 
   const errors = req.validationErrors();
 
@@ -274,16 +272,16 @@ exports.postReset = async (req, res) => {
 
   try {
     user = await User.findOne({
-      resetPasswordToken: req.params.token,
+      resetPasswordToken: req.body.token,
       resetPasswordExpires: { $gt: Date.now() },
     });
   } catch (e) {
     logger.error('Error finding user', e);
-    return res.sendStatus(500);
+		return response.serverError(res, 'Error finding user');
   }
 
   if (!user) {
-    return res.status(400).send('Password reset token is invalid or has expired');
+    return response.userError(res, 'Password reset token is invalid or has expired');
   }
 
   user.password = req.body.password;
@@ -294,36 +292,35 @@ exports.postReset = async (req, res) => {
     await user.save();
   } catch (e) {
     logger.error('Error saving password reset', e);
-    return res.sendStatus(500);
+		return response.serverError(res, 'Error saving password reset');
   }
 
-  req.logIn(user, (err) => {
+  req.logIn(user, async (err) => {
     if (err) {
-      logger.error('Error logging in user', e);
-    }
-    // Send 200 either way, since it is not critical the user gets logged in
-    res.sendStatus(200);
+      logger.error('Error logging in user', err);
+		}
+
+		const mailOptions = {
+			to: user.email,
+			subject: 'Your Data Collector password has been changed',
+			html: `
+				Hello,
+				<br /><br />
+				This is a confirmation that the password for your account ${user.email} has just been changed.
+				<br />
+			`,
+		};
+
+		try {
+			await email.send(mailOptions);
+		} catch (e) {
+			logger.error('Error sending password change email', e);
+			return response.serverError(res, 'Error sending password change email');
+		}
+
+		const data = { name: user.profile.name, email: user.email };
+		response.success(res, { data });
   });
-
-  const mailOptions = {
-    to: user.email,
-    subject: 'Your Data Collector password has been changed',
-    html: `
-			Hello,
-			<br /><br />
-			This is a confirmation that the password for your account ${user.email} has just been changed.
-			<br />
-		`,
-  };
-
-  try {
-    await email.send(mailOptions);
-  } catch (e) {
-    logger.error('Error sending password change email', e);
-    return res.sendStatus(500);
-  }
-
-  res.sendStatus(200);
 };
 
 // Forgot Password page
@@ -384,7 +381,7 @@ exports.postForgot = async (req, res) => {
 			<br /><br />
 			Please click on the following link, or paste the link into your browser to complete the process:
 			<br /><br />
-			http://${req.headers.host}/reset/${token}
+			http://${req.headers.host}/reset-password/${token}
 			<br /><br />
 			This link expires in one hour. If you did not request a password reset, please ignore this email and your password will remain unchanged.
 			<br />

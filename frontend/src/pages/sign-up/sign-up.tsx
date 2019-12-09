@@ -59,7 +59,7 @@ const SignUp: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: 'signup', body: inputs });
+      const response: ServerResponse = await Request.post({ url: '/signup', body: inputs });
       setLoading(false);
 
       if (!response.error) {

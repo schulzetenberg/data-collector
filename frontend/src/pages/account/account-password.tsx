@@ -2,31 +2,19 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, CardContent, CardActions, Divider, Grid, Button, TextField } from '@material-ui/core';
 
-import Request from '../../util/request';
-
 const useStyles = makeStyles((theme) => ({
   card: {
     marginTop: theme.spacing(5),
   },
 }));
 
-const AccountPassword: React.FC = () => {
+const AccountPassword: React.FC<{ handleSubmit: Function; isLoading: boolean }> = ({ handleSubmit, isLoading }) => {
   const classes = useStyles();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = async () => {
-    try {
-      const response: ServerResponse = await Request.post({
-        url: 'account/password',
-        body: { password, confirmPassword },
-      });
-
-      // TODO: add toast messages & error handling
-      alert('Updated');
-    } catch (e) {
-      console.log(e);
-    }
+  const submit = (): void => {
+    handleSubmit({ password, confirmPassword });
   };
 
   return (
@@ -43,6 +31,7 @@ const AccountPassword: React.FC = () => {
                 margin="dense"
                 name="password"
                 type="password"
+                disabled={isLoading}
                 onChange={(e: any): void => setPassword(e.target.value)}
                 required
                 value={password}
@@ -56,6 +45,7 @@ const AccountPassword: React.FC = () => {
                 margin="dense"
                 name="confirmPassword"
                 type="password"
+                disabled={isLoading}
                 onChange={(e: any): void => setConfirmPassword(e.target.value)}
                 required
                 value={confirmPassword}
@@ -65,7 +55,7 @@ const AccountPassword: React.FC = () => {
           </Grid>
         </CardContent>
         <CardActions>
-          <Button color="primary" variant="contained" onClick={handleSubmit}>
+          <Button color="primary" variant="contained" onClick={submit} disabled={isLoading}>
             Update Password
           </Button>
         </CardActions>

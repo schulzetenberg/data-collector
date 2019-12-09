@@ -11,6 +11,7 @@ const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any;
   saveData,
 }) => {
   const classes = useStyles();
+  const isLoading = false; // TODO
 
   return (
     <Card>
@@ -26,6 +27,7 @@ const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any;
                   label="First Name"
                   margin="dense"
                   name="firstName"
+                  disabled={isLoading}
                   onChange={updateProfile}
                   required
                   value={data.profile.firstName}
@@ -38,6 +40,7 @@ const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any;
                   label="Last Name"
                   margin="dense"
                   name="lastName"
+                  disabled={isLoading}
                   onChange={updateProfile}
                   required
                   value={data.profile.lastName}
@@ -50,6 +53,7 @@ const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any;
                   label="Email Address"
                   margin="dense"
                   name="email"
+                  disabled={isLoading}
                   type="email"
                   onChange={updateData}
                   required
@@ -61,7 +65,7 @@ const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any;
           </CardContent>
         )}
         <CardActions>
-          <Button color="primary" variant="contained" onClick={saveData}>
+          <Button color="primary" variant="contained" onClick={saveData} disabled={isLoading}>
             Save Changes
           </Button>
         </CardActions>

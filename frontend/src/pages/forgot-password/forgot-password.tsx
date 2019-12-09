@@ -58,7 +58,7 @@ const ForgotPassword: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: 'forgot', body: inputs });
+      const response: ServerResponse = await Request.post({ url: '/forgot', body: inputs });
       setLoading(false);
 
       if (!response.error) {

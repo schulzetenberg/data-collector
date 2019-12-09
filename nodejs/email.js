@@ -1,3 +1,4 @@
+require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create(); // https://stackoverflow.com/a/32440021
 const sgMail = require('@sendgrid/mail');
 const Q = require('q');
 
