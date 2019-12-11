@@ -6,7 +6,21 @@ const Request = {
   },
 
   post: ({ url, body = {} }: { url: string; body?: object }): Promise<ServerResponse> => {
-    return axios.post(url, body).then((x) => x.data);
+    return axios
+      .post(url, body)
+      .then((x) => x.data)
+      .catch((err) => {
+        const serverResponse = err.data.error;
+        let errors = [];
+
+        if (Array.isArray(serverResponse)) {
+          errors = serverResponse.map((error: ResponseValidationError) => error.msg);
+        } else {
+          errors = [serverResponse];
+        }
+
+        return { errors, status: err.status, statusText: err.statusText };
+      });
   },
 };
 

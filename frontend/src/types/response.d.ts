@@ -5,16 +5,14 @@ interface ResponseSuccess {
 }
 
 interface ReponseError {
-  error: string;
+  errors: string[];
 }
 
 interface ResponseValidationError {
-  error: {
-    location: string;
-    msg: string;
-    param: string;
-    value: string;
-  }[];
+  location: string;
+  msg: string;
+  param: string;
+  value: string;
 }
 
-interface ServerResponse extends ResponseSuccess, ReponseError, ResponseValidationError {}
+interface ServerResponse extends ResponseSuccess, ReponseError {}

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,8 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
 
-import Form from '../../components/form/form';
+import Checkbox from '../../components/checkbox/checkbox';
+import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
 import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
@@ -57,22 +57,36 @@ const SignIn: React.FC = () => {
   const { setSession }: any = React.useContext(SessionContext);
   const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
 
-  const submit = async (inputs: { email: string; password: string }) => {
+  type FormData = {
+    email: string;
+    password: string;
+  };
+
+  const signInSchema = yup.object().shape({
+    email: yup
+      .string()
+      .required('Required')
+      .email('Invalid email'),
+    password: yup.string().required('Required'),
+  });
+
+  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
+    validationSchema: signInSchema,
+  });
+
+  const submit = async (body: FormData): Promise<void> => {
     setLoginErrors([]);
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/signin', body: inputs });
+      const response: ServerResponse = await Request.post({ url: '/signin', body });
 
-      if (!response.error) {
+      if (!response.errors) {
         setSession({ email: response.data.email });
         setUserState(response.data.name, response.data.email);
         history.push('/');
-      } else if (Array.isArray(response.error)) {
-        const errorList = response.error.map((x) => x.msg);
-        setLoginErrors(errorList);
       } else {
-        setLoginErrors([response.error]);
+        setLoginErrors(response.errors);
       }
     } catch (e) {
       console.log(e);
@@ -81,18 +95,6 @@ const SignIn: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const {
-    inputs,
-    handleInputChange,
-    handleCheckboxChange,
-    handleSubmit,
-  }: {
-    inputs: { email: string; password: string; remember: boolean };
-    handleInputChange: any;
-    handleCheckboxChange: any;
-    handleSubmit: any;
-  } = Form({ email: '', password: '', remember: false }, submit);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -114,48 +116,45 @@ const SignIn: React.FC = () => {
               {error}
             </Typography>
           ))}
-          <form className={classes.form} onSubmit={handleSubmit}>
+
+          <form noValidate className={classes.form} onSubmit={handleSubmit(submit)}>
             <TextField
-              variant="outlined"
-              margin="normal"
+              name="email"
+              label="Email Address"
+              errors={errors}
+              register={register}
+              setValue={setValue}
               required
               fullWidth
               type="email"
-              id="email"
-              label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
-              value={inputs.email}
               disabled={isLoading}
-              onChange={handleInputChange}
             />
+
             <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               name="password"
               label="Password"
+              errors={errors}
+              register={register}
+              setValue={setValue}
+              required
+              fullWidth
               type="password"
-              id="password"
               autoComplete="current-password"
-              value={inputs.password}
               disabled={isLoading}
-              onChange={handleInputChange}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="remember"
-                  color="primary"
-                  value={inputs.remember}
-                  disabled={isLoading}
-                  onChange={handleCheckboxChange}
-                />
-              }
+
+            <Checkbox
+              name="remember"
+              errors={errors}
+              register={register}
+              setValue={setValue}
+              color="primary"
+              disabled={isLoading}
               label="Remember me"
             />
+
             <Button
               type="submit"
               fullWidth
