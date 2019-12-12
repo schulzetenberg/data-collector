@@ -7,9 +7,9 @@ const RHFInputAny = RHFInput as any; // TODO: Clean up
 const Checkbox: React.FC<{
   name: string;
   label?: string;
-  register: Function;
-  setValue: Function;
-  errors: any;
+  register?: Function;
+  setValue?: Function;
+  errors?: any;
   [x: string]: any;
 }> = ({ name, label, register, setValue, errors, ...rest }) => {
   return (

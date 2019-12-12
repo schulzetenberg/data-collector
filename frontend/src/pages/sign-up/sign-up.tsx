@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 
-import Form from '../../components/form/form';
+import FormOld from '../../components/form/form-old';
 import Request from '../../util/request';
 import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
@@ -87,7 +87,7 @@ const SignUp: React.FC = () => {
     inputs: { name: string; email: string; password: string; confirmPassword: string };
     handleInputChange: any;
     handleSubmit: any;
-  } = Form({ name: '', email: '', password: '', confirmPassword: '' }, submit);
+  } = FormOld({ name: '', email: '', password: '', confirmPassword: '' }, submit);
 
   return (
     <Container component="main" maxWidth="xs">

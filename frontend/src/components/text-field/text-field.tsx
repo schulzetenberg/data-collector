@@ -6,9 +6,9 @@ const RHFInputAny = RHFInput as any; // TODO: Clean up
 
 const TextField: React.FC<{
   name: string;
-  register: Function;
-  setValue: Function;
-  errors: any;
+  register?: Function;
+  setValue?: Function;
+  errors?: any;
   [x: string]: any;
 }> = ({ name, register, setValue, errors, type, ...rest }) => {
   return (

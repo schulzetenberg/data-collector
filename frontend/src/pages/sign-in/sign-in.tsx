@@ -13,6 +13,7 @@ import useForm from 'react-hook-form';
 import * as yup from 'yup';
 
 import Checkbox from '../../components/checkbox/checkbox';
+import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
 import UserContext from '../../util/user-context';
@@ -34,10 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -57,12 +54,7 @@ const SignIn: React.FC = () => {
   const { setSession }: any = React.useContext(SessionContext);
   const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
 
-  type FormData = {
-    email: string;
-    password: string;
-  };
-
-  const signInSchema = yup.object().shape({
+  const validationSchema = yup.object().shape({
     email: yup
       .string()
       .required('Required')
@@ -70,8 +62,13 @@ const SignIn: React.FC = () => {
     password: yup.string().required('Required'),
   });
 
+  type FormData = {
+    email: string;
+    password: string;
+  };
+
   const { handleSubmit, register, setValue, errors } = useForm<FormData>({
-    validationSchema: signInSchema,
+    validationSchema,
   });
 
   const submit = async (body: FormData): Promise<void> => {
@@ -117,52 +114,35 @@ const SignIn: React.FC = () => {
             </Typography>
           ))}
 
-          <form noValidate className={classes.form} onSubmit={handleSubmit(submit)}>
+          <Form
+            disabled={isLoading}
+            errors={errors}
+            register={register}
+            setValue={setValue}
+            onSubmit={handleSubmit(submit)}
+          >
             <TextField
               name="email"
               label="Email Address"
-              errors={errors}
-              register={register}
-              setValue={setValue}
               required
               fullWidth
               type="email"
               autoComplete="email"
               autoFocus
-              disabled={isLoading}
             />
 
             <TextField
               name="password"
               label="Password"
-              errors={errors}
-              register={register}
-              setValue={setValue}
               required
               fullWidth
               type="password"
               autoComplete="current-password"
-              disabled={isLoading}
             />
 
-            <Checkbox
-              name="remember"
-              errors={errors}
-              register={register}
-              setValue={setValue}
-              color="primary"
-              disabled={isLoading}
-              label="Remember me"
-            />
+            <Checkbox name="remember" errors={errors} color="primary" label="Remember me" />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={isLoading}
-              className={classes.submit}
-            >
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Sign In
             </Button>
             <Grid container>
@@ -177,7 +157,7 @@ const SignIn: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
-          </form>
+          </Form>
         </div>
       </Box>
     </Container>
