@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Form = (
+const FormOld = (
   initialValues: any,
   callback: { (inputs: any): any }
 ): {
@@ -34,4 +34,4 @@ const Form = (
   };
 };
 
-export default Form;
+export default FormOld;

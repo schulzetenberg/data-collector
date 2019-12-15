@@ -23,7 +23,7 @@ const App: React.FC = ({ location }: any) => {
       if (status === 401) {
         setSession();
       }
-      return Promise.reject(error);
+      return Promise.reject(error.response);
     }
   );
 

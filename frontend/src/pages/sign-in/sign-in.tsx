@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,8 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
 
+import Checkbox from '../../components/checkbox/checkbox';
 import Form from '../../components/form/form';
+import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
 import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
@@ -34,10 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -57,22 +54,36 @@ const SignIn: React.FC = () => {
   const { setSession }: any = React.useContext(SessionContext);
   const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
 
-  const submit = async (inputs: { email: string; password: string }) => {
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .required('Required')
+      .email('Invalid email'),
+    password: yup.string().required('Required'),
+  });
+
+  type FormData = {
+    email: string;
+    password: string;
+  };
+
+  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
+    validationSchema,
+  });
+
+  const submit = async (body: FormData): Promise<void> => {
     setLoginErrors([]);
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/signin', body: inputs });
+      const response: ServerResponse = await Request.post({ url: '/signin', body });
 
-      if (!response.error) {
+      if (!response.errors) {
         setSession({ email: response.data.email });
         setUserState(response.data.name, response.data.email);
         history.push('/');
-      } else if (Array.isArray(response.error)) {
-        const errorList = response.error.map((x) => x.msg);
-        setLoginErrors(errorList);
       } else {
-        setLoginErrors([response.error]);
+        setLoginErrors(response.errors);
       }
     } catch (e) {
       console.log(e);
@@ -81,18 +92,6 @@ const SignIn: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const {
-    inputs,
-    handleInputChange,
-    handleCheckboxChange,
-    handleSubmit,
-  }: {
-    inputs: { email: string; password: string; remember: boolean };
-    handleInputChange: any;
-    handleCheckboxChange: any;
-    handleSubmit: any;
-  } = Form({ email: '', password: '', remember: false }, submit);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -114,56 +113,36 @@ const SignIn: React.FC = () => {
               {error}
             </Typography>
           ))}
-          <form className={classes.form} onSubmit={handleSubmit}>
+
+          <Form
+            disabled={isLoading}
+            errors={errors}
+            register={register}
+            setValue={setValue}
+            onSubmit={handleSubmit(submit)}
+          >
             <TextField
-              variant="outlined"
-              margin="normal"
+              name="email"
+              label="Email Address"
               required
               fullWidth
               type="email"
-              id="email"
-              label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
-              value={inputs.email}
-              disabled={isLoading}
-              onChange={handleInputChange}
             />
+
             <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               name="password"
               label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={inputs.password}
-              disabled={isLoading}
-              onChange={handleInputChange}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="remember"
-                  color="primary"
-                  value={inputs.remember}
-                  disabled={isLoading}
-                  onChange={handleCheckboxChange}
-                />
-              }
-              label="Remember me"
-            />
-            <Button
-              type="submit"
+              required
               fullWidth
-              variant="contained"
-              color="primary"
-              disabled={isLoading}
-              className={classes.submit}
-            >
+              type="password"
+              autoComplete="current-password"
+            />
+
+            <Checkbox name="remember" errors={errors} color="primary" label="Remember me" />
+
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Sign In
             </Button>
             <Grid container>
@@ -178,7 +157,7 @@ const SignIn: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
-          </form>
+          </Form>
         </div>
       </Box>
     </Container>

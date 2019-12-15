@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -10,9 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
 
-import Request from '../../util/request';
 import Form from '../../components/form/form';
+import TextField from '../../components/text-field/text-field';
+import Request from '../../util/request';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -29,10 +31,6 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -51,6 +49,21 @@ const ForgotPassword: React.FC = () => {
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
+
+  const validationSchema = yup.object().shape({
+    email: yup
+      .string()
+      .required('Required')
+      .email('Invalid email'),
+  });
+
+  type FormData = {
+    email: string;
+  };
+
+  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
+    validationSchema,
+  });
 
   const submit = async (inputs: { email: string }) => {
     setLoginErrors([]);
@@ -76,8 +89,6 @@ const ForgotPassword: React.FC = () => {
     }
   };
 
-  const { inputs, handleInputChange, handleSubmit } = Form({ email: '' }, submit);
-
   return (
     <Container component="main" maxWidth="sm">
       <Box mt={5}>
@@ -93,9 +104,7 @@ const ForgotPassword: React.FC = () => {
           <Typography component="h1" variant="h5">
             Password Reset
           </Typography>
-          {(resetSuccess && (
-            <p className={classes.message}>{`An e-mail has been sent to ${inputs.email} with reset instructions`}</p>
-          )) || (
+          {(resetSuccess && <p className={classes.message}>An e-mail has been sent with reset instructions</p>) || (
             <>
               {loginErrors.map((error, index) => (
                 <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
@@ -104,30 +113,24 @@ const ForgotPassword: React.FC = () => {
               ))}
               <p>Enter your email address to receive password reset instructions</p>
               <Grid item xs={12} sm={10}>
-                <form className={classes.form} onSubmit={handleSubmit}>
+                <Form
+                  disabled={isLoading}
+                  errors={errors}
+                  register={register}
+                  setValue={setValue}
+                  onSubmit={handleSubmit(submit)}
+                >
                   <TextField
-                    variant="outlined"
-                    margin="normal"
+                    name="email"
+                    label="Email Address"
                     required
                     fullWidth
                     type="email"
-                    id="email"
-                    label="Email Address"
-                    name="email"
                     autoComplete="email"
                     autoFocus
-                    value={inputs.email}
-                    disabled={isLoading}
-                    onChange={handleInputChange}
                   />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    disabled={isLoading}
-                    className={classes.submit}
-                  >
+
+                  <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                     Reset Password
                   </Button>
                   <Grid container>
@@ -142,7 +145,7 @@ const ForgotPassword: React.FC = () => {
                       </Link>
                     </Grid>
                   </Grid>
-                </form>
+                </Form>
               </Grid>
             </>
           )}
