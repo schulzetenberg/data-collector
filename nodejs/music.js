@@ -6,15 +6,18 @@ const MusicModel = require('../models/music-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 
-exports.save = () => {
-  logger.info('Starting music save');
+exports.save = (userId) => {
+  logger.info('Starting music save', userId);
 
   appConfig
-    .get('music')
+    .get(userId)
     .then(topArtists)
     .then(recentTracks)
     .then(topArtistData)
-    .then(save)
+    .then((data) => {
+      const doc = new MusicModel({ ...data, userId });
+      return doc.save();
+    })
     .then(() => {
       logger.info('Saved music data');
     })
@@ -34,13 +37,7 @@ function topArtists(config) {
     api
       .get({ url })
       .then((data) => {
-        if (
-          !data ||
-          !data.topartists ||
-          !data.topartists.artist ||
-          !data.topartists.artist.length ||
-          !data.topartists['@attr']
-        ) {
+        if (!data || !data.topartists || !data.topartists.artist || !data.topartists.artist.length || !data.topartists['@attr']) {
           return defer.reject('Could not parse top artist data');
         }
 
@@ -83,9 +80,7 @@ function recentTracks(promiseData) {
     .subtract(1, 'years')
     .unix();
   const toDate = moment().unix();
-  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=${
-    promiseData.key
-  }&format=json&from=${fromDate}&to=${toDate}`;
+  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=${promiseData.key}&format=json&from=${fromDate}&to=${toDate}`;
 
   api
     .get({ url })
@@ -185,9 +180,4 @@ function getSpotifyArtist(config, artist) {
     });
 
   return defer.promise;
-}
-
-function save(data) {
-  const doc = new MusicModel(data);
-  return doc.save();
 }

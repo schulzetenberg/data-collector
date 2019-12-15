@@ -1,49 +1,52 @@
-const schedule = require('node-schedule');
-
 const appConfig = require('./app-config');
 const logger = require('./log');
-const scheduledJobs = [];
+const { removeUserJobs } = require('./agenda');
 
-exports.run = function(){
-  // Clear out current jobs before scheduling new jobs
-  for (let i = 0, x = scheduledJobs.length; i < x; i++) {
-    scheduledJobs[i].cancel();
+exports.run = async function(agenda, userId) {
+  let config;
+
+  try {
+    const removedJobs = await removeUserJobs(userId);
+    logger.info(`Removed ${removedJobs} jobs`);
+  } catch (e) {
+    logger.error(`Error removing existing jobs for user ${userId}`);
+    return Promise.reject('Error scheduling the jobs');
   }
 
-  appConfig.get().then(function(config){
-    if(!config) {
-      return logger.error('Scheduler not started. No config saved in db');
-    }
+  try {
+    config = await appConfig.get(userId);
+  } catch (e) {
+    logger.error(`Error getting app config for user ${userId}`);
+    return Promise.reject('Error scheduling the jobs');
+  }
 
-    var appList = objectList(config);
+  if (!config) {
+    logger.error(`Scheduler not started for user ${userId}. No config saved in db`);
+    return Promise.reject('No config saved in the database');
+  }
 
-    for (let i = 0, x=appList.length; i < x; i++) {
-      let app = appList[i];
+  const appList = objectList(config);
 
-      if (config[app].schedule && config[app].filePath && config[app].functionName) {
-        try {
-          let scheduledFunction = require('../' + config[app].filePath)[config[app].functionName];
-          if (typeof scheduledFunction !== 'function') {
-            throw config[app].filePath + '.js ' + config[app].functionName + '(), not a function';
-          }
+  for (let i = 0, x = appList.length; i < x; i += 1) {
+    const app = appList[i];
 
-          let job = schedule.scheduleJob(config[app].schedule, scheduledFunction);
-          scheduledJobs.push(job);
-        } catch (err) {
-          logger.error('Error scheduling appplication. Error:', err);
-        }
+    if (config[app].active && config[app].schedule) {
+      try {
+        console.log(`schedule app for user ${userId}`, app);
+        agenda.every(config[app].schedule, app, { userId });
+      } catch (err) {
+        logger.error(`Error scheduling appplication ${app}. Error:`, err);
+        return Promise.reject('Error scheduling the jobs');
       }
     }
-  }).catch(function(err) {
-    logger.error(err);
-  });
+  }
 };
 
 function objectList(o) {
   var objects = [];
 
-  Object.keys(o).forEach(function(key) {
-    if (o[key] !== null && typeof o[key] === 'object' &&  key !== '_id') {
+  Object.keys(o).forEach((key) => {
+    if (o[key] !== null && typeof o[key] === 'object' && key !== '_id') {
       var empty = isEmptyObject(o[key]);
 
       if (!empty) {
@@ -56,7 +59,7 @@ function objectList(o) {
 }
 
 function isEmptyObject(o) {
-  return Object.keys(o).every(function(x) {
+  return Object.keys(o).every((x) => {
     return !o[x] || (Array.isArray(o[x]) && o[x].length === 0);
   });
 }

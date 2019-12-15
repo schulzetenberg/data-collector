@@ -15,6 +15,7 @@ const path = require('path');
 const passport = require('passport');
 const expressValidator = require('express-validator');
 const assets = require('express-asset-versions');
+const Agendash = require('agendash');
 
 // Logging configuration
 const logger = require('./nodejs/log.js');
@@ -124,11 +125,24 @@ app.use((req, res, next) => {
   next();
 });
 
-const scheduler = require('./nodejs/scheduler');
-scheduler.run();
-
 // App routes
 require('./routes')(app);
+
+// Agenda scheduler
+const { agenda } = require('./nodejs/agenda');
+
+// Agenda UI Dashboard
+app.use(
+  '/agenda',
+  function(req, res, next) {
+    if (!req.user) {
+      res.send(401);
+    } else {
+      next();
+    }
+  },
+  Agendash(agenda)
+);
 
 // Used for testing
 app.get('/404', (req, res) => {
@@ -174,12 +188,12 @@ if (app.get('env') === 'production') {
         title: '500',
       });
     } else if (req.accepts('json')) {
-			// Respond with JSON
+      // Respond with JSON
       res.send({
         error: 'Internal Server Error',
       });
     } else {
-			// Fall back to plain text
+      // Fall back to plain text
       res.type('txt').send('Internal Server Error');
     }
   });

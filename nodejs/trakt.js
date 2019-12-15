@@ -4,36 +4,44 @@ const appConfig = require('./app-config');
 const traktModel = require('../models/trakt-model.js');
 const api = require('./api');
 
-exports.save = function() {
+exports.save = function(userId) {
   logger.info('Starting Trakt');
 
-  var traktConfig = {};
-  var statsData;
-  var moviesData;
+  let traktConfig = {};
+  let statsData;
+  let moviesData;
 
-  appConfig.get().then(function(config) {
-    traktConfig = config && config.trakt;
-    if(!traktConfig) return logger.error('Missing trakt config');
-    return userData(traktConfig);
-  }).then(function(data) {
-    statsData = data;
-    return topRatings(traktConfig, 'movies');
-  }).then(function(data) {
-    moviesData = data;
-    return topRatings(traktConfig, 'shows');
-  }).then(function(showsData) {
-    let doc = new traktModel({
-      stats: statsData,
-      topMovies: moviesData,
-      topShows: showsData
+  appConfig
+    .get(userId)
+    .then(function(config) {
+      traktConfig = config && config.trakt;
+      if (!traktConfig) return logger.error('Missing trakt config');
+      return userData(traktConfig);
+    })
+    .then(function(data) {
+      statsData = data;
+      return topRatings(traktConfig, 'movies');
+    })
+    .then(function(data) {
+      moviesData = data;
+      return topRatings(traktConfig, 'shows');
+    })
+    .then(function(showsData) {
+      let doc = new traktModel({
+        userId,
+        stats: statsData,
+        topMovies: moviesData,
+        topShows: showsData,
+      });
+
+      return doc.save();
+    })
+    .then(function() {
+      logger.info('Finished saving trakt data');
+    })
+    .catch(function(err) {
+      logger.error('Caught trakt save error:', err);
     });
-
-    return doc.save();
-  }).then(function() {
-    logger.info('Finished saving trakt data');
-  }).catch(function(err) {
-    logger.error('Caught trakt save error:', err);
-  });
 };
 
 function userData(config) {
@@ -46,8 +54,8 @@ function userData(config) {
     headers: {
       'Content-Type': 'application/json',
       'trakt-api-version': '2',
-      'trakt-api-key': config.id
-    }
+      'trakt-api-key': config.id,
+    },
   };
 
   return api.get(options);
@@ -64,8 +72,8 @@ function topRatings(config, type) {
     headers: {
       'Content-Type': 'application/json',
       'trakt-api-version': '2',
-      'trakt-api-key': config.id
-    }
+      'trakt-api-key': config.id,
+    },
   };
 
   return api.get(options);

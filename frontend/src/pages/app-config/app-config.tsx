@@ -54,7 +54,7 @@ const AppConfig: React.FC = () => {
     console.log('TODO update', e);
   };
 
-  const handelUpdateStatus = (appKey: string, checked: boolean) => {
+  const handleUpdateStatus = (appKey: string, checked: boolean) => {
     const toSave = {
       ...data,
       [appKey]: {
@@ -72,7 +72,7 @@ const AppConfig: React.FC = () => {
   }, []);
 
   const cardDefaultProps = {
-    updateStatus: handelUpdateStatus,
+    updateStatus: handleUpdateStatus,
     updateSettings: handleUpdateSettings,
     manuallyUpdate: handleManualUpdate,
     isLoading,

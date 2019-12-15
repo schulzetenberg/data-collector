@@ -5,16 +5,14 @@ const logger = require('./log');
 const appConfig = require('./app-config');
 const feedlyModel = require('../models/feedly-model');
 
-exports.save = function() {
+exports.save = function(userId) {
   logger.info('Starting Feedly');
 
   appConfig
-    .get()
+    .get(userId)
     .then(currentBlogs)
-    .then(function(blogs) {
-      const doc = new feedlyModel({
-        feeds: blogs,
-      });
+    .then((feeds) => {
+      const doc = new feedlyModel({ feeds, userId });
       return doc.save();
     })
     .catch(function(err) {

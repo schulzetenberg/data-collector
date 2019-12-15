@@ -6,6 +6,7 @@ const moment = require('moment');
 const logger = require('../nodejs/log');
 const email = require('../nodejs/email');
 const User = require('../models/User');
+const appConfig = require('../models/app-config');
 const response = require('../nodejs/response');
 
 // Login page
@@ -133,10 +134,13 @@ exports.postSignup = async (req, res, next) => {
   }
 
   try {
-    await user.save();
+    await user.save().then((user) => {
+      const configDoc = new appConfig({ userId: user._id });
+      return configDoc.save();
+    });
   } catch (e) {
     logger.error(err);
-    return response.serverError(res, 'Error saving new user');
+    return response.serverError(res, 'Error creating new user');
   }
 
   req.logIn(user, (err) => {
@@ -249,7 +253,7 @@ exports.getReset = (req, res) => {
       if (!user) {
         req.flash('error', { msg: 'Password reset token is invalid or has expired' });
         return res.redirect('/forgot');
-			}
+      }
 
       res.render('reset.html', {
         title: 'Password Reset',
@@ -277,7 +281,7 @@ exports.postReset = async (req, res) => {
     });
   } catch (e) {
     logger.error('Error finding user', e);
-		return response.serverError(res, 'Error finding user');
+    return response.serverError(res, 'Error finding user');
   }
 
   if (!user) {
@@ -292,34 +296,34 @@ exports.postReset = async (req, res) => {
     await user.save();
   } catch (e) {
     logger.error('Error saving password reset', e);
-		return response.serverError(res, 'Error saving password reset');
+    return response.serverError(res, 'Error saving password reset');
   }
 
   req.logIn(user, async (err) => {
     if (err) {
       logger.error('Error logging in user', err);
-		}
+    }
 
-		const mailOptions = {
-			to: user.email,
-			subject: 'Your Data Collector password has been changed',
-			html: `
+    const mailOptions = {
+      to: user.email,
+      subject: 'Your Data Collector password has been changed',
+      html: `
 				Hello,
 				<br /><br />
 				This is a confirmation that the password for your account ${user.email} has just been changed.
 				<br />
 			`,
-		};
+    };
 
-		try {
-			await email.send(mailOptions);
-		} catch (e) {
-			logger.error('Error sending password change email', e);
-			return response.serverError(res, 'Error sending password change email');
-		}
+    try {
+      await email.send(mailOptions);
+    } catch (e) {
+      logger.error('Error sending password change email', e);
+      return response.serverError(res, 'Error sending password change email');
+    }
 
-		const data = { name: user.profile.name, email: user.email };
-		response.success(res, { data });
+    const data = { name: user.profile.name, email: user.email };
+    response.success(res, { data });
   });
 };
 

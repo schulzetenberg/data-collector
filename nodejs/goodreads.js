@@ -7,18 +7,22 @@ const goodreadsModel = require('../models/goodreads-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 
-exports.save = function() {
+exports.save = function(userId) {
   logger.info('Starting Goodreads');
 
   appConfig
-    .get()
+    .get(userId)
     .then(booksRead)
     .then(topBooks)
     .then(save)
-    .then(function() {
+    .then((data) => {
+      const doc = new goodreadsModel({ ...data, userId });
+      return doc.save();
+    })
+    .then(() => {
       logger.info('Finished saving Goodreads data');
     })
-    .catch(function(err) {
+    .catch((err) => {
       logger.error(err);
     });
 };
@@ -189,9 +193,4 @@ function topBooks(params) {
   }
 
   return defer.promise;
-}
-
-function save(data) {
-  var doc = new goodreadsModel(data);
-  return doc.save();
 }

@@ -12,23 +12,28 @@ const logger = require('./log');
 const appConfig = require('./app-config');
 
 // Get updated configuration & save to file for future use
-exports.getConfig = function() {
+exports.save = (userId) => {
   logger.info('Starting TMDB');
 
-  appConfig.get().then(function(config) {
-    if (!config || !config.tmdb || !config.tmdb.key) {
-      return logger.error('Missing TMDB config');
-    }
+  appConfig
+    .get(userId)
+    .then((config) => {
+      if (!config || !config.tmdb || !config.tmdb.key) {
+        return logger.error('Missing TMDB config');
+      }
 
-    const options = {
-      url: 'https://api.themoviedb.org/3/configuration?api_key=' + config.tmdb.key,
-      headers: { 'Content-Type': 'application/json' }
-    };
+      const options = {
+        url: 'https://api.themoviedb.org/3/configuration?api_key=' + config.tmdb.key,
+        headers: { 'Content-Type': 'application/json' },
+      };
 
-    return options;
-  }).then(api.get).then(function(body) {
+      return options;
+    })
+    .then(api.get)
+    .then((body) => {
       return writeFileAsync('./config/tmdb.json', JSON.stringify(body, null, 4));
-  }).catch(function(err) {
-    logger.error('TMDB error', err);
-  });
+    })
+    .catch((err) => {
+      logger.error('TMDB error', err);
+    });
 };

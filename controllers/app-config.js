@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const moment = require('moment');
 const parser = require('cron-parser');
 
 const logger = require('../nodejs/log');
@@ -7,6 +6,8 @@ const configModel = require('../models/app-config');
 const appConfig = require('../nodejs/app-config');
 const response = require('../nodejs/response');
 const mongoUtils = require('../nodejs/mongo-utils');
+const scheduler = require('../nodejs/scheduler');
+const { agenda } = require('../nodejs/agenda');
 
 /**
  * GET /app-config-page
@@ -24,7 +25,7 @@ exports.getConfig = async (req, res, next) => {
   const lastUpdateData = await mongoUtils.getLatestDocTimestamps();
 
   appConfig
-    .get()
+    .get(req.user._id)
     .then((data) => {
       if (data) {
         _.forIn(data, (value, key) => {
@@ -78,6 +79,9 @@ exports.saveConfig = (req, res, next) => {
     .then(() => {
       return exports.getConfig(req, res, next);
     })
+    .then(() => {
+      return scheduler.run(agenda, req.user._id);
+    })
     .catch((err) => {
       console.log(err);
       return next('Error saving config');
@@ -95,7 +99,7 @@ exports.runApp = (req, res, next) => {
     return next('No App to run');
   }
 
-  appConfig.get().then((config) => {
+  appConfig.get(req.user._id).then((config) => {
     if (config[data.app].filePath && config[data.app].functionName) {
       try {
         // eslint-disable-next-line
@@ -105,7 +109,7 @@ exports.runApp = (req, res, next) => {
           throw `${config[data.app].filePath}.js ${config[data.app].functionName}(), not a function`;
         }
 
-        scheduledFunction();
+        scheduledFunction(req.user._id);
       } catch (err) {
         console.log('Error running appplication. Error:', err);
         return res.sendStatus(500);

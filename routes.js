@@ -1,5 +1,4 @@
 const passportConf = require('./config/passport');
-const init = require('./nodejs/init');
 
 // Controllers
 const homeController = require('./controllers/home');
@@ -16,14 +15,6 @@ module.exports = (app) => {
   app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
   app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
   app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
-  app.get('/app-config/scheduler', passportConf.isAuthenticated, (req, res) => {
-    scheduler.run();
-    res.sendStatus(200);
-  });
-  app.get('/app-config/init', passportConf.isAuthenticated, (req, res) => {
-    init.run();
-    res.sendStatus(200);
-  });
 
   app.get('/settings', passportConf.isAuthenticated, settingsController.getSettings);
 
@@ -50,7 +41,7 @@ module.exports = (app) => {
   );
   app.post('/logout', userController.logout);
   app.get('/forgot', userController.getForgot);
-	app.post('/forgot', userController.postForgot);
+  app.post('/forgot', userController.postForgot);
   app.get('/reset/:token', userController.getReset);
   app.post('/reset', userController.postReset);
   app.get('/signup', userController.getSignup);
