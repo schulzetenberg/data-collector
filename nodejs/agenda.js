@@ -1,4 +1,4 @@
-var Agenda = require('agenda');
+const Agenda = require('agenda');
 
 const secrets = require('../config/secrets');
 const logger = require('./log');
@@ -9,7 +9,7 @@ exports.agenda = agenda;
 require('./jobs')(agenda);
 
 // IIFE to give access to async/await
-(async function() {
+(async () => {
   logger.warn('Agenda started!');
   await agenda.start();
 })();

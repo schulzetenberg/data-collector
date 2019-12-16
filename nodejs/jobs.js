@@ -1,10 +1,10 @@
+/* eslint-disable global-require */
 const appModules = {
   music: require('./music'),
   goodreads: require('./goodreads'),
   github: require('./github'),
   trakt: require('./trakt'),
   tmdb: require('./tmdb'),
-  fuelly: require('./fuelly'),
   fuelly: require('./fuelly'),
   playerFm: require('./player-fm'),
   feedly: require('./feedly'),

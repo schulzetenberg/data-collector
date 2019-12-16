@@ -1,29 +1,29 @@
 const Q = require('q');
 const opmlToJSON = require('opml-to-json');
-const parseString = require('xml2js').parseString;
+const { parseString } = require('xml2js');
 
 const logger = require('./log');
 const appConfig = require('./app-config');
 const api = require('./api');
-const playerFmModel = require('../models/player-fm-model');
+const PlayerFmModel = require('../models/player-fm-model');
 
-exports.save = function(userId) {
+exports.save = (userId) => {
   logger.info('Starting Goodreads');
 
   appConfig
     .get(userId)
     .then(currentPodcasts)
-    .then(function(podcasts) {
+    .then((podcasts) => {
       const promises = [];
 
-      for (let i = 0, x = podcasts.length; i < x; i++) {
+      for (let i = 0, x = podcasts.length; i < x; i += 1) {
         promises.push(getArtwork(podcasts[i]));
       }
 
       return Q.all(promises);
     })
     .then((podcasts) => {
-      const doc = new playerFmModel({ podcasts, userId });
+      const doc = new PlayerFmModel({ podcasts, userId });
       return doc.save();
     })
     .then(() => {
@@ -46,14 +46,12 @@ function currentPodcasts(config) {
 
     api
       .get({ url })
-      .then(function(body) {
+      .then((body) => {
         try {
-          opmlToJSON(body, function(err, json) {
+          opmlToJSON(body, (err, json) => {
             if (err) {
               return defer.reject(err);
             }
-
-            console.log('TEST', json.children[0]);
 
             defer.resolve(json.children);
           });
@@ -61,7 +59,7 @@ function currentPodcasts(config) {
           defer.reject(err);
         }
       })
-      .catch(function(err) {
+      .catch((err) => {
         logger.error(err);
         defer.reject('Get PlayerFM podcasts error');
       });
@@ -74,11 +72,11 @@ function getArtwork(podcast) {
   // Make a HTTP request to the podcast URL to find the artwork URL
   return api
     .get({ url: podcast.xmlurl })
-    .then(function(xmlData) {
+    .then((xmlData) => {
       let img = null;
 
       try {
-        parseString(xmlData, function(err, result) {
+        parseString(xmlData, (err, result) => {
           if (err) console.log(err);
 
           img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
@@ -96,7 +94,7 @@ function getArtwork(podcast) {
 
       return podcastData;
     })
-    .catch(function(err) {
+    .catch((err) => {
       logger.error(`Error getting podcast artwork for ${podcast.text}`);
       logger.error(err);
 

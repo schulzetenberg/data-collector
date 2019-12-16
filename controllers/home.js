@@ -13,5 +13,5 @@ exports.index = (req, res) => {
 };
 
 exports.getReactPage = (req, res) => {
-	res.sendFile(path.join(__dirname, '../frontend/build/index.html'), { title: 'React' });
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'), { title: 'React' });
 };

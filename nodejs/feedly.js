@@ -3,19 +3,19 @@ const opmlToJSON = require('opml-to-json');
 
 const logger = require('./log');
 const appConfig = require('./app-config');
-const feedlyModel = require('../models/feedly-model');
+const FeedlyModel = require('../models/feedly-model');
 
-exports.save = function(userId) {
+exports.save = (userId) => {
   logger.info('Starting Feedly');
 
   appConfig
     .get(userId)
     .then(currentBlogs)
     .then((feeds) => {
-      const doc = new feedlyModel({ feeds, userId });
+      const doc = new FeedlyModel({ feeds, userId });
       return doc.save();
     })
-    .catch(function(err) {
+    .catch((err) => {
       logger.error('Feedly error', err);
     });
 };
@@ -28,7 +28,7 @@ function currentBlogs(config) {
     defer.reject('Missing Feedly opml config');
   } else {
     try {
-      opmlToJSON(opml, function(err, json) {
+      opmlToJSON(opml, (err, json) => {
         if (err) {
           return defer.reject(err);
         }

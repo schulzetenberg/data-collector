@@ -5,6 +5,7 @@
 
 const { promisify } = require('util');
 const fs = require('fs');
+
 const writeFileAsync = promisify(fs.writeFile);
 
 const api = require('./api');
@@ -23,7 +24,7 @@ exports.save = (userId) => {
       }
 
       const options = {
-        url: 'https://api.themoviedb.org/3/configuration?api_key=' + config.tmdb.key,
+        url: `https://api.themoviedb.org/3/configuration?api_key=${config.tmdb.key}`,
         headers: { 'Content-Type': 'application/json' },
       };
 

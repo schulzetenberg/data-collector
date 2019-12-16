@@ -13,16 +13,18 @@ const store = new MongoStore((ready) => {
   });
 });
 
+// eslint-disable-next-line no-new
 new ExpressBrute(store);
 
 const failCallback = (req, res, next, nextValidRequestDate) => {
-	response.userError(res, `You've made too many failed login attempts, please try again ${moment(nextValidRequestDate).fromNow()}`);
+  response.userError(res, `You've made too many failed login attempts, please try again ${moment(nextValidRequestDate).fromNow()}`);
 };
 
 const handleStoreError = (error) => {
-	console.log(error);
+  console.log(error);
 
   // cause node to exit, hopefully restarting the process fixes the problem
+  // eslint-disable-next-line no-throw-literal
   throw {
     message: error.message,
     parent: error.parent,

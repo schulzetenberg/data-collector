@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const moment = require('moment');
 
 const logger = require('./log');

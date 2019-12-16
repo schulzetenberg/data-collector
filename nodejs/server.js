@@ -6,23 +6,23 @@ const logger = require('./log');
 const app = require('../app');
 const secrets = require('../config/secrets');
 
-const ipAddress = secrets.ipAddress;
-const port = secrets.port;
-var server;
+const { ipAddress } = secrets;
+const { port } = secrets;
+let server;
 
 // Create HTTP(S) server.
 if (!secrets.SSL) {
   server = http.createServer(app);
 } else {
-  const privateKey  = fs.readFileSync('./key.pem', 'utf8');
+  const privateKey = fs.readFileSync('./key.pem', 'utf8');
   const certificate = fs.readFileSync('./cert.pem', 'utf8');
-  const credentials = {key: privateKey, cert: certificate};
+  const credentials = { key: privateKey, cert: certificate };
 
   server = https.createServer(credentials, app);
 }
 
 // Listen on provided port
-server.listen(port, ipAddress, function () {
+server.listen(port, ipAddress, () => {
   logger.warn('%s: Node server started on %s:%d ...', Date(Date.now()), ipAddress, port);
 });
 
@@ -34,16 +34,16 @@ function onError(error) {
     throw error;
   }
 
-  var bind = (typeof port === 'string') ? 'Pipe ' + port : 'Port ' + port;
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      logger.error(bind + ' requires elevated privileges');
+      logger.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      logger.error(bind + ' is already in use');
+      logger.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:

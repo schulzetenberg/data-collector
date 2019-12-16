@@ -1,4 +1,3 @@
-const async = require('async');
 const crypto = require('crypto');
 const passport = require('passport');
 const moment = require('moment');
@@ -6,7 +5,7 @@ const moment = require('moment');
 const logger = require('../nodejs/log');
 const email = require('../nodejs/email');
 const User = require('../models/User');
-const appConfig = require('../models/app-config');
+const AppConfig = require('../models/app-config');
 const response = require('../nodejs/response');
 
 // Login page
@@ -33,6 +32,7 @@ exports.postLogin = (req, res, next) => {
     return res.redirect('/login');
   }
 
+  // eslint-disable-next-line no-unused-vars
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (!user) {
@@ -72,9 +72,9 @@ exports.postSignin = (req, res, next) => {
       req.session.cookie.expires = false; // Else, cookie expires at end of session
     }
 
-    req.logIn(user, (err) => {
-      if (err) {
-        logger.error(err);
+    req.logIn(user, (loginErr) => {
+      if (loginErr) {
+        logger.error(loginErr);
         return response.serverError(res, 'Error logging in user');
       }
 
@@ -102,6 +102,7 @@ exports.getSignup = (req, res) => {
 };
 
 // Create a new local account
+// eslint-disable-next-line no-unused-vars
 exports.postSignup = async (req, res, next) => {
   req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password must be at least 4 characters long').len(4);
@@ -134,12 +135,13 @@ exports.postSignup = async (req, res, next) => {
   }
 
   try {
-    await user.save().then((user) => {
-      const configDoc = new appConfig({ userId: user._id });
+    await user.save().then((savedUser) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const configDoc = new AppConfig({ userId: savedUser._id });
       return configDoc.save();
     });
   } catch (e) {
-    logger.error(err);
+    logger.error(e);
     return response.serverError(res, 'Error creating new user');
   }
 
@@ -176,19 +178,22 @@ exports.getProfile = (req, res) => {
 
 // Update profile information
 exports.postUpdateProfile = (req, res, next) => {
-  User.findById(req.user.id, (err, user) => {
-    if (err) return next(err);
+  User.findById(req.user.id, (findErr, user) => {
+    if (findErr) return next(findErr);
+    // eslint-disable-next-line no-param-reassign
     user.email = req.body.email || '';
+    // eslint-disable-next-line no-param-reassign
     user.profile.firstName = req.body.profile.firstName || '';
+    // eslint-disable-next-line no-param-reassign
     user.profile.lastName = req.body.profile.lastName || '';
 
-    user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
+    user.save((saveErr) => {
+      if (saveErr) {
+        if (saveErr.code === 11000) {
           return response.userError(res, 'email address already in use');
         }
 
-        logger.error(err);
+        logger.error(saveErr);
         return response.serverError(res, 'Error saving profile updates');
       }
 
@@ -198,6 +203,7 @@ exports.postUpdateProfile = (req, res, next) => {
 };
 
 // Update current password
+// eslint-disable-next-line no-unused-vars
 exports.postUpdatePassword = (req, res, next) => {
   req.assert('password', 'Password must be at least 4 characters long').len(4);
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
@@ -214,6 +220,7 @@ exports.postUpdatePassword = (req, res, next) => {
       return response.serverError(res, 'Error finding user profile');
     }
 
+    // eslint-disable-next-line no-param-reassign
     user.password = req.body.password;
 
     user.save((err) => {
@@ -228,6 +235,7 @@ exports.postUpdatePassword = (req, res, next) => {
 };
 
 // Delete the user account
+// eslint-disable-next-line no-unused-vars
 exports.postDeleteAccount = (req, res, next) => {
   User.remove({ _id: req.user.id }, (err) => {
     if (err) {

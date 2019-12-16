@@ -2,7 +2,7 @@ const appConfig = require('./app-config');
 const logger = require('./log');
 const { removeUserJobs } = require('./agenda');
 
-exports.run = async function(agenda, userId) {
+exports.run = async (agenda, userId) => {
   let config;
 
   try {
@@ -43,11 +43,11 @@ exports.run = async function(agenda, userId) {
 };
 
 function objectList(o) {
-  var objects = [];
+  const objects = [];
 
   Object.keys(o).forEach((key) => {
     if (o[key] !== null && typeof o[key] === 'object' && key !== '_id') {
-      var empty = isEmptyObject(o[key]);
+      const empty = isEmptyObject(o[key]);
 
       if (!empty) {
         objects.push(key);

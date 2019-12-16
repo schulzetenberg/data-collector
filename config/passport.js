@@ -32,5 +32,5 @@ passport.use(
 // Login Required middleware
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) return next();
-	response.loginRequired(res);
+  response.loginRequired(res);
 };

@@ -1,10 +1,10 @@
 const logger = require('./log');
 
 const appConfig = require('./app-config');
-const traktModel = require('../models/trakt-model.js');
+const TraktModel = require('../models/trakt-model.js');
 const api = require('./api');
 
-exports.save = function(userId) {
+exports.save = (userId) => {
   logger.info('Starting Trakt');
 
   let traktConfig = {};
@@ -13,21 +13,21 @@ exports.save = function(userId) {
 
   appConfig
     .get(userId)
-    .then(function(config) {
+    .then((config) => {
       traktConfig = config && config.trakt;
       if (!traktConfig) return logger.error('Missing trakt config');
       return userData(traktConfig);
     })
-    .then(function(data) {
+    .then((data) => {
       statsData = data;
       return topRatings(traktConfig, 'movies');
     })
-    .then(function(data) {
+    .then((data) => {
       moviesData = data;
       return topRatings(traktConfig, 'shows');
     })
-    .then(function(showsData) {
-      let doc = new traktModel({
+    .then((showsData) => {
+      const doc = new TraktModel({
         userId,
         stats: statsData,
         topMovies: moviesData,
@@ -36,10 +36,10 @@ exports.save = function(userId) {
 
       return doc.save();
     })
-    .then(function() {
+    .then(() => {
       logger.info('Finished saving trakt data');
     })
-    .catch(function(err) {
+    .catch((err) => {
       logger.error('Caught trakt save error:', err);
     });
 };
@@ -50,7 +50,7 @@ function userData(config) {
   }
 
   const options = {
-    url: 'https://api.trakt.tv/users/' + config.user + '/stats',
+    url: `https://api.trakt.tv/users/${config.user}/stats`,
     headers: {
       'Content-Type': 'application/json',
       'trakt-api-version': '2',
@@ -68,7 +68,7 @@ function topRatings(config, type) {
   }
 
   const options = {
-    url: 'https://api.trakt.tv/users/' + config.user + '/ratings/' + type + '/,9,10', // Only items rated 9 or 10
+    url: `https://api.trakt.tv/users/${config.user}/ratings/${type}/,9,10`, // Only items rated 9 or 10
     headers: {
       'Content-Type': 'application/json',
       'trakt-api-version': '2',

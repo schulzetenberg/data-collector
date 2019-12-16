@@ -100,6 +100,7 @@ exports.getTrakt = (req, res, next) => {
       const startDate = moment('2016-10-02');
       const now = moment();
       const totalDays = now.diff(startDate, 'days');
+      // eslint-disable-next-line no-param-reassign
       data.totalDays = totalDays;
 
       res.json(data);

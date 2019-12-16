@@ -2,7 +2,7 @@ const _ = require('lodash');
 const parser = require('cron-parser');
 
 const logger = require('../nodejs/log');
-const configModel = require('../models/app-config');
+const ConfigModel = require('../models/app-config');
 const appConfig = require('../nodejs/app-config');
 const response = require('../nodejs/response');
 const mongoUtils = require('../nodejs/mongo-utils');
@@ -25,10 +25,12 @@ exports.getConfig = async (req, res, next) => {
   const lastUpdateData = await mongoUtils.getLatestDocTimestamps();
 
   appConfig
+    // eslint-disable-next-line no-underscore-dangle
     .get(req.user._id)
     .then((data) => {
       if (data) {
         _.forIn(data, (value, key) => {
+          // eslint-disable-next-line no-param-reassign
           data[key].lastUpdated = lastUpdateData[key] ? lastUpdateData[key] : null;
 
           if (value && value.schedule) {
@@ -37,10 +39,11 @@ exports.getConfig = async (req, res, next) => {
               const scheduleArr = [];
 
               for (let i = 0; i < 5; i += 1) {
-                const next = interval.next();
-                scheduleArr.push(next.toString());
+                const nextInterval = interval.next();
+                scheduleArr.push(nextInterval.toString());
               }
 
+              // eslint-disable-next-line no-param-reassign
               data[key].scheduleList = scheduleArr;
             } catch (err) {
               console.log(`Cannot parse schedule ${value.schedule}. Err:${err.message}`);
@@ -72,7 +75,7 @@ exports.saveConfig = (req, res, next) => {
   delete data.createdAt;
   // eslint-disable-next-line no-underscore-dangle
   delete data._id;
-  const doc = new configModel(data);
+  const doc = new ConfigModel(data);
 
   doc
     .save()
@@ -80,6 +83,7 @@ exports.saveConfig = (req, res, next) => {
       return exports.getConfig(req, res, next);
     })
     .then(() => {
+      // eslint-disable-next-line no-underscore-dangle
       return scheduler.run(agenda, req.user._id);
     })
     .catch((err) => {
@@ -99,17 +103,12 @@ exports.runApp = (req, res, next) => {
     return next('No App to run');
   }
 
+  // eslint-disable-next-line no-underscore-dangle
   appConfig.get(req.user._id).then((config) => {
     if (config[data.app].filePath && config[data.app].functionName) {
       try {
-        // eslint-disable-next-line
-        const scheduledFunction = require(`../${config[data.app].filePath}`)[config[data.app].functionName];
-
-        if (typeof scheduledFunction !== 'function') {
-          throw `${config[data.app].filePath}.js ${config[data.app].functionName}(), not a function`;
-        }
-
-        scheduledFunction(req.user._id);
+        // TODO: get the function and call it!
+        // scheduledFunction(req.user._id);
       } catch (err) {
         console.log('Error running appplication. Error:', err);
         return res.sendStatus(500);

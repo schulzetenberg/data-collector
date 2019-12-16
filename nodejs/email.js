@@ -8,7 +8,7 @@ const secrets = require('../config/secrets');
 sgMail.setApiKey(secrets.sendgrid.apiKey);
 
 // Required Fields: to, subject, html (body)
-exports.send = function(mailOptions) {
+exports.send = (mailOptions) => {
   const defer = Q.defer();
   const body = mailOptions.html;
 
@@ -16,34 +16,41 @@ exports.send = function(mailOptions) {
     // Do nothing
   } else {
     try {
-     if (body instanceof Error) {
-       // JSON.stringify() errors outputs an empty object so we need to handle errors seperately
-       mailOptions.html = JSON.stringify(body, ['message', 'arguments', 'type', 'name']);
-     } else {
-       mailOptions.html = JSON.stringify(body);
-     }
-    } catch(err) {
-     return defer.reject(err);
+      if (body instanceof Error) {
+        // JSON.stringify() errors outputs an empty object so we need to handle errors seperately
+        // eslint-disable-next-line no-param-reassign
+        mailOptions.html = JSON.stringify(body, ['message', 'arguments', 'type', 'name']);
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        mailOptions.html = JSON.stringify(body);
+      }
+    } catch (err) {
+      return defer.reject(err);
     }
   }
 
   // Email defaults from config
   if (!mailOptions.to) {
+    // eslint-disable-next-line no-param-reassign
     mailOptions.to = secrets.defaults.emailTo;
-	}
+  }
 
-	mailOptions.from = {
-		email: mailOptions.from || secrets.defaults.emailFrom,
-		name: secrets.defaults.emailFromName
-	};
+  // eslint-disable-next-line no-param-reassign
+  mailOptions.from = {
+    email: mailOptions.from || secrets.defaults.emailFrom,
+    name: secrets.defaults.emailFromName,
+  };
 
-  sgMail.send(mailOptions).then(function(info) {
-    logger.debug('Email sent. Message: ' + info.message);
-    defer.resolve();
-  }).catch(function(err) {
-		logger.error(err);
-    defer.reject(err);
-  });
+  sgMail
+    .send(mailOptions)
+    .then((info) => {
+      logger.debug(`Email sent. Message: ${info.message}`);
+      defer.resolve();
+    })
+    .catch((err) => {
+      logger.error(err);
+      defer.reject(err);
+    });
 
   return defer.promise;
 };
