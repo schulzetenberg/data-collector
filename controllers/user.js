@@ -79,7 +79,7 @@ exports.postSignin = (req, res, next) => {
 
       // Reset the failure counter for this user
       req.brute.reset(() => {
-        const data = { name: user.profile.name, email: user.email };
+        const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
         response.success(res, { data });
       });
     });
@@ -145,7 +145,7 @@ exports.postSignup = async (req, res, next) => {
       return response.serverError(res, 'Error logging in user');
     }
 
-    const data = { name: user.profile.name, email: user.email };
+    const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
     response.success(res, { data });
   });
 };
@@ -160,11 +160,12 @@ exports.getAccount = (req, res) => {
 exports.getProfile = (req, res) => {
   // We dont want to expose private user data such as the password hash
   const data = {
+		firstName: req.user.firstName,
+		lastName: req.user.lastName,
     createdAt: req.user.createdAt,
     updatedAt: req.user.updatedAt,
     email: req.user.email,
     gravatar: req.user.gravatar(),
-    profile: { ...req.user.profile },
   };
 
   response.success(res, { data });
@@ -172,11 +173,12 @@ exports.getProfile = (req, res) => {
 
 // Update profile information
 exports.postUpdateProfile = (req, res, next) => {
+	console.log('id', req.user.id)
   User.findById(req.user.id, (err, user) => {
     if (err) return next(err);
     user.email = req.body.email || '';
-    user.profile.firstName = req.body.profile.firstName || '';
-    user.profile.lastName = req.body.profile.lastName || '';
+    user.firstName = req.body.firstName || '';
+    user.lastName = req.body.lastName || '';
 
     user.save((err) => {
       if (err) {
@@ -188,7 +190,7 @@ exports.postUpdateProfile = (req, res, next) => {
         return response.serverError(res, 'Error saving profile updates');
       }
 
-      response.success(res);
+      response.success(res, { user });
     });
   });
 };
@@ -318,7 +320,7 @@ exports.postReset = async (req, res) => {
 			return response.serverError(res, 'Error sending password change email');
 		}
 
-		const data = { name: user.profile.name, email: user.email };
+    const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
 		response.success(res, { data });
   });
 };

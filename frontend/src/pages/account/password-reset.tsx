@@ -23,7 +23,8 @@ const PasswordReset: React.FC = (props: any) => {
 
   const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
-  const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
+  const setUserState = (firstName: string, lastName: string, email: string): void =>
+    dispatch({ type: 'set-user', payload: { firstName, lastName, email } });
 
   const {
     match: {
@@ -43,15 +44,12 @@ const PasswordReset: React.FC = (props: any) => {
 
       setLoading(false);
 
-      if (!response.error) {
+      if (!response.errors) {
         setSession({ email: response.data.email });
-        setUserState(response.data.name, response.data.email);
+        setUserState(response.data.firstName, response.data.lastName, response.data.email);
         history.push('/account');
-      } else if (Array.isArray(response.error)) {
-        const errorList = response.error.map((x) => x.msg);
-        setLoginErrors(errorList);
       } else {
-        setLoginErrors([response.error]);
+        setLoginErrors(response.errors);
       }
     } catch (e) {
       console.log(e);
@@ -68,7 +66,7 @@ const PasswordReset: React.FC = (props: any) => {
           {error}
         </Typography>
       ))}
-      <AccountPassword handleSubmit={handleSubmit} isLoading={isLoading} />
+      <AccountPassword saveData={handleSubmit} isLoading={isLoading} />
     </div>
   );
 };

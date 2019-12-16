@@ -45,11 +45,11 @@ const Header: React.FC = () => {
       const response: ServerResponse = await Request.post({ url: '/logout' });
       setLoading(false);
 
-      if (!response.error) {
+      if (!response.errors) {
         setSession();
         history.push('/sign-in');
       } else {
-        setLogoutErrors([response.error]);
+        setLogoutErrors(response.errors);
       }
     } catch (e) {
       console.log(e);

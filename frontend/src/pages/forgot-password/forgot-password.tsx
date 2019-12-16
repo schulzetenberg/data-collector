@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,6 +11,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import useForm from 'react-hook-form';
 import * as yup from 'yup';
 
+import Button from '../../components/button/button';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
@@ -31,9 +31,6 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
   },
   message: {
     marginTop: theme.spacing(8),
@@ -65,6 +62,8 @@ const ForgotPassword: React.FC = () => {
     validationSchema,
   });
 
+  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+
   const submit = async (inputs: { email: string }) => {
     setLoginErrors([]);
     setResetSuccess(false);
@@ -74,13 +73,10 @@ const ForgotPassword: React.FC = () => {
       const response: ServerResponse = await Request.post({ url: '/forgot', body: inputs });
       setLoading(false);
 
-      if (!response.error) {
+      if (!response.errors) {
         setResetSuccess(true);
-      } else if (Array.isArray(response.error)) {
-        const errorList = response.error.map((x) => x.msg);
-        setLoginErrors(errorList);
       } else {
-        setLoginErrors([response.error]);
+        setLoginErrors(response.errors);
       }
     } catch (e) {
       console.log(e);
@@ -113,24 +109,17 @@ const ForgotPassword: React.FC = () => {
               ))}
               <p>Enter your email address to receive password reset instructions</p>
               <Grid item xs={12} sm={10}>
-                <Form
-                  disabled={isLoading}
-                  errors={errors}
-                  register={register}
-                  setValue={setValue}
-                  onSubmit={handleSubmit(submit)}
-                >
+                <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>
                   <TextField
+                    {...formProps}
                     name="email"
                     label="Email Address"
                     required
-                    fullWidth
                     type="email"
                     autoComplete="email"
                     autoFocus
                   />
-
-                  <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+                  <Button {...formProps} type="submit">
                     Reset Password
                   </Button>
                   <Grid container>

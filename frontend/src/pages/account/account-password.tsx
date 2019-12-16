@@ -8,13 +8,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountPassword: React.FC<{ handleSubmit: Function; isLoading: boolean }> = ({ handleSubmit, isLoading }) => {
+const AccountPassword: React.FC<{ saveData: Function; isLoading: boolean }> = ({ saveData, isLoading }) => {
   const classes = useStyles();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const submit = (): void => {
-    handleSubmit({ password, confirmPassword });
+    saveData({ password, confirmPassword });
   };
 
   return (

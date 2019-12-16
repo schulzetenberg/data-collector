@@ -1,7 +1,8 @@
 import React from 'react';
 
 const initialValues = {
-  name: '',
+  fistName: '',
+  lastName: '',
   email: '',
 };
 
@@ -17,7 +18,8 @@ const reducer = (state: any, action: any) => {
     case 'set-user':
       return {
         ...state,
-        name: action.payload.name,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
         email: action.payload.email,
       };
     default:

@@ -15,34 +15,19 @@ const useStyles = makeStyles((theme: Theme) =>
     formDisabled: {
       animationName: '$fadeinout',
       animationDuration: '2s',
-      animationTimingFunction: 'linear',
+      animationTimingFunction: 'ease',
       animationIterationCount: 'infinite',
     },
   })
 );
 
-const Form = ({ children, onSubmit, disabled, errors, register, setValue }: any): any => {
+const Form = ({ children, onSubmit, disabled }: any): any => {
   const classes = useStyles();
-
-  const childrenWithProps = React.Children.map(children, (child) => {
-    if (child.type.name === 'Checkbox' || child.type.name === 'TextField') {
-      return React.cloneElement(child, {
-        disabled,
-        errors,
-        register,
-        setValue,
-      });
-    }
-
-    return React.cloneElement(child, {
-      disabled,
-    });
-  });
 
   return (
     <Fade in timeout={750}>
       <form noValidate className={classNames(classes.form, { [classes.formDisabled]: disabled })} onSubmit={onSubmit}>
-        {childrenWithProps}
+        {children}
       </form>
     </Fade>
   );
