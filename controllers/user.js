@@ -160,8 +160,8 @@ exports.getAccount = (req, res) => {
 exports.getProfile = (req, res) => {
   // We dont want to expose private user data such as the password hash
   const data = {
-		firstName: req.user.firstName,
-		lastName: req.user.lastName,
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
     createdAt: req.user.createdAt,
     updatedAt: req.user.updatedAt,
     email: req.user.email,
@@ -173,7 +173,6 @@ exports.getProfile = (req, res) => {
 
 // Update profile information
 exports.postUpdateProfile = (req, res, next) => {
-	console.log('id', req.user.id)
   User.findById(req.user.id, (err, user) => {
     if (err) return next(err);
     user.email = req.body.email || '';
@@ -251,7 +250,7 @@ exports.getReset = (req, res) => {
       if (!user) {
         req.flash('error', { msg: 'Password reset token is invalid or has expired' });
         return res.redirect('/forgot');
-			}
+      }
 
       res.render('reset.html', {
         title: 'Password Reset',
@@ -279,7 +278,7 @@ exports.postReset = async (req, res) => {
     });
   } catch (e) {
     logger.error('Error finding user', e);
-		return response.serverError(res, 'Error finding user');
+    return response.serverError(res, 'Error finding user');
   }
 
   if (!user) {
@@ -294,34 +293,34 @@ exports.postReset = async (req, res) => {
     await user.save();
   } catch (e) {
     logger.error('Error saving password reset', e);
-		return response.serverError(res, 'Error saving password reset');
+    return response.serverError(res, 'Error saving password reset');
   }
 
   req.logIn(user, async (err) => {
     if (err) {
       logger.error('Error logging in user', err);
-		}
+    }
 
-		const mailOptions = {
-			to: user.email,
-			subject: 'Your Data Collector password has been changed',
-			html: `
+    const mailOptions = {
+      to: user.email,
+      subject: 'Your Data Collector password has been changed',
+      html: `
 				Hello,
 				<br /><br />
 				This is a confirmation that the password for your account ${user.email} has just been changed.
 				<br />
 			`,
-		};
+    };
 
-		try {
-			await email.send(mailOptions);
-		} catch (e) {
-			logger.error('Error sending password change email', e);
-			return response.serverError(res, 'Error sending password change email');
-		}
+    try {
+      await email.send(mailOptions);
+    } catch (e) {
+      logger.error('Error sending password change email', e);
+      return response.serverError(res, 'Error sending password change email');
+    }
 
     const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
-		response.success(res, { data });
+    response.success(res, { data });
   });
 };
 

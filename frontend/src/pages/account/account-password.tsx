@@ -1,65 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardContent, CardActions, Divider, Grid, Button, TextField } from '@material-ui/core';
+import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
+
+import Form from '../../components/form/form';
+import Button from '../../components/button/button';
+import TextField from '../../components/text-field/text-field';
 
 const useStyles = makeStyles((theme) => ({
   card: {
     marginTop: theme.spacing(5),
   },
+  buttonGrid: {
+    'margin-left': '0.75em',
+  },
 }));
 
-const AccountPassword: React.FC<{ saveData: Function; isLoading: boolean }> = ({ saveData, isLoading }) => {
+const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ saveData, isLoading }) => {
   const classes = useStyles();
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const submit = (): void => {
-    saveData({ password, confirmPassword });
-  };
+  const validationSchema = yup.object().shape({
+    password: yup.string().required('Required'),
+    confirmPassword: yup.string().required('Required'),
+  });
+
+  type FormData = { password: string; confirmPassword: string };
+
+  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
+    validationSchema,
+  });
+
+  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
 
   return (
     <Card className={classes.card}>
-      <form autoComplete="off" noValidate>
+      <Form autocomplete="off" disabled={isLoading} onSubmit={handleSubmit(saveData)}>
         <CardHeader title="Change Password" />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="New Password"
-                margin="dense"
-                name="password"
-                type="password"
-                disabled={isLoading}
-                onChange={(e: any): void => setPassword(e.target.value)}
-                required
-                value={password}
-                variant="outlined"
-              />
+              <TextField {...formProps} label="New Password" name="password" type="password" required />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Confirm Password"
-                margin="dense"
-                name="confirmPassword"
-                type="password"
-                disabled={isLoading}
-                onChange={(e: any): void => setConfirmPassword(e.target.value)}
-                required
-                value={confirmPassword}
-                variant="outlined"
-              />
+              <TextField {...formProps} label="Confirm Password" name="confirmPassword" type="password" required />
             </Grid>
           </Grid>
         </CardContent>
         <CardActions>
-          <Button color="primary" variant="contained" onClick={submit} disabled={isLoading}>
-            Update Password
-          </Button>
+          <Grid container spacing={3}>
+            <Grid item md={6} xs={12} className={classes.buttonGrid}>
+              <Button {...formProps} type="submit">
+                Update Password
+              </Button>
+            </Grid>
+          </Grid>
         </CardActions>
-      </form>
+      </Form>
     </Card>
   );
 };
