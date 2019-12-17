@@ -322,9 +322,7 @@ describe('POST: user logged in', function () {
       User.findOne({ email: 'testing-new@1.com' }, function(err, user) {
         if (err) return done(err);
         user.email.should.equal('testing-new@1.com');
-        user.profile.name.should.equal('New Name');
-        user.profile.location.should.equal('Denver, CO');
-        user.profile.website.should.equal('www.test.com');
+        user.firstName.should.equal('New Name');
         done();
       });
     });

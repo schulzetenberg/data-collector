@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,6 +11,7 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import useForm from 'react-hook-form';
 import * as yup from 'yup';
 
+import Button from '../../components/button/button';
 import Checkbox from '../../components/checkbox/checkbox';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
@@ -35,9 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
   errorMessage: {
     color: theme.palette.error.main,
     marginTop: theme.spacing(2),
@@ -52,7 +49,8 @@ const SignIn: React.FC = () => {
 
   const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
-  const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
+  const setUserState = (firstName: string, lastName: string, email: string): void =>
+    dispatch({ type: 'set-user', payload: { firstName, lastName, email } });
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -71,6 +69,8 @@ const SignIn: React.FC = () => {
     validationSchema,
   });
 
+  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+
   const submit = async (body: FormData): Promise<void> => {
     setLoginErrors([]);
     setLoading(true);
@@ -80,7 +80,7 @@ const SignIn: React.FC = () => {
 
       if (!response.errors) {
         setSession({ email: response.data.email });
-        setUserState(response.data.name, response.data.email);
+        setUserState(response.data.firstName, response.data.lastName, response.data.email);
         history.push('/');
       } else {
         setLoginErrors(response.errors);
@@ -114,35 +114,29 @@ const SignIn: React.FC = () => {
             </Typography>
           ))}
 
-          <Form
-            disabled={isLoading}
-            errors={errors}
-            register={register}
-            setValue={setValue}
-            onSubmit={handleSubmit(submit)}
-          >
+          <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
             <TextField
+              {...formProps}
               name="email"
               label="Email Address"
               required
-              fullWidth
               type="email"
               autoComplete="email"
               autoFocus
             />
 
             <TextField
+              {...formProps}
               name="password"
               label="Password"
               required
-              fullWidth
               type="password"
               autoComplete="current-password"
             />
 
-            <Checkbox name="remember" errors={errors} color="primary" label="Remember me" />
+            <Checkbox {...formProps} name="remember" errors={errors} color="primary" label="Remember me" />
 
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <Button {...formProps} type="submit">
               Sign In
             </Button>
             <Grid container>

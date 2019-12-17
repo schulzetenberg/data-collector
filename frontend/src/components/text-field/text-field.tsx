@@ -15,14 +15,14 @@ const TextField: React.FC<{
     <RHFInputAny
       as={<MaterialTextField />}
       name={name}
-      error={errors[name] ? true : undefined}
+      error={errors && errors[name] ? true : undefined}
       defaultValue=""
       variant="outlined"
       margin="normal"
       register={register}
       setValue={setValue}
       InputProps={{ type }}
-      helperText={errors[name] ? errors[name].message : undefined}
+      helperText={errors && errors[name] ? errors[name].message : undefined}
       {...rest}
     />
   );

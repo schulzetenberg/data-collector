@@ -16,13 +16,19 @@ const useStyles = makeStyles((theme) => ({
 const Account: React.FC = () => {
   const classes = useStyles();
   const [data, setData] = useState();
+  const [isLoading, setLoading] = useState(false);
+  const [isLoadingPassword, setLoadingPassword] = useState(false);
 
   const loadData = async (): Promise<void> => {
+    setLoading(true);
+
     try {
       const response: ServerResponse = await Request.get({ url: 'account/profile' });
       setData(response.data);
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,33 +36,30 @@ const Account: React.FC = () => {
     loadData();
   }, []);
 
-  const handleUpdateProfile = (e: any): void => {
-    setData({
-      ...data,
-      profile: {
-        ...data.profile,
-        [e.target.name]: e.target.value,
-      },
-    });
-  };
+  const handleSaveData = async (updatedData: any) => {
+    setLoading(true);
 
-  const handleUpdateData = (e: any): void => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSaveData = async () => {
     try {
-      const response: ServerResponse = await Request.post({ url: '/account/profile', body: data });
-      alert('saved!');
+      const response: ServerResponse = await Request.post({ url: '/account/profile', body: updatedData });
+      console.log('saved!', response.data);
+      setData(response.data);
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSubmit = async (body: { password: string; confirmPassword: string }) => {
+  const handleUpdateUser = (updatedData: any): void => {
+    handleSaveData({
+      ...data,
+      ...updatedData,
+    });
+  };
+
+  const handleSavePassword = async (body: { password: string; confirmPassword: string }) => {
+    setLoadingPassword(true);
+
     try {
       const response: ServerResponse = await Request.post({
         url: '/account/password',
@@ -68,6 +71,8 @@ const Account: React.FC = () => {
       // TODO: Clear out password fields
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoadingPassword(false);
     }
   };
 
@@ -75,14 +80,8 @@ const Account: React.FC = () => {
     <div className={classes.root}>
       <Grid container spacing={4}>
         <Grid item lg={8} md={6} xl={8} xs={12}>
-          <AccountDetails
-            data={data}
-            updateProfile={handleUpdateProfile}
-            updateData={handleUpdateData}
-            saveData={handleSaveData}
-          />
-          {/* TODO: Add isLoading logic */}
-          <AccountPassword handleSubmit={handleSubmit} isLoading={false} />
+          <AccountDetails data={data} saveData={handleUpdateUser} isLoading={isLoading} />
+          <AccountPassword saveData={handleSavePassword} isLoading={isLoadingPassword} />
         </Grid>
         <Grid item lg={4} md={6} xl={4} xs={12}>
           <AccountProfile />

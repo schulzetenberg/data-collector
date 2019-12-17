@@ -10,8 +10,10 @@ const Checkbox: React.FC<{
   register?: Function;
   setValue?: Function;
   errors?: any;
+  fullWidth?: boolean;
   [x: string]: any;
-}> = ({ name, label, register, setValue, errors, ...rest }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+}> = ({ name, label, register, setValue, errors, fullWidth, ...rest }) => {
   return (
     <FormControlLabel
       control={

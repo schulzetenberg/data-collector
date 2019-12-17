@@ -1,75 +1,81 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardContent, CardActions, Divider, Grid, Button, TextField } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
 
-const useStyles = makeStyles(() => ({}));
+import Form from '../../components/form/form';
+import Button from '../../components/button/button';
+import TextField from '../../components/text-field/text-field';
 
-const AccountDetails: React.FC<{ data: any; updateProfile: any; updateData: any; saveData: any }> = ({
-  data,
-  updateProfile,
-  updateData,
-  saveData,
-}) => {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    buttonGrid: {
+      'margin-left': '0.75em',
+    },
+  })
+);
+
+const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }> = ({ data, saveData, isLoading }) => {
   const classes = useStyles();
-  const isLoading = false; // TODO
+
+  const validationSchema = yup.object().shape({
+    firstName: yup.string().required('Required'),
+    lastName: yup.string().required('Required'),
+    email: yup
+      .string()
+      .required('Required')
+      .email('Invalid email'),
+  });
+
+  type FormData = { firstName: string; lastName: string; email: string };
+
+  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>({
+    validationSchema,
+  });
+
+  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+
+  useEffect(() => {
+    if (data) {
+      reset({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
+    }
+  }, [data, reset]);
 
   return (
     <Card>
-      <form>
-        <CardHeader title="Profile" />
-        <Divider />
-        {data && (
-          <CardContent>
-            <Grid container spacing={3}>
-              <Grid item md={6} xs={12}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  margin="dense"
-                  name="firstName"
-                  disabled={isLoading}
-                  onChange={updateProfile}
-                  required
-                  value={data.profile.firstName}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  margin="dense"
-                  name="lastName"
-                  disabled={isLoading}
-                  onChange={updateProfile}
-                  required
-                  value={data.profile.lastName}
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <TextField
-                  fullWidth
-                  label="Email Address"
-                  margin="dense"
-                  name="email"
-                  disabled={isLoading}
-                  type="email"
-                  onChange={updateData}
-                  required
-                  value={data.email}
-                  variant="outlined"
-                />
-              </Grid>
+      <CardHeader title="Profile" />
+      <Divider />
+
+      <Form disabled={isLoading} onSubmit={handleSubmit(saveData)}>
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid item md={6} xs={12}>
+              <TextField {...formProps} label="First Name" name="firstName" required />
             </Grid>
-          </CardContent>
-        )}
+            <Grid item md={6} xs={12}>
+              <TextField {...formProps} label="Last Name" name="lastName" required />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField {...formProps} label="Email Address" name="email" type="email" required />
+            </Grid>
+          </Grid>
+        </CardContent>
+
         <CardActions>
-          <Button color="primary" variant="contained" onClick={saveData} disabled={isLoading}>
-            Save Changes
-          </Button>
+          <Grid container spacing={3}>
+            <Grid item md={6} xs={12} className={classes.buttonGrid}>
+              <Button {...formProps} type="submit">
+                Save Changes
+              </Button>
+            </Grid>
+          </Grid>
         </CardActions>
-      </form>
+      </Form>
     </Card>
   );
 };

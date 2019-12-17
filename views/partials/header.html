@@ -144,8 +144,8 @@
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <% if(user.profile.picture){ %>
-                <img src="<%=user.profile.picture%>" class="user-image" alt="User Image" />
+                <% if(user.picture){ %>
+                <img src="<%=user.picture%>" class="user-image" alt="User Image" />
                 <% }else{ %>
                 <img src="<%=user.gravatar(60)%>" class="user-image" alt="User Image" />
                 <% } %>
@@ -156,14 +156,14 @@
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                  <% if(user.profile.picture){ %>
-                  <img src="<%=user.profile.picture%>" class="img-circle" alt="User Image" />
+                  <% if(user.picture){ %>
+                  <img src="<%=user.picture%>" class="img-circle" alt="User Image" />
                   <% }else{ %>
                   <img src="<%=user.gravatar(60)%>" class="img-circle" alt="User Image" />
                   <% } %>
                   <p>
                     Name:
-                    <%= user.profile.name %>
+                    <%= user.firstName %>
                     <small> Email:
                       <%= user.email %></small>
                   </p>

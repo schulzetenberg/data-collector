@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -10,8 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
+import useForm from 'react-hook-form';
+import * as yup from 'yup';
 
-import FormOld from '../../components/form/form-old';
+import Button from '../../components/button/button';
+import Form from '../../components/form/form';
+import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
 import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
@@ -32,13 +34,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
   errorMessage: {
     color: theme.palette.error.main,
     marginTop: theme.spacing(2),
@@ -52,7 +47,8 @@ const SignUp: React.FC = () => {
   const [signupErrors, setSignupErrors] = useState<string[]>([]);
   const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
-  const setUserState = (name: string, email: string): void => dispatch({ type: 'set-user', payload: { name, email } });
+  const setUserState = (firstName: string, lastName: string, email: string): void =>
+    dispatch({ type: 'set-user', payload: { firstName, lastName, email } });
 
   const submit = async (inputs: { email: string; password: string }) => {
     setSignupErrors([]);
@@ -62,15 +58,12 @@ const SignUp: React.FC = () => {
       const response: ServerResponse = await Request.post({ url: '/signup', body: inputs });
       setLoading(false);
 
-      if (!response.error) {
+      if (!response.errors) {
         setSession({ email: response.data.email });
-        setUserState(response.data.name, response.data.email);
+        setUserState(response.data.firstName, response.data.lastName, response.data.email);
         history.push('/');
-      } else if (Array.isArray(response.error)) {
-        const errorList = response.error.map((x) => x.msg);
-        setSignupErrors(errorList);
       } else {
-        setSignupErrors([response.error]);
+        setSignupErrors(response.errors);
       }
     } catch (e) {
       console.log(e);
@@ -79,15 +72,30 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const {
-    inputs,
-    handleInputChange,
-    handleSubmit,
-  }: {
-    inputs: { name: string; email: string; password: string; confirmPassword: string };
-    handleInputChange: any;
-    handleSubmit: any;
-  } = FormOld({ name: '', email: '', password: '', confirmPassword: '' }, submit);
+  const validationSchema = yup.object().shape({
+    firstName: yup.string().required('Required'),
+    lastName: yup.string().required('Required'),
+    email: yup
+      .string()
+      .required('Required')
+      .email('Invalid email'),
+    password: yup
+      .string()
+      .required('Required')
+      .min(4, 'Password must be at least 4 characters long'),
+    confirmPassword: yup
+      .string()
+      .required('Required')
+      .min(4, 'Password must be at least 4 characters long'),
+  });
+
+  type FormData = { firstName: string; lastName: string; email: string; password: string; confirmPassword: string };
+
+  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
+    validationSchema,
+  });
+
+  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -109,72 +117,34 @@ const SignUp: React.FC = () => {
               {error}
             </Typography>
           ))}
-          <form className={classes.form} onSubmit={handleSubmit}>
+          <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>
             <TextField
-              variant="outlined"
-              margin="normal"
+              {...formProps}
               required
-              fullWidth
-              type="text"
-              id="name"
-              label="Name"
-              name="name"
-              autoComplete="name"
+              label="First Name"
+              name="firstName"
+              autoComplete="first-name"
               autoFocus
-              value={inputs.name}
-              disabled={isLoading}
-              onChange={handleInputChange}
             />
+            <TextField {...formProps} required label="Last Name" name="lastName" autoComplete="last-name" />
+            <TextField {...formProps} required type="email" label="Email Address" name="email" autoComplete="email" />
             <TextField
-              variant="outlined"
-              margin="normal"
+              {...formProps}
               required
-              fullWidth
-              type="email"
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={inputs.email}
-              disabled={isLoading}
-              onChange={handleInputChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               name="password"
               label="Password"
               type="password"
-              id="password"
               autoComplete="current-password"
-              value={inputs.password}
-              disabled={isLoading}
-              onChange={handleInputChange}
             />
             <TextField
-              variant="outlined"
-              margin="normal"
+              {...formProps}
               required
-              fullWidth
               name="confirmPassword"
               label="Confirm Password"
               type="password"
-              id="confirmPassword"
               autoComplete="current-password"
-              value={inputs.confirmPassword}
-              disabled={isLoading}
-              onChange={handleInputChange}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={isLoading}
-              className={classes.submit}
-            >
+            <Button {...formProps} type="submit">
               Create Account
             </Button>
             <Grid container>
@@ -189,7 +159,7 @@ const SignUp: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
-          </form>
+          </Form>
         </div>
       </Box>
     </Container>
