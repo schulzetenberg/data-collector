@@ -25,9 +25,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     float: 'right',
   },
+  errorMessage: {
+    color: theme.palette.error.main,
+    marginTop: theme.spacing(2),
+  },
 }));
 
-const AccountProfile: React.FC = () => {
+const AccountProfile: React.FC<{ handleRemove: any; isLoading: boolean; errors: string[] }> = ({
+  handleRemove,
+  isLoading,
+  errors,
+}) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -73,14 +81,31 @@ const AccountProfile: React.FC = () => {
       </CardActions>
       {open && (
         <Modal title="Delete Account" open={open} handleClose={handleClose}>
+          {errors.map((error, index) => (
+            <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
+              {error}
+            </Typography>
+          ))}
           <p>
             If you delete your account, all data related to your account will be <strong>permanently deleted</strong>.
             Are you sure you want to proceed?
           </p>
-          <Button className={classes.modalButton} color="primary" variant="contained">
+          <Button
+            disabled={isLoading}
+            className={classes.modalButton}
+            onClick={handleRemove}
+            color="primary"
+            variant="contained"
+          >
             Confirm
           </Button>
-          <Button className={classes.modalButton} onClick={handleClose} color="primary" variant="text">
+          <Button
+            disabled={isLoading}
+            className={classes.modalButton}
+            onClick={handleClose}
+            color="primary"
+            variant="text"
+          >
             Cancel
           </Button>
         </Modal>

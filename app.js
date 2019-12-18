@@ -134,7 +134,7 @@ const { agenda } = require('./nodejs/agenda');
 // Agenda UI Dashboard
 app.use(
   '/agenda',
-  function(req, res, next) {
+  (req, res, next) => {
     if (!req.user) {
       res.send(401);
     } else {
@@ -144,61 +144,25 @@ app.use(
   Agendash(agenda)
 );
 
-// Used for testing
-app.get('/404', (req, res) => {
-  res.render('404.html', {
-    title: '404',
-  });
-});
-app.get('/500', (req, res) => {
-  res.render('500.html', {
-    message: 'Test Error!',
-    error: {},
-    title: '500',
-  });
-});
-
 if (app.get('env') === 'production') {
   // catch 404 and forward to error handler
   app.use((req, res) => {
-    if (req.accepts('html')) {
-      res.render('404.html', {
-        title: '404',
-      }); // Respond with HTML
-    } else if (req.accepts('json')) {
-      res.send({
-        error: 'Not found',
-      }); // Respond with JSON
-    } else {
-      res.type('txt').send('Not found'); // Fall back to plain text
-    }
+    res.status(404).send({ error: 'Not Found' });
   });
 
   // production error handler, no stacktraces shown
+  // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     logger.error(`500 error: ${err}`);
-
     res.status(err.status || 500);
-
-    if (req.accepts('html')) {
-      // Respond with HTML
-      res.render('500.html', {
-        message: err.message,
-        error: {},
-        title: '500',
-      });
-    } else if (req.accepts('json')) {
-      // Respond with JSON
-      res.send({
-        error: 'Internal Server Error',
-      });
-    } else {
-      // Fall back to plain text
-      res.type('txt').send('Internal Server Error');
-    }
+    res.send({ error: 'Internal Server Error' });
   });
 } else {
   app.use(errorHandler()); // Display stack trace in dev
 }
+
+app.post('*', (req, res) => {
+  res.status(404).send({ error: 'Not Found' });
+});
 
 module.exports = app;
