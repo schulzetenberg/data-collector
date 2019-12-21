@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Home from './pages/home/home';
-import Demo from './pages/demo/demo';
 import SignIn from './pages/sign-in/sign-in';
 import NotFound from './pages/not-found/not-found';
 import ForgotPassword from './pages/forgot-password/forgot-password';
@@ -33,7 +32,6 @@ const Routes: React.FC = () => {
   return (
     <Switch>
       <PublicRoute component={Home} path="/" exact />
-      <PublicRoute component={Demo} path="/demo" />
       <PublicRoute component={SignIn} path="/sign-in" />
       <PublicRoute component={SignUp} path="/sign-up" />
       <PublicRoute component={ForgotPassword} path="/forgot-password" />

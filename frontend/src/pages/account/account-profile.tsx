@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
     flexGrow: 0,
   },
-  progress: {
-    marginTop: theme.spacing(2),
-  },
   uploadButton: {
     marginRight: theme.spacing(2),
   },
@@ -28,11 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountProfile: React.FC<{ handleRemove: any; isLoading: boolean; errors: string[] }> = ({
-  handleRemove,
-  isLoading,
-  errors,
-}) => {
+const AccountProfile: React.FC<{
+  handleRemove: any;
+  isLoading: boolean;
+  errors: string[];
+  setShowProfile: any;
+  setShowPassword: any;
+}> = ({ handleRemove, isLoading, errors, setShowProfile, setShowPassword }) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -58,15 +57,21 @@ const AccountProfile: React.FC<{ handleRemove: any; isLoading: boolean; errors: 
               John Doe
             </Typography>
             <Typography color="textSecondary" variant="body1">
-              Account Created 11/22/2019
+              admin@1.com
+            </Typography>
+            <Typography color="textSecondary" variant="body1">
+              Account created on 11/22/2019
             </Typography>
           </div>
           <Avatar className={classes.avatar} src={user.avatar} />
         </div>
-        <Button className={classes.uploadButton} color="primary" variant="text">
-          Upload picture
+        <br />
+        <Button variant="text" className={classes.uploadButton} onClick={setShowProfile}>
+          Edit Profile
         </Button>
-        <Button variant="text">Remove picture</Button>
+        <Button variant="text" className={classes.uploadButton} onClick={setShowPassword}>
+          Change Password
+        </Button>
       </CardContent>
       <Divider />
       <CardActions>

@@ -8,6 +8,7 @@ import AccountProfile from './account-profile';
 import AccountDetails from './account-details';
 import AccountPassword from './account-password';
 import Request from '../../util/request';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,9 @@ const Account: React.FC = () => {
   const history = useHistory();
   const { session, setSession }: any = React.useContext(SessionContext);
   const [isLoading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [loadingErrors, setLoadingErrors] = useState<string[]>([]);
   const [isRemoveLoading, setRemoveLoading] = useState(false);
   const [removeErrors, setRemoveErrors] = useState<string[]>([]);
 
@@ -33,7 +37,7 @@ const Account: React.FC = () => {
       const response: ServerResponse = await Request.get({ url: 'account/profile' });
       setData(response.data);
     } catch (e) {
-      console.log(e);
+      setLoadingErrors(e);
     } finally {
       setLoading(false);
     }
@@ -62,6 +66,16 @@ const Account: React.FC = () => {
       ...data,
       ...updatedData,
     });
+  };
+
+  const handleShowProfile = (): void => {
+    setShowPassword(false);
+    setShowProfile(!showProfile);
+  };
+
+  const handleShowPassword = (): void => {
+    setShowPassword(!showPassword);
+    setShowProfile(false);
   };
 
   const handleSavePassword = async (body: { password: string; confirmPassword: string }) => {
@@ -100,13 +114,23 @@ const Account: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <ErrorList errors={loadingErrors} />
       <Grid container spacing={4}>
-        <Grid item lg={8} md={6} xl={8} xs={12}>
-          <AccountDetails data={data} saveData={handleUpdateUser} isLoading={isLoading} />
-          <AccountPassword saveData={handleSavePassword} isLoading={isLoadingPassword} />
-        </Grid>
+        {(showProfile || showPassword) && (
+          <Grid item lg={8} md={6} xl={8} xs={12}>
+            {showProfile && <AccountDetails data={data} saveData={handleUpdateUser} isLoading={isLoading} />}
+            {showPassword && <AccountPassword saveData={handleSavePassword} isLoading={!data || isLoadingPassword} />}
+          </Grid>
+        )}
+        {!showProfile && !showPassword && <Grid item lg={4} md={3} xl={4} xs={12} />}
         <Grid item lg={4} md={6} xl={4} xs={12}>
-          <AccountProfile handleRemove={handleRemove} isLoading={isRemoveLoading} errors={removeErrors} />
+          <AccountProfile
+            handleRemove={handleRemove}
+            isLoading={!data || isRemoveLoading}
+            errors={removeErrors}
+            setShowProfile={handleShowProfile}
+            setShowPassword={handleShowPassword}
+          />
         </Grid>
       </Grid>
     </div>

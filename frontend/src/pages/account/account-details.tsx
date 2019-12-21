@@ -48,7 +48,7 @@ const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }>
 
   return (
     <Card>
-      <CardHeader title="Profile" />
+      <CardHeader title="Edit Profile" />
       <Divider />
 
       <Form disabled={isLoading} onSubmit={handleSubmit(saveData)}>

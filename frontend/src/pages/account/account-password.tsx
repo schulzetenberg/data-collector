@@ -9,9 +9,6 @@ import Button from '../../components/button/button';
 import TextField from '../../components/text-field/text-field';
 
 const useStyles = makeStyles((theme) => ({
-  card: {
-    marginTop: theme.spacing(5),
-  },
   buttonGrid: {
     'margin-left': '0.75em',
   },
@@ -34,7 +31,7 @@ const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ save
   const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
 
   return (
-    <Card className={classes.card}>
+    <Card>
       <Form autocomplete="off" disabled={isLoading} onSubmit={handleSubmit(saveData)}>
         <CardHeader title="Change Password" />
         <Divider />

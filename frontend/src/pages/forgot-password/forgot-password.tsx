@@ -61,7 +61,7 @@ const ForgotPassword: React.FC = () => {
 
   const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
 
-  const submit = async (inputs: { email: string }) => {
+  const submit = async (inputs: { email: string }): Promise<void> => {
     setLoginErrors([]);
     setResetSuccess(false);
     setLoading(true);
@@ -71,8 +71,7 @@ const ForgotPassword: React.FC = () => {
       setResetSuccess(true);
       setLoginErrors(response.errors);
     } catch (e) {
-      console.log(e);
-      setLoginErrors(['Error creating sending reset instructions']);
+      setLoginErrors(e);
     } finally {
       setLoading(false);
     }
