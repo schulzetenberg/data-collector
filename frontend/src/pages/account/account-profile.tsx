@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardActions, CardContent, Avatar, Typography, Divider, Button, Grid } from '@material-ui/core';
 
 import Modal from '../../components/modal/modal';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   details: {
@@ -24,10 +25,6 @@ const useStyles = makeStyles((theme) => ({
   modalButton: {
     marginRight: theme.spacing(2),
     float: 'right',
-  },
-  errorMessage: {
-    color: theme.palette.error.main,
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -81,11 +78,7 @@ const AccountProfile: React.FC<{ handleRemove: any; isLoading: boolean; errors: 
       </CardActions>
       {open && (
         <Modal title="Delete Account" open={open} handleClose={handleClose}>
-          {errors.map((error, index) => (
-            <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
-              {error}
-            </Typography>
-          ))}
+          <ErrorList errors={errors} />
           <p>
             If you delete your account, all data related to your account will be <strong>permanently deleted</strong>.
             Are you sure you want to proceed?

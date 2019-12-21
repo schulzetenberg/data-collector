@@ -15,6 +15,7 @@ import Button from '../../components/button/button';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -34,10 +35,6 @@ const useStyles = makeStyles((theme) => ({
   },
   message: {
     marginTop: theme.spacing(8),
-  },
-  errorMessage: {
-    color: theme.palette.error.main,
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -71,16 +68,12 @@ const ForgotPassword: React.FC = () => {
 
     try {
       const response: ServerResponse = await Request.post({ url: '/forgot', body: inputs });
-      setLoading(false);
-
-      if (!response.errors) {
-        setResetSuccess(true);
-      } else {
-        setLoginErrors(response.errors);
-      }
+      setResetSuccess(true);
+      setLoginErrors(response.errors);
     } catch (e) {
       console.log(e);
       setLoginErrors(['Error creating sending reset instructions']);
+    } finally {
       setLoading(false);
     }
   };
@@ -102,11 +95,7 @@ const ForgotPassword: React.FC = () => {
           </Typography>
           {(resetSuccess && <p className={classes.message}>An e-mail has been sent with reset instructions</p>) || (
             <>
-              {loginErrors.map((error, index) => (
-                <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
-                  {error}
-                </Typography>
-              ))}
+              <ErrorList errors={loginErrors} />
               <p>Enter your email address to receive password reset instructions</p>
               <Grid item xs={12} sm={10}>
                 <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>

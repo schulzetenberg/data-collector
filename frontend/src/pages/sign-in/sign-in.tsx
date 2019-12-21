@@ -16,8 +16,8 @@ import Checkbox from '../../components/checkbox/checkbox';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
-import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -35,10 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  errorMessage: {
-    color: theme.palette.error.main,
-    marginTop: theme.spacing(2),
-  },
 }));
 
 const SignIn: React.FC = () => {
@@ -47,10 +43,7 @@ const SignIn: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
 
-  const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
-  const setUserState = (firstName: string, lastName: string, email: string): void =>
-    dispatch({ type: 'set-user', payload: { firstName, lastName, email } });
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -77,19 +70,11 @@ const SignIn: React.FC = () => {
 
     try {
       const response: ServerResponse = await Request.post({ url: '/signin', body });
-
-      if (!response.errors) {
-        setSession({ email: response.data.email });
-        setUserState(response.data.firstName, response.data.lastName, response.data.email);
-        history.push('/');
-      } else {
-        setLoginErrors(response.errors);
-      }
+      setSession({ email: response.data.email });
+      history.push('/');
     } catch (e) {
-      console.log(e);
-      setLoginErrors(['Error signing in']);
-    } finally {
       setLoading(false);
+      setLoginErrors(e);
     }
   };
 
@@ -108,12 +93,7 @@ const SignIn: React.FC = () => {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          {loginErrors.map((error, index) => (
-            <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
-              {error}
-            </Typography>
-          ))}
-
+          <ErrorList errors={loginErrors} />
           <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
             <TextField
               {...formProps}

@@ -89,17 +89,12 @@ const Account: React.FC = () => {
 
     try {
       const response: ServerResponse = await Request.post({ url: '/account/delete' });
-
-      if (!response.errors) {
-        setSession();
-        history.push('/sign-in');
-      } else {
-        setRemoveErrors(response.errors);
-      }
+      setSession();
+      history.push('/sign-in');
+      setRemoveErrors(response.errors);
     } catch (e) {
-      setRemoveErrors(e);
-    } finally {
       setRemoveLoading(false);
+      setRemoveErrors(e);
     }
   };
 

@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import Header from './components/header/header';
 import Routes from './routes';
-import { UserProvider } from './util/user-context';
 import { SessionContext } from './util/session-context';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
@@ -28,10 +27,10 @@ const App: React.FC = ({ location }: any) => {
   );
 
   return (
-    <UserProvider>
+    <>
       {noHeaderPages.indexOf(location.pathname) < 0 && <Header />}
       <Routes />
-    </UserProvider>
+    </>
   );
 };
 

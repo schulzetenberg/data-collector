@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
@@ -15,8 +15,8 @@ import Button from '../../components/button/button';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';
-import UserContext from '../../util/user-context';
 import { SessionContext } from '../../util/session-context';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -34,10 +34,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  errorMessage: {
-    color: theme.palette.error.main,
-    marginTop: theme.spacing(2),
-  },
 }));
 
 const SignUp: React.FC = () => {
@@ -45,30 +41,18 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
   const [signupErrors, setSignupErrors] = useState<string[]>([]);
-  const { dispatch }: any = React.useContext(UserContext);
   const { setSession }: any = React.useContext(SessionContext);
-  const setUserState = (firstName: string, lastName: string, email: string): void =>
-    dispatch({ type: 'set-user', payload: { firstName, lastName, email } });
-
-  const submit = async (inputs: { email: string; password: string }) => {
+  const submit = async (inputs: { email: string; password: string }): Promise<void> => {
     setSignupErrors([]);
     setLoading(true);
 
     try {
       const response: ServerResponse = await Request.post({ url: '/signup', body: inputs });
-      setLoading(false);
-
-      if (!response.errors) {
-        setSession({ email: response.data.email });
-        setUserState(response.data.firstName, response.data.lastName, response.data.email);
-        history.push('/');
-      } else {
-        setSignupErrors(response.errors);
-      }
+      setSession({ email: response.data.email });
+      history.push('/');
     } catch (e) {
-      console.log(e);
-      setSignupErrors(['Error signing up']);
       setLoading(false);
+      setSignupErrors(e);
     }
   };
 
@@ -112,11 +96,7 @@ const SignUp: React.FC = () => {
           <Typography component="h1" variant="h5">
             Sign Up
           </Typography>
-          {signupErrors.map((error, index) => (
-            <Typography className={classes.errorMessage} key={index} variant="body1" align="center">
-              {error}
-            </Typography>
-          ))}
+          <ErrorList errors={signupErrors} />
           <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>
             <TextField
               {...formProps}

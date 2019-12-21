@@ -8,7 +8,10 @@ const Request = {
   post: ({ url, body = {} }: { url: string; body?: object }): Promise<ServerResponse> => {
     return axios
       .post(url, body)
-      .then((x) => x.data)
+      .then((response) => {
+        if (response.data.errors) return Promise.reject({ data: { error: response.data.errors } });
+        return response.data;
+      })
       .catch((err) => {
         const serverResponse = err.data.error;
         let errors = [];
