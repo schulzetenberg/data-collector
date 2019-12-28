@@ -2,7 +2,16 @@ import axios from 'axios';
 
 const Request = {
   get: ({ url }: { url: string }): Promise<ServerResponse> => {
-    return axios.get(url).then((x) => x.data);
+    return axios
+      .get(url)
+      .then((response) => {
+        if (response.data.errors) return Promise.reject({ data: { error: response.data.errors } });
+        return response.data;
+      })
+      .catch((err) => {
+        const serverResponse = err.data.error;
+        return Promise.reject([serverResponse]);
+      });
   },
 
   post: ({ url, body = {} }: { url: string; body?: object }): Promise<ServerResponse> => {
@@ -22,7 +31,7 @@ const Request = {
           errors = [serverResponse];
         }
 
-        return { errors, status: err.status, statusText: err.statusText };
+        return Promise.reject([errors]);
       });
   },
 };

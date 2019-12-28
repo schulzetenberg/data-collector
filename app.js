@@ -23,6 +23,7 @@ const logger = require('./nodejs/log.js');
 // API keys and configuration.
 const secrets = require('./config/secrets');
 const webConfig = require('./config/web');
+const response = require('./nodejs/response');
 
 // Development options
 let cookieOpts = {
@@ -145,11 +146,6 @@ app.use(
 );
 
 if (app.get('env') === 'production') {
-  // catch 404 and forward to error handler
-  app.use((req, res) => {
-    res.status(404).send({ error: 'Not Found' });
-  });
-
   // production error handler, no stacktraces shown
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
@@ -161,8 +157,12 @@ if (app.get('env') === 'production') {
   app.use(errorHandler()); // Display stack trace in dev
 }
 
+app.get('*', (req, res) => {
+  response.notFound(res, `Path "${req.path}" not found`);
+});
+
 app.post('*', (req, res) => {
-  res.status(404).send({ error: 'Not Found' });
+  response.notFound(res, `Path "${req.path}" not found`);
 });
 
 module.exports = app;

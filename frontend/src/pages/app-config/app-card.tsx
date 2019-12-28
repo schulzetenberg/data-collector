@@ -103,6 +103,7 @@ const AppCard: React.FC<AppCardProps> = ({
             isLoading ? (
               <Skeleton variant="circle" width={40} height={30} />
             ) : (
+              // TODO: Change Switch component to SwitchForm
               active !== undefined && <Switch onChange={handleActiveChange} checked={active} />
             )
           }

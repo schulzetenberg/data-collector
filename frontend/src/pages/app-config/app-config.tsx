@@ -4,9 +4,11 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { Grid, Snackbar, SnackbarContent } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
 
 import Request from '../../util/request';
 import AppCard from './app-card';
+import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   snackbarContent: {
@@ -16,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
 
 const AppConfig: React.FC = () => {
   const classes = useStyles();
-  const [hasError, setErrors] = useState(false);
+  const history = useHistory();
+  const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -46,8 +49,8 @@ const AppConfig: React.FC = () => {
     }
   };
 
-  const handleUpdateSettings = (e: any) => {
-    console.log('TODO', e);
+  const handleUpdateSettings = (app: string): void => {
+    history.push(`/app-settings/${app}`);
   };
 
   const handleManualUpdate = (e: any) => {
@@ -96,7 +99,7 @@ const AppConfig: React.FC = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             App Config
           </Typography>
-          {hasError && <div>{hasError}</div>}
+          <ErrorList errors={errors} />
           <Grid container spacing={3}>
             <AppCard
               appKey="music"

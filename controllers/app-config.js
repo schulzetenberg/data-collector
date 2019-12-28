@@ -21,7 +21,7 @@ exports.getConfigPage = (req, res) => {
  * GET /app-config/config
  * Get application config
  */
-exports.getConfig = async (req, res, next) => {
+exports.getConfig = async (req, res) => {
   const lastUpdateData = await mongoUtils.getLatestDocTimestamps();
 
   appConfig

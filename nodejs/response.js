@@ -5,6 +5,7 @@ const response = {
   userError: (res, error = 'User Error') => res.status(400).send({ error }),
   serverError: (res, error = 'Server Error') => (isProd ? res.sendStatus(500) : res.status(500).send({ error })),
   loginRequired: (res, error = 'You must be logged in to access this resource') => res.status(401).send({ error }),
+  notFound: (res, error = 'Resource not found') => res.status(404).send({ error }),
 };
 
 module.exports = response;

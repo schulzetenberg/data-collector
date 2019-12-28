@@ -24,7 +24,7 @@ const Account: React.FC = () => {
   const [isLoading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [loadingErrors, setLoadingErrors] = useState<string[]>([]);
+  const [serverErrors, setServerErrors] = useState<string[]>([]);
   const [isRemoveLoading, setRemoveLoading] = useState(false);
   const [removeErrors, setRemoveErrors] = useState<string[]>([]);
 
@@ -37,7 +37,7 @@ const Account: React.FC = () => {
       const response: ServerResponse = await Request.get({ url: 'account/profile' });
       setData(response.data);
     } catch (e) {
-      setLoadingErrors(e);
+      setServerErrors(e);
     } finally {
       setLoading(false);
     }
@@ -52,10 +52,10 @@ const Account: React.FC = () => {
 
     try {
       const response: ServerResponse = await Request.post({ url: '/account/profile', body: updatedData });
-      console.log('saved!', response.data);
       setData(response.data);
+      setShowProfile(false);
     } catch (e) {
-      console.log(e);
+      setServerErrors(e);
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ const Account: React.FC = () => {
       alert('Updated');
       // TODO: Clear out password fields
     } catch (e) {
-      console.log(e);
+      setServerErrors(e);
     } finally {
       setLoadingPassword(false);
     }
@@ -114,7 +114,7 @@ const Account: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <ErrorList errors={loadingErrors} />
+      <ErrorList errors={serverErrors} />
       <Grid container spacing={4}>
         {(showProfile || showPassword) && (
           <Grid item lg={8} md={6} xl={8} xs={12}>
