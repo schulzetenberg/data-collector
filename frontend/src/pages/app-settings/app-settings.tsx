@@ -6,7 +6,7 @@ import { Snackbar, SnackbarContent, Avatar } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useParams } from 'react-router-dom';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Request from '../../util/request';
 
 import Button from '../../components/button/button';
