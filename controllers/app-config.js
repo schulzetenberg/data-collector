@@ -8,6 +8,7 @@ const response = require('../nodejs/response');
 const mongoUtils = require('../nodejs/mongo-utils');
 const scheduler = require('../nodejs/scheduler');
 const { agenda } = require('../nodejs/agenda');
+const statesList = require('../config/states');
 
 /**
  * GET /app-config-page
@@ -29,6 +30,11 @@ exports.getConfig = async (req, res) => {
     .get(req.user._id)
     .then((data) => {
       if (data) {
+        // eslint-disable-next-line no-param-reassign
+        data.states.visited = data.states.visited.map((x) => ({ value: x, label: x }));
+        // eslint-disable-next-line no-param-reassign
+        data.states.options = statesList.map((x) => ({ value: x, label: x }));
+
         _.forIn(data, (value, key) => {
           // eslint-disable-next-line no-param-reassign
           data[key].lastUpdated = lastUpdateData[key] ? lastUpdateData[key] : null;
@@ -69,6 +75,10 @@ exports.saveConfig = (req, res, next) => {
 
   if (!data) {
     return next('No config data to save');
+  }
+
+  if (data.states && data.states.visited) {
+    data.states.visited = data.states.visited.map((x) => x.value);
   }
 
   delete data.updatedAt;

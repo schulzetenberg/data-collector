@@ -6,16 +6,15 @@ import { Snackbar, SnackbarContent, Avatar } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useParams } from 'react-router-dom';
-import useForm from 'react-hook-form';
 import Request from '../../util/request';
 
-import Button from '../../components/button/button';
-import Form from '../../components/form/form';
-import TextField from '../../components/text-field/text-field';
-
 import ErrorList from '../../components/error-list/error-list';
-import SwitchForm from '../../components/switch/switch-form';
 import { parseCamelCase } from '../../util/helpers';
+import MusicSettings from './music-settings';
+import GoodreadsSettings from './goodreads-settings';
+import PlayerFmSettings from './player-fm-settings';
+import FeedlySettings from './feedly-settings';
+import StatesSettings from './states-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.main,
   },
-  textCenter: { textAlign: 'center' },
   content: {
     marginTop: theme.spacing(3),
   },
@@ -75,7 +73,7 @@ const AppSettings: React.FC = () => {
     }
   };
 
-  const submit = (formData: FormData) => {
+  const submit = (formData: FormData): void => {
     const toSave = {
       ...data,
       [appName]: {
@@ -90,33 +88,8 @@ const AppSettings: React.FC = () => {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  type FormData = {
-    active: boolean;
-    schedule: string;
-    spotifySecret: string;
-    spotifyId: string;
-    lastFmKey: string;
-  };
-
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>();
-
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
-
-  useEffect(() => {
-    if (data && appName && data[appName]) {
-      const { active, schedule, spotifySecret, spotifyId, lastFmKey } = data[appName];
-
-      reset({
-        active,
-        schedule,
-        spotifySecret,
-        spotifyId,
-        lastFmKey,
-      });
-    }
-  }, [appName, data, reset]);
 
   return (
     <>
@@ -142,19 +115,18 @@ const AppSettings: React.FC = () => {
             </Typography>
             <div className={classes.content}>
               <ErrorList errors={responseErrors} />
-              {appName === 'music' && (
-                <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
-                  <div className={classes.textCenter}>
-                    <SwitchForm {...formProps} name="active" label="Active" />
-                  </div>
-                  <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
-                  <TextField {...formProps} name="spotifySecret" label="Spotify Secret" type="text" />
-                  <TextField {...formProps} name="spotifyId" label="Spotify ID" type="text" />
-                  <TextField {...formProps} name="lastFmKey" label="LastFM Key" type="text" />
-                  <Button {...formProps} type="submit">
-                    Save
-                  </Button>
-                </Form>
+              {appName === 'music' && <MusicSettings data={data && data.music} submit={submit} isLoading={isLoading} />}
+              {appName === 'goodreads' && (
+                <GoodreadsSettings data={data && data.goodreads} submit={submit} isLoading={isLoading} />
+              )}
+              {appName === 'feedly' && (
+                <FeedlySettings data={data && data.feedly} submit={submit} isLoading={isLoading} />
+              )}
+              {appName === 'playerFm' && (
+                <PlayerFmSettings data={data && data.playerFm} submit={submit} isLoading={isLoading} />
+              )}
+              {appName === 'states' && (
+                <StatesSettings data={data && data.states} submit={submit} isLoading={isLoading} />
               )}
             </div>
           </div>
