@@ -1,15 +1,13 @@
 Data Collector Web App
 ----------------------------------
 
- - Using AdminLTE website template 2.4
+ - Using Express, MongoDB, & React
 
 Features
 --------
 
 - Local Authentication using Email and Password
-- Flash notifications
-- MVC Project Structure
-- Bootstrap 3
+- Material UI
 - **Account Management**
  - Profile picture
  - Profile Details
@@ -23,16 +21,14 @@ Features
 
 Requirements
 -------
-Node (Tested on v8)
-MongoDB (Tested on 3.4)
+Node (Tested on v12)
+MongoDB (Tested on v4)
 
 Install
 -------
-After installing Node.js & npm:
+After installing Node.js:
 ```console
-$ npm i -g grunt-cli
 $ npm i
-$ grunt build
 ```
 
 Run
@@ -42,10 +38,6 @@ Run
 Sign Up
 -------
 - Signing up is currently locked down to admin@1.com to prevent multiple users
-
-Packages
---------
-- See package.json
 
 Deployment on Google Cloud Platform - Compute
 --------

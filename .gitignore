@@ -66,18 +66,6 @@ Temporary Items
 .apdisk
 cert.pem
 key.pem
-public/build.js
-public/build.css
-public/fonts/
-public/plugins.min.js
-public/blue.png
-public/blue@2x.png
-public/ng.min.js
-public/css/styles.css
-public/js/footer-plugins.js
-public/js/header-plugins.js
-public/images
-public/d3.min.js
 config/tmdb.json
 
 # e2e

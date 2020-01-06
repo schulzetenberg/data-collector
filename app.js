@@ -1,6 +1,5 @@
 // Module dependencies
 const express = require('express');
-const lessMiddleware = require('less-middleware');
 const cookieParser = require('cookie-parser');
 const compress = require('compression');
 const favicon = require('serve-favicon');
@@ -10,7 +9,6 @@ const morgan = require('morgan');
 const errorHandler = require('errorhandler');
 const methodOverride = require('method-override');
 const MongoStore = require('connect-mongo')(session);
-const flash = require('express-flash');
 const path = require('path');
 const passport = require('passport');
 const expressValidator = require('express-validator');
@@ -33,8 +31,6 @@ let cookieOpts = {
 let publicOpts = {
   maxAge: 0,
 }; // No cached content
-let lessDebug = true;
-let lessCompileOnce = true;
 
 const app = express();
 require('./nodejs/db');
@@ -87,17 +83,8 @@ if (app.get('env') === 'production') {
     httpOnly: true,
     secure: true,
   }; // Secure cookies
-  lessDebug = false;
-  lessCompileOnce = false;
 }
 
-app.use(
-  lessMiddleware(path.join(__dirname, 'build', 'less'), {
-    dest: path.join(__dirname, 'public'),
-    once: lessCompileOnce,
-    debug: lessDebug,
-  })
-);
 app.use(
   session({
     resave: true,
@@ -115,7 +102,6 @@ app.use('/react', express.static(path.join(__dirname, 'frontend/build'), publicO
 app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 const env = process.env.NODE_ENV || 'local';
 app.use((req, res, next) => {
