@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import { InputLabel, Select, MenuItem, FormControl, Input } from '@material-ui/core';
 import Button from '../../components/button/button';

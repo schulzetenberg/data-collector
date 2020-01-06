@@ -24,13 +24,14 @@
     "enzyme-adapter-react-16": "1.15.2",
     "history": "4.10.1",
     "js-cookie": "2.2.1",
+    "node-sass": "4.13.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-hook-form": "4.4.2",
     "react-hook-form-input": "1.1.10",
     "react-router-dom": "5.1.2",
-		"react-scripts": "3.3.0",
-		"react-select": "3.0.8",
+    "react-scripts": "3.3.0",
+    "react-select": "3.0.8",
     "react-test-renderer": "16.12.0",
     "typescript": "3.7.4",
     "yup": "0.27.0"
@@ -57,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@schulzetenberg/eslint-config-react": "^0.0.6",
+    "@schulzetenberg/eslint-config-react": "^0.0.8",
     "@typescript-eslint/eslint-plugin": "2.14.0",
     "@typescript-eslint/parser": "2.14.0",
     "eslint": "6.8.0",

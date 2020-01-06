@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import Button from '../../components/button/button';
 import Form from '../../components/form/form';
