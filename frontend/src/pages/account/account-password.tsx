@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import Form from '../../components/form/form';
