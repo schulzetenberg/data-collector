@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Button: React.FC<any> = ({ children, type, errors, register, setValue, ...rest }): any => {
+const Button: React.FC<any> = ({ children, type, errors, name, register, setValue, ...rest }): any => {
   const classes = useStyles();
 
   return (
@@ -21,6 +21,8 @@ const Button: React.FC<any> = ({ children, type, errors, register, setValue, ...
       type={type}
       variant="contained"
       color="primary"
+      data-testid={name}
+      name={name}
       {...rest}
       className={classNames(classes.button, { [classes.submit]: type === 'submit' })}
     >

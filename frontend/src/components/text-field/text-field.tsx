@@ -13,7 +13,7 @@ const TextField: React.FC<{
 }> = ({ name, register, setValue, errors, type, ...rest }) => {
   return (
     <RHFInputAny
-      as={<MaterialTextField />}
+      as={<MaterialTextField name={name} data-testid={name} />}
       name={name}
       error={errors && errors[name] ? true : undefined}
       defaultValue=""

@@ -116,7 +116,7 @@ const SignIn: React.FC = () => {
 
             <Checkbox {...formProps} name="remember" errors={errors} color="primary" label="Remember me" />
 
-            <Button {...formProps} type="submit">
+            <Button {...formProps} name="sign-in" type="submit">
               Sign In
             </Button>
             <Grid container>
@@ -127,7 +127,7 @@ const SignIn: React.FC = () => {
               </Grid>
               <Grid item>
                 <Link component={RouterLink} to="/sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
