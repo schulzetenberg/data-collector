@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+
 import React, { useState, useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -22,7 +24,12 @@ const AppConfig: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+	const [successMessage, setSuccessMessage] = useState('');
+
+	const messageConstants = {
+		saveSuccess: 'Saved config',
+		runSuccess: 'App ran successfully',
+	};
 
   const loadData = async (): Promise<void> => {
     setLoading(true);
@@ -38,12 +45,12 @@ const AppConfig: React.FC = () => {
   };
 
   const saveData = async (body: any): Promise<void> => {
-    setSaveSuccess(false);
+    setSuccessMessage('');
 
     try {
       const response: ServerResponse = await Request.post({ url: '/app-config/config', body });
       setData(response.data);
-      setSaveSuccess(true);
+      setSuccessMessage(messageConstants.saveSuccess);
     } catch (e) {
       setErrors(e);
     }
@@ -53,8 +60,14 @@ const AppConfig: React.FC = () => {
     history.push(`/app-settings/${app}`);
   };
 
-  const handleManualUpdate = (e: any) => {
-    console.log('TODO update', e);
+  const handleManualUpdate = async (appName: string) => {
+		try {
+      const response: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
+			setSuccessMessage(messageConstants.runSuccess);
+    } catch (e) {
+      setErrors(e);
+    }
+
   };
 
   const handleUpdateStatus = (appKey: string, checked: boolean) => {
@@ -86,12 +99,12 @@ const AppConfig: React.FC = () => {
       <Snackbar
         autoHideDuration={2000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={saveSuccess}
+        open={!!successMessage}
         onClose={(): void => {
-          setSaveSuccess(false);
+          setSuccessMessage('');
         }}
       >
-        <SnackbarContent className={classes.snackbarContent} message={<span>Saved config</span>} />
+        <SnackbarContent className={classes.snackbarContent} message={<span>{successMessage}</span>} />
       </Snackbar>
 
       <Container maxWidth="sm">

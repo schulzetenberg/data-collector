@@ -9,6 +9,7 @@ const mongoUtils = require('../nodejs/mongo-utils');
 const scheduler = require('../nodejs/scheduler');
 const { agenda } = require('../nodejs/agenda');
 const statesList = require('../config/states');
+const appModules = require('../nodejs/app-modules');
 
 /**
  * GET /app-config-page
@@ -106,27 +107,23 @@ exports.saveConfig = (req, res, next) => {
  * POST /app-config/run-app
  * Manually run application
  */
-exports.runApp = (req, res, next) => {
-  const data = req.body;
+exports.runApp = async (req, res) => {
+  const app = req.body && req.body.app;
 
-  if (!data || !data.app) {
-    return next('No App to run');
+  if (!app) {
+    return response.userError(res, 'No app specified');
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  appConfig.get(req.user._id).then((config) => {
-    if (config[data.app].filePath && config[data.app].functionName) {
-      try {
-        // TODO: get the function and call it!
-        // scheduledFunction(req.user._id);
-      } catch (err) {
-        console.log('Error running appplication. Error:', err);
-        return res.sendStatus(500);
-      }
+  // appConfig.get(req.user._id).then((config) => {
+  try {
+    // eslint-disable-next-line no-underscore-dangle
+    await appModules[app].save(req.user._id);
+  } catch (err) {
+    console.log('Error running appplication. Error:', err);
+    return res.sendStatus(500);
+  }
 
-      res.sendStatus(200);
-    } else {
-      return next('App missing file path or function name');
-    }
-  });
+  res.sendStatus(200);
+  // });
 };

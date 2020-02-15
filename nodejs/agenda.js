@@ -6,7 +6,14 @@ const logger = require('./log');
 const agenda = new Agenda({ db: { address: secrets.db } });
 exports.agenda = agenda;
 
-require('./jobs')(agenda);
+const appModules = require('./app-modules');
+
+Object.keys(appModules).forEach((app) => {
+  agenda.define(app, async (job) => {
+    const { userId } = job.attrs.data;
+    appModules[app].save(userId);
+  });
+});
 
 // IIFE to give access to async/await
 (async () => {

@@ -153,7 +153,7 @@ function getSpotifyArtist(config, artist) {
 
         return getOptions;
       }
-
+      console.log('Access token error', data && data.error);
       return Promise.reject('Error parsing access token');
     })
     .then(api.get)

@@ -52,3 +52,7 @@ $ cd /home/bitnami/apps/collector/htdocs/
 $ git pull
 $ ./start-data-collector.sh
 ```
+
+Agenda Scheduler
+--------
+- http://localhost:3000/agenda/

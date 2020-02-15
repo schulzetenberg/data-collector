@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-const appModules = {
+module.exports = {
   music: require('./music'),
   goodreads: require('./goodreads'),
   github: require('./github'),
@@ -8,13 +8,4 @@ const appModules = {
   fuelly: require('./fuelly'),
   playerFm: require('./player-fm'),
   feedly: require('./feedly'),
-};
-
-module.exports = (agenda) => {
-  Object.keys(appModules).forEach((app) => {
-    agenda.define(app, async (job) => {
-      const { userId } = job.attrs.data;
-      appModules[app].save(userId);
-    });
-  });
 };
