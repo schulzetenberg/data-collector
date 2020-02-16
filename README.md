@@ -56,3 +56,21 @@ $ ./start-data-collector.sh
 Agenda Scheduler
 --------
 - http://localhost:3000/agenda/
+
+Requirements
+--------
+- MongoDB
+- NodeJS
+
+Run Locally (Backend)
+--------
+$ npm i
+$ npm run start
+Express server will start on localhost:3000
+
+Run Locally (Frontend)
+--------
+$ npm i
+$ npm run build (first time only)
+$ npm run start
+Local web server will start & open webpage to localhost:8999, with a proxy to the backend server on port 3000

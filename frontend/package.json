@@ -2,7 +2,7 @@
   "name": "data-collector-web",
   "version": "0.0.1",
   "private": true,
-  "homepage": "/react",
+  "homepage": "/",
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@material-ui/core": "4.8.3",
@@ -33,7 +33,7 @@
     "react-hook-form": "4.4.2",
     "react-hook-form-input": "1.1.10",
     "react-router-dom": "5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "3.4.0",
     "react-select": "3.0.8",
     "react-test-renderer": "16.12.0",
     "typescript": "3.7.4",
@@ -58,7 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@schulzetenberg/eslint-config-react": "^0.0.8",
+    "@schulzetenberg/eslint-config-react": "^0.0.9",
     "@typescript-eslint/eslint-plugin": "2.14.0",
     "@typescript-eslint/parser": "2.14.0",
     "eslint": "6.8.0",

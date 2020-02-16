@@ -98,7 +98,7 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'public'), publicOpts));
-app.use('/react', express.static(path.join(__dirname, 'frontend/build'), publicOpts));
+app.use('/', express.static(path.join(__dirname, 'frontend/build'), publicOpts));
 app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
