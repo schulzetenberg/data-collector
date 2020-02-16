@@ -1,5 +1,3 @@
-const Q = require('q');
-
 const logger = require('./log');
 const GithubModel = require('../models/github-model.js');
 const appConfig = require('./app-config');
@@ -8,7 +6,7 @@ const api = require('./api');
 exports.save = (userId) => {
   logger.info('Starting Github');
 
-  appConfig
+  return appConfig
     .app(userId, 'github')
     .then((githubConfig) => {
       if (!githubConfig || !githubConfig.user || !githubConfig.token) {
@@ -24,24 +22,24 @@ exports.save = (userId) => {
 
         // User data
         api.get({
-          url: `https://api.github.com/users/${githubConfig.user}?access_token=${githubConfig.token}&per_page=100`,
-          headers: { 'User-Agent': `GitHub User:${githubConfig.user}` },
+          url: `https://api.github.com/users/${githubConfig.user}?per_page=100`,
+          headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
         }),
 
         // Followers data
         api.get({
-          url: `https://api.github.com/users/${githubConfig.user}/followers` + `?access_token=${githubConfig.token}&per_page=100`,
-          headers: { 'User-Agent': `GitHub User:${githubConfig.user}` },
+          url: `https://api.github.com/users/${githubConfig.user}/followers?per_page=100`,
+          headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
         }),
 
         // Following data
         api.get({
-          url: `https://api.github.com/users/${githubConfig.user}/following` + `?access_token=${githubConfig.token}&per_page=100`,
-          headers: { 'User-Agent': `GitHub User:${githubConfig.user}` },
+          url: `https://api.github.com/users/${githubConfig.user}/following?per_page=100`,
+          headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
         }),
       ];
 
-      return Q.all(promises);
+      return Promise.all(promises);
     })
     .then((data) => {
       const doc = new GithubModel({
@@ -56,8 +54,5 @@ exports.save = (userId) => {
     })
     .then(() => {
       logger.info('Saved Github data');
-    })
-    .catch((err) => {
-      logger.error('Github error', err);
     });
 };
