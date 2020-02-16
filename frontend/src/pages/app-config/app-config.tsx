@@ -24,12 +24,12 @@ const AppConfig: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
   const [data, setData] = useState();
   const [isLoading, setLoading] = useState(false);
-	const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-	const messageConstants = {
-		saveSuccess: 'Saved config',
-		runSuccess: 'App ran successfully',
-	};
+  const messageConstants = {
+    saveSuccess: 'Saved config',
+    runSuccess: 'App ran successfully',
+  };
 
   const loadData = async (): Promise<void> => {
     setLoading(true);
@@ -61,13 +61,12 @@ const AppConfig: React.FC = () => {
   };
 
   const handleManualUpdate = async (appName: string) => {
-		try {
+    try {
       const response: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
-			setSuccessMessage(messageConstants.runSuccess);
+      setSuccessMessage(messageConstants.runSuccess);
     } catch (e) {
       setErrors(e);
     }
-
   };
 
   const handleUpdateStatus = (appKey: string, checked: boolean) => {
@@ -159,12 +158,12 @@ const AppConfig: React.FC = () => {
             />
 
             <AppCard
-              appKey="feedly"
-              active={data && data.feedly.active}
+              appKey="playerFm"
+              active={data && data.playerFm.active}
               {...cardDefaultProps}
               title="Podcasts"
               image="/img/microphone.jpg"
-              lastUpdated={data && data.feedly.lastUpdated}
+              lastUpdated={data && data.playerFm.lastUpdated}
               summary="Collect podcast subscriptions from PlayerFM"
             />
 

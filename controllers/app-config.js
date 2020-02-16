@@ -9,6 +9,7 @@ const mongoUtils = require('../nodejs/mongo-utils');
 const scheduler = require('../nodejs/scheduler');
 const { agenda } = require('../nodejs/agenda');
 const statesList = require('../config/states');
+const countriesList = require('../config/countries');
 const appModules = require('../nodejs/app-modules');
 
 /**
@@ -35,6 +36,11 @@ exports.getConfig = async (req, res) => {
         data.states.visited = data.states.visited.map((x) => ({ value: x, label: x }));
         // eslint-disable-next-line no-param-reassign
         data.states.options = statesList.map((x) => ({ value: x, label: x }));
+
+        // eslint-disable-next-line no-param-reassign
+        data.countries.visited = data.countries.visited.map((x) => ({ value: x, label: x }));
+        // eslint-disable-next-line no-param-reassign
+        data.countries.options = countriesList.map((x) => ({ value: x, label: x }));
 
         _.forIn(data, (value, key) => {
           // eslint-disable-next-line no-param-reassign
@@ -80,6 +86,10 @@ exports.saveConfig = (req, res, next) => {
 
   if (data.states && data.states.visited) {
     data.states.visited = data.states.visited.map((x) => x.value);
+  }
+
+  if (data.countries && data.countries.visited) {
+    data.countries.visited = data.countries.visited.map((x) => x.value);
   }
 
   delete data.updatedAt;

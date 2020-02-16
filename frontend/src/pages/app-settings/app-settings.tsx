@@ -17,6 +17,8 @@ import FeedlySettings from './feedly-settings';
 import StatesSettings from './states-settings';
 import GithubSettings from './github-settings';
 import FuellySettings from './fuelly-settings';
+import TmdbSettings from './tmdb-settings';
+import TraktSettings from './trakt-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -129,8 +131,11 @@ const AppSettings: React.FC = () => {
                   feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
                   playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
                   states: <StatesSettings data={data && data.states} {...baseAppProps} />,
+                  countries: <StatesSettings data={data && data.countries} {...baseAppProps} />,
                   github: <GithubSettings data={data && data.github} {...baseAppProps} />,
                   fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
+                  tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
+                  trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
                 } as any)[appName]
               }
             </div>
