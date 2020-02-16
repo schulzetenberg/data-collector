@@ -52,6 +52,9 @@ const appConfigSchema = new mongoose.Schema(
         type: [],
         default: [
           {
+            tableData: {
+              index: Number,
+            },
             name: '',
             url: '',
           },

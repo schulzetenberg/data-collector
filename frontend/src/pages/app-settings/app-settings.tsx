@@ -16,6 +16,7 @@ import PlayerFmSettings from './player-fm-settings';
 import FeedlySettings from './feedly-settings';
 import StatesSettings from './states-settings';
 import GithubSettings from './github-settings';
+import FuellySettings from './fuelly-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -129,6 +130,7 @@ const AppSettings: React.FC = () => {
                   playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
                   states: <StatesSettings data={data && data.states} {...baseAppProps} />,
                   github: <GithubSettings data={data && data.github} {...baseAppProps} />,
+                  fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
                 } as any)[appName]
               }
             </div>
