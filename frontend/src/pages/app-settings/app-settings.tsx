@@ -15,6 +15,7 @@ import GoodreadsSettings from './goodreads-settings';
 import PlayerFmSettings from './player-fm-settings';
 import FeedlySettings from './feedly-settings';
 import StatesSettings from './states-settings';
+import GithubSettings from './github-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -91,6 +92,11 @@ const AppSettings: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const baseAppProps = {
+    submit,
+    isLoading,
+  };
+
   return (
     <>
       <Snackbar
@@ -115,19 +121,16 @@ const AppSettings: React.FC = () => {
             </Typography>
             <div className={classes.content}>
               <ErrorList errors={responseErrors} />
-              {appName === 'music' && <MusicSettings data={data && data.music} submit={submit} isLoading={isLoading} />}
-              {appName === 'goodreads' && (
-                <GoodreadsSettings data={data && data.goodreads} submit={submit} isLoading={isLoading} />
-              )}
-              {appName === 'feedly' && (
-                <FeedlySettings data={data && data.feedly} submit={submit} isLoading={isLoading} />
-              )}
-              {appName === 'playerFm' && (
-                <PlayerFmSettings data={data && data.playerFm} submit={submit} isLoading={isLoading} />
-              )}
-              {appName === 'states' && (
-                <StatesSettings data={data && data.states} submit={submit} isLoading={isLoading} />
-              )}
+              {
+                ({
+                  music: <MusicSettings data={data && data.music} {...baseAppProps} />,
+                  goodreads: <GoodreadsSettings data={data && data.goodreads} {...baseAppProps} />,
+                  feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
+                  playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
+                  states: <StatesSettings data={data && data.states} {...baseAppProps} />,
+                  github: <GithubSettings data={data && data.github} {...baseAppProps} />,
+                } as any)[appName]
+              }
             </div>
           </div>
         </Box>
