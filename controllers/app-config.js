@@ -59,7 +59,7 @@ exports.getConfig = async (req, res) => {
               // eslint-disable-next-line no-param-reassign
               data[key].scheduleList = scheduleArr;
             } catch (err) {
-              console.log(`Cannot parse schedule ${value.schedule}. Err:${err.message}`);
+              logger.error(`Cannot parse schedule ${value.schedule}. Err:${err.message}`);
             }
           }
         });
@@ -108,7 +108,7 @@ exports.saveConfig = (req, res, next) => {
       return scheduler.run(agenda, req.user._id);
     })
     .catch((err) => {
-      console.log(err);
+      logger.error(err);
       return next('Error saving config');
     });
 };
@@ -127,13 +127,14 @@ exports.runApp = async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   // appConfig.get(req.user._id).then((config) => {
   try {
+    logger.info(`Starting ${app} save`);
     // eslint-disable-next-line no-underscore-dangle
     await appModules[app].save(req.user._id);
+    logger.info(`Finished ${app} save`);
   } catch (err) {
-    console.log('Error running appplication. Error:', err);
+    logger.error('Error running appplication. Error:', err);
     return res.sendStatus(500);
   }
 
   res.sendStatus(200);
-  // });
 };

@@ -8,8 +8,6 @@ const api = require('./api');
 const PlayerFmModel = require('../models/player-fm-model');
 
 exports.save = (userId) => {
-  logger.info('Starting Goodreads');
-
   appConfig
     .get(userId)
     .then(currentPodcasts)
@@ -25,9 +23,6 @@ exports.save = (userId) => {
     .then((podcasts) => {
       const doc = new PlayerFmModel({ podcasts, userId });
       return doc.save();
-    })
-    .then(() => {
-      logger.info('Finished saving Goodreads data');
     })
     .catch((err) => {
       logger.error('PlayerFM error', err);
@@ -77,12 +72,12 @@ function getArtwork(podcast) {
 
       try {
         parseString(xmlData, (err, result) => {
-          if (err) console.log(err);
+          if (err) Error(err);
 
           img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
         });
       } catch (err) {
-        console.log(`Could not get podcast artwork for ${podcast.text}`, err);
+        logger.error(`Could not get podcast artwork for ${podcast.text}`, err);
       }
 
       const podcastData = {

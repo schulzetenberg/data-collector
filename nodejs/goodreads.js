@@ -8,8 +8,6 @@ const appConfig = require('./app-config');
 const api = require('./api');
 
 exports.save = (userId) => {
-  logger.info('Starting Goodreads');
-
   appConfig
     .get(userId)
     .then(booksRead)
@@ -17,9 +15,6 @@ exports.save = (userId) => {
     .then((data) => {
       const doc = new GoodreadsModel({ ...data, userId });
       return doc.save();
-    })
-    .then(() => {
-      logger.info('Finished saving Goodreads data');
     })
     .catch((err) => {
       logger.error(err);

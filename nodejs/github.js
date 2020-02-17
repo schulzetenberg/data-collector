@@ -4,8 +4,6 @@ const appConfig = require('./app-config');
 const api = require('./api');
 
 exports.save = (userId) => {
-  logger.info('Starting Github');
-
   return appConfig
     .app(userId, 'github')
     .then((githubConfig) => {
@@ -51,8 +49,5 @@ exports.save = (userId) => {
       });
 
       return doc.save();
-    })
-    .then(() => {
-      logger.info('Saved Github data');
     });
 };

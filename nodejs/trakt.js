@@ -5,8 +5,6 @@ const TraktModel = require('../models/trakt-model.js');
 const api = require('./api');
 
 exports.save = (userId) => {
-  logger.info('Starting Trakt');
-
   let traktConfig = {};
   let statsData;
   let moviesData;
@@ -35,9 +33,6 @@ exports.save = (userId) => {
       });
 
       return doc.save();
-    })
-    .then(() => {
-      logger.info('Finished saving trakt data');
     })
     .catch((err) => {
       logger.error('Caught trakt save error:', err);

@@ -6,20 +6,15 @@ const appConfig = require('./app-config');
 exports.get = (userId) => {
   const defer = Q.defer();
 
-  appConfig
-    .get(userId)
-    .then((config) => {
-      const visited = config && config.states && config.states.visited;
+  appConfig.get(userId).then((config) => {
+    const visited = config && config.states && config.states.visited;
 
-      if (!visited) {
-        logger.error('States config missing');
-      }
+    if (!visited) {
+      logger.error('States config missing');
+    }
 
-      defer.resolve(visited);
-    })
-    .catch((err) => {
-      defer.reject(err);
-    });
+    defer.resolve(visited);
+  });
 
   return defer.promise;
 };

@@ -7,8 +7,6 @@ const appConfig = require('./app-config');
 const api = require('./api');
 
 exports.save = (userId) => {
-  logger.info('Starting music save', userId);
-
   appConfig
     .get(userId)
     .then(topArtists)
@@ -17,9 +15,6 @@ exports.save = (userId) => {
     .then((data) => {
       const doc = new MusicModel({ ...data, userId });
       return doc.save();
-    })
-    .then(() => {
-      logger.info('Saved music data');
     })
     .catch((err) => {
       logger.error('Caught music error', err);
@@ -153,7 +148,7 @@ function getSpotifyArtist(config, artist) {
 
         return getOptions;
       }
-      console.log('Access token error', data && data.error);
+      logger.error('Access token error', data && data.error);
       return Promise.reject('Error parsing access token');
     })
     .then(api.get)

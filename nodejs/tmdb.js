@@ -14,8 +14,6 @@ const appConfig = require('./app-config');
 
 // Get updated configuration & save to file for future use
 exports.save = (userId) => {
-  logger.info('Starting TMDB');
-
   appConfig
     .get(userId)
     .then((config) => {
