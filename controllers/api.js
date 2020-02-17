@@ -8,11 +8,14 @@ const states = require('../nodejs/states');
 const countries = require('../nodejs/countries');
 const fuelly = require('../models/fuelly-model');
 const playerFm = require('../models/player-fm-model');
+const response = require('../nodejs/response');
+const logger = require('../nodejs/log');
 
-exports.getMusic = (req, res, next) => {
+exports.getMusic = (req, res) => {
   music
     .findOne(
-      {},
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.user._id },
       {},
       {
         sort: { _id: -1 },
@@ -23,14 +26,16 @@ exports.getMusic = (req, res, next) => {
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Error getting music data', err);
+      response.serverError(res, 'Error getting music data');
     });
 };
 
-exports.getGoodreads = (req, res, next) => {
+exports.getGoodreads = (req, res) => {
   goodreads
     .findOne(
-      {},
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.user._id },
       {},
       {
         sort: { _id: -1 },
@@ -38,18 +43,19 @@ exports.getGoodreads = (req, res, next) => {
     )
     .lean()
     .then((data) => {
-      console.log('data!', data);
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Error getting Goodreads data', err);
+      response.serverError(res, 'Error getting Goodreads data');
     });
 };
 
-exports.getPlayerFm = (req, res, next) => {
+exports.getPlayerFm = (req, res) => {
   playerFm
     .findOne(
-      {},
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.user._id },
       {},
       {
         sort: { _id: -1 },
@@ -60,14 +66,16 @@ exports.getPlayerFm = (req, res, next) => {
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Error getting PlayerFM data', err);
+      response.serverError(res, 'Error getting PlayerFM data');
     });
 };
 
-exports.getGithub = (req, res, next) => {
+exports.getGithub = (req, res) => {
   github
     .findOne(
-      {},
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.user._id },
       {},
       {
         sort: { _id: -1 },
@@ -78,14 +86,16 @@ exports.getGithub = (req, res, next) => {
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Error getting Github data', err);
+      response.serverError(res, 'Error getting Github data');
     });
 };
 
-exports.getTrakt = (req, res, next) => {
+exports.getTrakt = (req, res) => {
   trakt
     .findOne(
-      {},
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.user._id },
       {},
       {
         sort: {
@@ -95,7 +105,7 @@ exports.getTrakt = (req, res, next) => {
     )
     .lean()
     .then((data) => {
-      if (!data) return next('No data');
+      if (!data) return response.serverError(res, 'No data');
 
       const startDate = moment('2016-10-02');
       const now = moment();
@@ -106,39 +116,44 @@ exports.getTrakt = (req, res, next) => {
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Error getting Trakt data', err);
+      response.serverError(res, 'Error getting Trakt data');
     });
 };
 
 exports.getStates = (req, res) => {
   states
-    .get()
+    // eslint-disable-next-line no-underscore-dangle
+    .get(req.user._id)
     .then((data) => {
       res.json(data);
     })
     .catch((err) => {
-      console.log('Get states error', err);
-      res.sendStatus(500);
+      logger.error('Get states error', err);
+      response.serverError(res, 'Error getting states data');
     });
 };
 
 exports.getCountries = (req, res) => {
   countries
-    .get()
+    // eslint-disable-next-line no-underscore-dangle
+    .get(req.user._id)
     .then((data) => {
       res.json(data);
     })
     .catch((err) => {
-      console.log('Get countries error', err);
-      res.sendStatus(500);
+      logger.error('Get countries error', err);
+      response.serverError(res, 'Error getting countries data');
     });
 };
 
-exports.getFuelly = (req, res, next) => {
-  if (!req.query.start || !req.query.end) return next('Start and end time parameters required');
-  if (!req.query.name) return next('Vehicle name required');
+exports.getFuelly = (req, res) => {
+  if (!req.query.start || !req.query.end) return response.userError(res, 'Start and end time parameters required');
+  if (!req.query.name) return response.userError(res, 'Vehicle name required');
 
   const by = {
+    // eslint-disable-next-line no-underscore-dangle
+    userId: req.user._id,
     name: req.query.name,
     fillTime: {
       $gte: req.query.start,
@@ -161,18 +176,22 @@ exports.getFuelly = (req, res, next) => {
       res.json(data);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Get Fuelly error', err);
+      response.serverError(res, 'Error getting Fuelly data');
     });
 };
 
-exports.getFuellyAvg = (req, res, next) => {
+exports.getFuellyAvg = (req, res) => {
   // Get all data from the past year
   const numDays = 365;
   const start = moment()
     .subtract(numDays, 'days')
     .toDate();
   const end = moment().toDate();
+
   const filter = {
+    // eslint-disable-next-line no-underscore-dangle
+    userId: req.user._id,
     fillTime: {
       $gte: start,
       $lte: end,
@@ -209,6 +228,7 @@ exports.getFuellyAvg = (req, res, next) => {
       res.json(retData);
     })
     .catch((err) => {
-      return next(err);
+      logger.error('Get Fuelly averages error', err);
+      response.serverError(res, 'Error getting Fuelly averages data');
     });
 };

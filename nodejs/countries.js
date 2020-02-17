@@ -1,20 +1,13 @@
-const Q = require('q');
-
-const logger = require('./log');
 const appConfig = require('./app-config');
 
 exports.get = (userId) => {
-  const defer = Q.defer();
-
-  appConfig.get(userId).then((config) => {
+  return appConfig.get(userId).then((config) => {
     const visited = config && config.countries && config.countries.visited;
 
     if (!visited) {
-      logger.error('Countries config missing');
+      return Promise.reject('Countries config is missing');
     }
 
-    defer.resolve(visited);
+    return visited;
   });
-
-  return defer.promise;
 };

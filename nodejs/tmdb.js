@@ -9,16 +9,15 @@ const fs = require('fs');
 const writeFileAsync = promisify(fs.writeFile);
 
 const api = require('./api');
-const logger = require('./log');
 const appConfig = require('./app-config');
 
 // Get updated configuration & save to file for future use
 exports.save = (userId) => {
-  appConfig
+  return appConfig
     .get(userId)
     .then((config) => {
       if (!config || !config.tmdb || !config.tmdb.key) {
-        return logger.error('Missing TMDB config');
+        return Promise.reject('Missing TMDB config');
       }
 
       const options = {
@@ -31,8 +30,5 @@ exports.save = (userId) => {
     .then(api.get)
     .then((body) => {
       return writeFileAsync('./config/tmdb.json', JSON.stringify(body, null, 4));
-    })
-    .catch((err) => {
-      logger.error('TMDB error', err);
     });
 };

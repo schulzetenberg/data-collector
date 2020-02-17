@@ -1,6 +1,9 @@
 const Q = require('q');
 const opmlToJSON = require('opml-to-json');
 const { parseString } = require('xml2js');
+const util = require('util');
+
+const opmlToJSONPromise = util.promisify(opmlToJSON);
 
 const logger = require('./log');
 const appConfig = require('./app-config');
@@ -8,59 +11,32 @@ const api = require('./api');
 const PlayerFmModel = require('../models/player-fm-model');
 
 exports.save = (userId) => {
-  appConfig
+  return appConfig
     .get(userId)
     .then(currentPodcasts)
     .then((podcasts) => {
-      const promises = [];
-
-      for (let i = 0, x = podcasts.length; i < x; i += 1) {
-        promises.push(getArtwork(podcasts[i]));
-      }
-
-      return Q.all(promises);
+      const artworkPromises = podcasts.map((podcast) => getArtwork(podcast));
+      return Q.all(artworkPromises);
     })
     .then((podcasts) => {
       const doc = new PlayerFmModel({ podcasts, userId });
       return doc.save();
-    })
-    .catch((err) => {
-      logger.error('PlayerFM error', err);
     });
 };
 
 function currentPodcasts(config) {
-  const defer = Q.defer();
-
   const user = config && config.playerFm && config.playerFm.user;
 
   if (!user) {
-    defer.reject('Missing playerFm config');
-  } else {
-    const url = `https://player.fm/${user}/fm.opml`;
-
-    api
-      .get({ url })
-      .then((body) => {
-        try {
-          opmlToJSON(body, (err, json) => {
-            if (err) {
-              return defer.reject(err);
-            }
-
-            defer.resolve(json.children);
-          });
-        } catch (err) {
-          defer.reject(err);
-        }
-      })
-      .catch((err) => {
-        logger.error(err);
-        defer.reject('Get PlayerFM podcasts error');
-      });
+    return Promise.reject('Missing playerFm config');
   }
 
-  return defer.promise;
+  const url = `https://player.fm/${user}/fm.opml`;
+
+  return api
+    .get({ url })
+    .then(opmlToJSONPromise)
+    .then((data) => data.children);
 }
 
 function getArtwork(podcast) {

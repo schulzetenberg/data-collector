@@ -32,7 +32,7 @@ exports.run = async (agenda, userId) => {
 
     if (config[app].active && config[app].schedule) {
       try {
-        console.log(`schedule app for user ${userId}`, app);
+        logger.info(`schedule app for user ${userId}`, app);
         agenda.every(config[app].schedule, app, { userId });
       } catch (err) {
         logger.error(`Error scheduling appplication ${app}. Error:`, err);

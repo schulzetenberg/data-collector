@@ -9,7 +9,7 @@ exports.save = (userId) => {
   let statsData;
   let moviesData;
 
-  appConfig
+  return appConfig
     .get(userId)
     .then((config) => {
       traktConfig = config && config.trakt;
@@ -33,9 +33,6 @@ exports.save = (userId) => {
       });
 
       return doc.save();
-    })
-    .catch((err) => {
-      logger.error('Caught trakt save error:', err);
     });
 };
 
