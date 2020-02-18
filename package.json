@@ -42,7 +42,7 @@
     "moment": "2.22.1",
     "mongodb": "2.2.35",
     "mongoose": "5.9.1",
-    "morgan": "1.9.0",
+    "morgan": "1.9.1",
     "opml-to-json": "0.0.3",
     "passport": "0.4.0",
     "passport-local": "1.0.0",
