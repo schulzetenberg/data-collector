@@ -32,7 +32,9 @@ const Routes: React.FC = () => {
 
   return (
     <Switch>
-      <PublicRoute component={Home} path="/" exact />
+      <AuthenticatedRoute session={session} component={AppConfig} path="/" exact />
+      {/* <PublicRoute component={Home} path="/" exact /> */}
+
       <PublicRoute component={SignIn} path="/sign-in" />
       <PublicRoute component={SignUp} path="/sign-up" />
       <PublicRoute component={ForgotPassword} path="/forgot-password" />

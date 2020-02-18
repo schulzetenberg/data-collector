@@ -3,26 +3,20 @@ const util = require('util');
 
 const opmlToJSONPromise = util.promisify(opmlToJSON);
 
-const logger = require('./log');
 const appConfig = require('./app-config');
 const FeedlyModel = require('../models/feedly-model');
 
 exports.save = (userId) => {
-  logger.info('Starting Feedly');
-
-  appConfig
+  return appConfig
     .get(userId)
-    .then(currentBlogs)
+    .then(getCurrentBlogs)
     .then((feeds) => {
       const doc = new FeedlyModel({ feeds, userId });
       return doc.save();
-    })
-    .catch((err) => {
-      logger.error('Feedly error', err);
     });
 };
 
-function currentBlogs(config) {
+function getCurrentBlogs(config) {
   const opml = config && config.feedly && config.feedly.opml;
 
   if (!opml) {
