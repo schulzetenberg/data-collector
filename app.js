@@ -20,7 +20,6 @@ const logger = require('./nodejs/log.js');
 
 // API keys and configuration.
 const secrets = require('./config/secrets');
-const webConfig = require('./config/web');
 const response = require('./nodejs/response');
 
 // Development options
@@ -102,15 +101,6 @@ app.use('/', express.static(path.join(__dirname, 'frontend/build'), publicOpts))
 app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
-
-const env = process.env.NODE_ENV || 'local';
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  res.locals.user = req.user;
-  res.locals.config = webConfig;
-  res.locals.env = env;
-  next();
-});
 
 // App routes
 require('./routes')(app);

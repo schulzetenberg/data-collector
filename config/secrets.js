@@ -9,7 +9,6 @@
  */
 
 module.exports = {
-
   ipAddress: process.env.IP_ADDRESS || '127.0.0.1',
 
   port: process.env.PORT || '3000',
@@ -27,9 +26,8 @@ module.exports = {
   },
 
   defaults: {
-		emailTo: 'me@gmail.com',
-		emailFrom: 'Data_Collector@me.com',
-		emailFromName: 'Data Collector',
-  }
-
+    emailTo: 'me@gmail.com',
+    emailFrom: 'Data_Collector@me.com',
+    emailFromName: 'Data Collector',
+  },
 };

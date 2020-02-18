@@ -13,14 +13,6 @@ const countriesList = require('../config/countries');
 const appModules = require('../nodejs/app-modules');
 
 /**
- * GET /app-config-page
- * Application config page
- */
-exports.getConfigPage = (req, res) => {
-  res.render('app-config.html', { title: 'Application Configuration' });
-};
-
-/**
  * GET /app-config/config
  * Get application config
  */

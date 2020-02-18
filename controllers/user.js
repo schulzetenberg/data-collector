@@ -8,46 +8,6 @@ const User = require('../models/User');
 const AppConfig = require('../models/app-config');
 const response = require('../nodejs/response');
 
-// Login page
-exports.getLogin = (req, res) => {
-  if (req.user) {
-    res.redirect('/');
-  } else {
-    res.render('account/login.html', { title: 'Login' });
-  }
-};
-
-/**
- * TODO: Delete after move to React
- * POST /login
- * Sign in using email and password.
- */
-exports.postLogin = (req, res, next) => {
-  req.assert('email', 'Email address is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
-
-  const errors = req.validationErrors();
-
-  if (errors) {
-    return res.redirect('/login');
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) {
-      return res.redirect('/login');
-    }
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      // reset the failure counter so next time they log in they get 5 tries again before the delays kick in
-      req.brute.reset(() => {
-        res.redirect('/');
-      });
-    });
-  })(req, res, next);
-};
-
 exports.postSignin = (req, res, next) => {
   req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password cannot be blank').notEmpty();
@@ -91,14 +51,6 @@ exports.postSignin = (req, res, next) => {
 exports.logout = (req, res) => {
   req.logout();
   response.success(res);
-};
-
-// Signup page
-exports.getSignup = (req, res) => {
-  if (req.user) return res.redirect('/');
-  res.render('account/signup.html', {
-    title: 'Create Account',
-  });
 };
 
 // Create a new local account
@@ -156,13 +108,6 @@ exports.postSignup = async (req, res, next) => {
   });
 };
 
-// Profile page
-exports.getAccount = (req, res) => {
-  res.render('account/profile.html', {
-    title: 'Account Management',
-  });
-};
-
 exports.getProfile = (req, res) => {
   // We dont want to expose private user data such as the password hash
   const data = {
@@ -180,12 +125,12 @@ exports.getProfile = (req, res) => {
 // Update profile information
 exports.postUpdateProfile = (req, res, next) => {
   User.findById(req.user.id, (err, user) => {
-		if (err) return next(err);
-		// eslint-disable-next-line no-param-reassign
-		user.email = req.body.email || '';
-		// eslint-disable-next-line no-param-reassign
-		user.firstName = req.body.firstName || '';
-		// eslint-disable-next-line no-param-reassign
+    if (err) return next(err);
+    // eslint-disable-next-line no-param-reassign
+    user.email = req.body.email || '';
+    // eslint-disable-next-line no-param-reassign
+    user.firstName = req.body.firstName || '';
+    // eslint-disable-next-line no-param-reassign
     user.lastName = req.body.lastName || '';
 
     user.save((err) => {
@@ -247,27 +192,6 @@ exports.postDeleteAccount = (req, res, next) => {
     req.logout();
     res.redirect('/');
   });
-};
-
-// Reset Password page
-exports.getReset = (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-
-  User.findOne({ resetPasswordToken: req.params.token })
-    .where('resetPasswordExpires')
-    .gt(Date.now())
-    .exec((err, user) => {
-      if (!user) {
-        req.flash('error', { msg: 'Password reset token is invalid or has expired' });
-        return res.redirect('/forgot');
-      }
-
-      res.render('reset.html', {
-        title: 'Password Reset',
-      });
-    });
 };
 
 // Process the reset password request
@@ -333,16 +257,6 @@ exports.postReset = async (req, res) => {
 
     const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
     response.success(res, { data });
-  });
-};
-
-// Forgot Password page
-exports.getForgot = (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-  res.render('account/forgot.html', {
-    title: 'Forgot Password',
   });
 };
 
