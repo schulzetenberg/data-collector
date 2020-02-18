@@ -1,4 +1,3 @@
-const logger = require('./log');
 const GithubModel = require('../models/github-model.js');
 const appConfig = require('./app-config');
 const api = require('./api');
@@ -8,7 +7,7 @@ exports.save = (userId) => {
     .app(userId, 'github')
     .then((githubConfig) => {
       if (!githubConfig || !githubConfig.user || !githubConfig.token) {
-        return logger.error('Github config missing');
+        return Promise.reject('Github config missing');
       }
 
       const promises = [

@@ -1,5 +1,7 @@
-const Q = require('q');
 const opmlToJSON = require('opml-to-json');
+const util = require('util');
+
+const opmlToJSONPromise = util.promisify(opmlToJSON);
 
 const logger = require('./log');
 const appConfig = require('./app-config');
@@ -21,24 +23,13 @@ exports.save = (userId) => {
 };
 
 function currentBlogs(config) {
-  const defer = Q.defer();
   const opml = config && config.feedly && config.feedly.opml;
 
   if (!opml) {
-    defer.reject('Missing Feedly opml config');
-  } else {
-    try {
-      opmlToJSON(opml, (err, json) => {
-        if (err) {
-          return defer.reject(err);
-        }
-
-        defer.resolve(json && json.children);
-      });
-    } catch (err) {
-      defer.reject(err);
-    }
+    return Promise.reject('Missing Feedly opml config');
   }
 
-  return defer.promise;
+  return opmlToJSONPromise(opml).then((json) => {
+    return json && json.children;
+  });
 }

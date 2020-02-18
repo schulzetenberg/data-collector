@@ -1,4 +1,3 @@
-const Q = require('q');
 const opmlToJSON = require('opml-to-json');
 const { parseString } = require('xml2js');
 const util = require('util');
@@ -16,7 +15,7 @@ exports.save = (userId) => {
     .then(currentPodcasts)
     .then((podcasts) => {
       const artworkPromises = podcasts.map((podcast) => getArtwork(podcast));
-      return Q.all(artworkPromises);
+      return Promise.all(artworkPromises);
     })
     .then((podcasts) => {
       const doc = new PlayerFmModel({ podcasts, userId });

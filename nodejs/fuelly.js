@@ -35,7 +35,7 @@ function carData(config, userId) {
         const entries = result.rss.channel[0].item;
 
         if (!entries || !entries.length) {
-          Promise.reject(`No fuel data from fuelly for ${config.name}`);
+          return Promise.reject(`No fuel data from fuelly for ${config.name}`);
         }
 
         for (let i = 0, x = entries.length; i < x; i += 1) {

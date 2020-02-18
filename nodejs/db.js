@@ -1,12 +1,7 @@
 const mongoose = require('mongoose');
-const Q = require('q');
 
-mongoose.Promise = Q.Promise;
 const secrets = require('../config/secrets');
 const logger = require('./log');
-
-// q promise library
-mongoose.Promise = require('q').Promise;
 
 const url = secrets.db;
 mongoose.connect(url);

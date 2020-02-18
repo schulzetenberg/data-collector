@@ -1,5 +1,3 @@
-const Q = require('q');
-
 const configModel = require('../models/app-config');
 
 exports.get = (userId) => {
@@ -7,31 +5,26 @@ exports.get = (userId) => {
 };
 
 exports.app = (userId, filter) => {
-  const defer = Q.defer();
-
   // eslint-disable-next-line no-param-reassign
   filter = filter || ''; // Set filter to '' if not specified
 
-  configModel
+  return configModel
     .findOne({ userId }, filter, { sort: { _id: -1 } })
     .lean()
     .then((data) => {
       if (!data) {
-        defer.reject('No config saved in db');
-      } else if (filter && !data[filter]) {
-        defer.reject(`No config found for "${filter}"`);
-      } else {
-        if (filter) {
-          // eslint-disable-next-line no-param-reassign
-          data = data[filter];
-        }
-
-        defer.resolve(data);
+        return Promise.reject('No config saved in db');
       }
-    })
-    .catch((err) => {
-      defer.reject(err);
-    });
 
-  return defer.promise;
+      if (filter && !data[filter]) {
+        return Promise.reject(`No config found for "${filter}"`);
+      }
+
+      if (filter) {
+        // eslint-disable-next-line no-param-reassign
+        data = data[filter];
+      }
+
+      return data;
+    });
 };

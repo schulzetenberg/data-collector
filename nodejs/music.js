@@ -21,7 +21,7 @@ exports.save = (userId) => {
 function getTopArtists(config) {
   const key = config && config.music && config.music.lastFmKey;
 
-  if (!key) Promise.reject('Missing LastFM key');
+  if (!key) return Promise.reject('Missing LastFM key');
 
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=${key}&format=json&period=12month`;
 
