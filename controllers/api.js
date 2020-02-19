@@ -15,7 +15,7 @@ exports.getMusic = (req, res) => {
   music
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: req.user._id },
+      { userId: getUserId(req) },
       {},
       {
         sort: { _id: -1 },
@@ -35,7 +35,7 @@ exports.getGoodreads = (req, res) => {
   goodreads
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: req.user._id },
+      { userId: getUserId(req) },
       {},
       {
         sort: { _id: -1 },
@@ -55,7 +55,7 @@ exports.getPlayerFm = (req, res) => {
   playerFm
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: req.user._id },
+      { userId: getUserId(req) },
       {},
       {
         sort: { _id: -1 },
@@ -75,7 +75,7 @@ exports.getGithub = (req, res) => {
   github
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: req.user._id },
+      { userId: getUserId(req) },
       {},
       {
         sort: { _id: -1 },
@@ -95,7 +95,7 @@ exports.getTrakt = (req, res) => {
   trakt
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: req.user._id },
+      { userId: getUserId(req) },
       {},
       {
         sort: {
@@ -124,7 +124,7 @@ exports.getTrakt = (req, res) => {
 exports.getStates = (req, res) => {
   states
     // eslint-disable-next-line no-underscore-dangle
-    .get(req.user._id)
+    .get(getUserId(req))
     .then((data) => {
       res.json(data);
     })
@@ -137,7 +137,7 @@ exports.getStates = (req, res) => {
 exports.getCountries = (req, res) => {
   countries
     // eslint-disable-next-line no-underscore-dangle
-    .get(req.user._id)
+    .get(getUserId(req))
     .then((data) => {
       res.json(data);
     })
@@ -153,7 +153,7 @@ exports.getFuelly = (req, res) => {
 
   const by = {
     // eslint-disable-next-line no-underscore-dangle
-    userId: req.user._id,
+    userId: getUserId(req),
     name: req.query.name,
     fillTime: {
       $gte: req.query.start,
@@ -191,7 +191,7 @@ exports.getFuellyAvg = (req, res) => {
 
   const filter = {
     // eslint-disable-next-line no-underscore-dangle
-    userId: req.user._id,
+    userId: getUserId(req),
     fillTime: {
       $gte: start,
       $lte: end,
