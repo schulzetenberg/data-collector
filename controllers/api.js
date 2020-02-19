@@ -11,6 +11,12 @@ const playerFm = require('../models/player-fm-model');
 const response = require('../nodejs/response');
 const logger = require('../nodejs/log');
 
+// TODO: Create API token
+function getUserId(req) {
+  // eslint-disable-next-line no-underscore-dangle
+  return (req.user && req.user._id) || '5e4c9b10231dc32fa0870be7';
+}
+
 exports.getMusic = (req, res) => {
   music
     .findOne(
