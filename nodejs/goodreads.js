@@ -93,7 +93,7 @@ function getPhoto(data) {
     });
   }
 
-  Promise.resolve(data); // Image url from API is fine, do nothing
+  return Promise.resolve(data); // Image url from API is fine, do nothing
 }
 
 function getTopBooks(params) {
