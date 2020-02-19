@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Home from './pages/home/home';
+// import Home from './pages/home/home';
 import SignIn from './pages/sign-in/sign-in';
 import NotFound from './pages/not-found/not-found';
 import ForgotPassword from './pages/forgot-password/forgot-password';
@@ -24,7 +24,7 @@ const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): an
 };
 
 const PublicRoute = ({ component: Component, ...rest }: any): any => {
-  return <Route {...rest} render={(props: any) => <Component {...props} />} />;
+  return <Route {...rest} render={(props: any): any => <Component {...props} />} />;
 };
 
 const Routes: React.FC = () => {

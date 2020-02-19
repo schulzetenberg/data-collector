@@ -37,7 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SignIn: React.FC = () => {
+const SignIn: React.FC = ({ location }: any) => {
+  const queryParams = new URLSearchParams(location.search);
+  const redirectPath = queryParams.get('redirect') || '/';
+
   const classes = useStyles();
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
@@ -71,7 +74,7 @@ const SignIn: React.FC = () => {
     try {
       const response: ServerResponse = await Request.post({ url: '/signin', body });
       setSession({ email: response.data.email });
-      history.push('/');
+      history.push(redirectPath);
     } catch (e) {
       setLoading(false);
       setLoginErrors(e);

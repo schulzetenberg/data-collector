@@ -1,5 +1,7 @@
 const passportConf = require('./config/passport');
 
+const response = require('./nodejs/response');
+
 // Controllers
 const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
@@ -8,8 +10,6 @@ const apiController = require('./controllers/api');
 const bruteforceController = require('./controllers/brute-force');
 
 module.exports = (app) => {
-  app.get('/', homeController.getReactPage);
-
   app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
   app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
   app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
@@ -44,4 +44,10 @@ module.exports = (app) => {
   app.get('/api/fuelly', apiController.getFuelly);
   app.get('/api/fuelly-avg', apiController.getFuellyAvg);
   app.get('/api/player-fm', apiController.getPlayerFm);
+  app.get('/api/*', (req, res) => {
+    response.notFound(res, `Requested API resource at '${req.path}' not found`);
+  });
+
+  // All requests that are not '/api/*' get sent the React page
+  app.get('*', homeController.getReactPage);
 };

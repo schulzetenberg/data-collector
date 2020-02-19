@@ -133,10 +133,6 @@ if (app.get('env') === 'production') {
   app.use(errorHandler()); // Display stack trace in dev
 }
 
-app.get('*', (req, res) => {
-  response.notFound(res, `Path "${req.path}" not found`);
-});
-
 app.post('*', (req, res) => {
   response.notFound(res, `Path "${req.path}" not found`);
 });
