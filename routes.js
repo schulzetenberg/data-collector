@@ -28,12 +28,12 @@ module.exports = (app) => {
   app.post('/forgot', userController.postForgot);
   app.post('/reset', userController.postReset);
   app.post('/signup', userController.postSignup);
-  app.get('/api-key', userController.getNewApiKey);
 
   app.get('/account/profile', passportConf.isAuthenticated, userController.getProfile);
   app.post('/account/profile', passportConf.isAuthenticated, userController.postUpdateProfile);
   app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
   app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
+  app.get('/account/api-key', passportConf.isAuthenticated, userController.getNewApiKey);
 
   app.get('/api/music', apiController.getMusic);
   app.get('/api/goodreads', apiController.getGoodreads);

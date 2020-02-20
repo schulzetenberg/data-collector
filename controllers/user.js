@@ -117,6 +117,7 @@ exports.getProfile = (req, res) => {
     updatedAt: req.user.updatedAt,
     email: req.user.email,
     gravatar: req.user.gravatar(),
+    tokens: req.user.tokens,
   };
 
   response.success(res, { data });
@@ -329,7 +330,15 @@ exports.postForgot = async (req, res) => {
 exports.getNewApiKey = async (req, res) => {
   try {
     const token = await crypto.randomBytes(16).toString('hex');
-    response.success(res, { token, createdAt: moment() });
+
+    const newData = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $push: { tokens: [{ token, createdAt: moment() }] } },
+      { new: true }
+    );
+
+    // eslint-disable-next-line no-underscore-dangle
+    response.success(res, { data: newData._doc.tokens });
   } catch (e) {
     logger.error(e);
     return response.serverError(res, 'Error generating token');

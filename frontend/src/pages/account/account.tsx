@@ -9,6 +9,7 @@ import AccountDetails from './account-details';
 import AccountPassword from './account-password';
 import Request from '../../util/request';
 import ErrorList from '../../components/error-list/error-list';
+import AccountTokens from './account-tokens';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,6 +113,13 @@ const Account: React.FC = () => {
     }
   };
 
+  const handleUpdateTokens = (tokens: any): void => {
+    setData({
+      ...data,
+      tokens,
+    });
+  };
+
   return (
     <div className={classes.root}>
       <ErrorList errors={serverErrors} />
@@ -130,6 +138,12 @@ const Account: React.FC = () => {
             errors={removeErrors}
             setShowProfile={handleShowProfile}
             setShowPassword={handleShowPassword}
+          />
+          <AccountTokens
+            tokens={data && data.tokens}
+            updateTokens={handleUpdateTokens}
+            saveData={handleUpdateUser}
+            isLoading={!data}
           />
         </Grid>
       </Grid>

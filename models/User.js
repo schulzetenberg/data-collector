@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true, lowercase: true },
     password: String,
-    tokens: Array,
+    tokens: [{ token: String, createdAt: Date }],
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
     picture: { type: String, default: '' }, // TODO: Use or delete this
