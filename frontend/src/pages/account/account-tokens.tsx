@@ -11,8 +11,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type Token = { _id?: string; token: string; createdAt: string; tableData?: { id: number } };
+
 const AccountTokens: React.FC<{
-  tokens: any;
+  tokens: Token[];
   updateTokens: any;
   saveData: any;
   isLoading: boolean;
@@ -21,12 +23,30 @@ const AccountTokens: React.FC<{
   const [tokenErrors, setTokenErrors] = useState<string[]>([]);
   const classes = useStyles();
 
-  const addToken = async () => {
+  const addToken = async (): Promise<void> => {
     setTokenErrors([]);
     setTokenLoading(true);
 
     try {
       const response: ServerResponse = await Request.get({ url: '/account/api-key' });
+      if (response.errors) {
+        setTokenErrors(response.errors);
+      } else {
+        updateTokens(response.data);
+      }
+    } catch (e) {
+      setTokenErrors(e);
+    } finally {
+      setTokenLoading(false);
+    }
+  };
+
+  const removeToken = async (token: string): Promise<void> => {
+    setTokenErrors([]);
+    setTokenLoading(true);
+
+    try {
+      const response: ServerResponse = await Request.post({ url: '/account/remove-api-key', body: { token } });
       if (response.errors) {
         setTokenErrors(response.errors);
       } else {
@@ -53,6 +73,11 @@ const AccountTokens: React.FC<{
             tooltip: 'Add',
             isFreeAction: true,
             onClick: (): Promise<void> => addToken(),
+          },
+          {
+            icon: 'delete',
+            tooltip: 'Delete',
+            onClick: (e, rowData: any): Promise<void> => removeToken(rowData.token),
           },
         ]}
         columns={[

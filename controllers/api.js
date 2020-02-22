@@ -11,17 +11,11 @@ const playerFm = require('../models/player-fm-model');
 const response = require('../nodejs/response');
 const logger = require('../nodejs/log');
 
-// TODO: Create API token
-function getUserId(req) {
-  // eslint-disable-next-line no-underscore-dangle
-  return (req.user && req.user._id) || '5e4c9b10231dc32fa0870be7';
-}
-
 exports.getMusic = (req, res) => {
   music
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: getUserId(req) },
+      { userId: req.userId },
       {},
       {
         sort: { _id: -1 },
@@ -41,7 +35,7 @@ exports.getGoodreads = (req, res) => {
   goodreads
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: getUserId(req) },
+      { userId: req.userId },
       {},
       {
         sort: { _id: -1 },
@@ -61,7 +55,7 @@ exports.getPlayerFm = (req, res) => {
   playerFm
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: getUserId(req) },
+      { userId: req.userId },
       {},
       {
         sort: { _id: -1 },
@@ -81,7 +75,7 @@ exports.getGithub = (req, res) => {
   github
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: getUserId(req) },
+      { userId: req.userId },
       {},
       {
         sort: { _id: -1 },
@@ -101,7 +95,7 @@ exports.getTrakt = (req, res) => {
   trakt
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
-      { userId: getUserId(req) },
+      { userId: req.userId },
       {},
       {
         sort: {
@@ -130,7 +124,7 @@ exports.getTrakt = (req, res) => {
 exports.getStates = (req, res) => {
   states
     // eslint-disable-next-line no-underscore-dangle
-    .get(getUserId(req))
+    .get(req.userId)
     .then((data) => {
       res.json(data);
     })
@@ -143,7 +137,7 @@ exports.getStates = (req, res) => {
 exports.getCountries = (req, res) => {
   countries
     // eslint-disable-next-line no-underscore-dangle
-    .get(getUserId(req))
+    .get(req.userId)
     .then((data) => {
       res.json(data);
     })
@@ -159,7 +153,7 @@ exports.getFuelly = (req, res) => {
 
   const by = {
     // eslint-disable-next-line no-underscore-dangle
-    userId: getUserId(req),
+    userId: req.userId,
     name: req.query.name,
     fillTime: {
       $gte: req.query.start,
@@ -197,7 +191,7 @@ exports.getFuellyAvg = (req, res) => {
 
   const filter = {
     // eslint-disable-next-line no-underscore-dangle
-    userId: getUserId(req),
+    userId: req.userId,
     fillTime: {
       $gte: start,
       $lte: end,

@@ -34,16 +34,17 @@ module.exports = (app) => {
   app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
   app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
   app.get('/account/api-key', passportConf.isAuthenticated, userController.getNewApiKey);
+  app.post('/account/remove-api-key', passportConf.isAuthenticated, userController.removeApiKey);
 
-  app.get('/api/music', apiController.getMusic);
-  app.get('/api/goodreads', apiController.getGoodreads);
-  app.get('/api/github', apiController.getGithub);
-  app.get('/api/trakt', apiController.getTrakt);
-  app.get('/api/states', apiController.getStates);
-  app.get('/api/countries', apiController.getCountries);
-  app.get('/api/fuelly', apiController.getFuelly);
-  app.get('/api/fuelly-avg', apiController.getFuellyAvg);
-  app.get('/api/player-fm', apiController.getPlayerFm);
+  app.get('/api/music', passportConf.validateApiToken, apiController.getMusic);
+  app.get('/api/goodreads', passportConf.validateApiToken, apiController.getGoodreads);
+  app.get('/api/github', passportConf.validateApiToken, apiController.getGithub);
+  app.get('/api/trakt', passportConf.validateApiToken, apiController.getTrakt);
+  app.get('/api/states', passportConf.validateApiToken, apiController.getStates);
+  app.get('/api/countries', passportConf.validateApiToken, apiController.getCountries);
+  app.get('/api/fuelly', passportConf.validateApiToken, apiController.getFuelly);
+  app.get('/api/fuelly-avg', passportConf.validateApiToken, apiController.getFuellyAvg);
+  app.get('/api/player-fm', passportConf.validateApiToken, apiController.getPlayerFm);
   app.get('/api/*', (req, res) => {
     response.notFound(res, `Requested API resource at '${req.path}' not found`);
   });

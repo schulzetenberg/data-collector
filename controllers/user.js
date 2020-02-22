@@ -344,3 +344,19 @@ exports.getNewApiKey = async (req, res) => {
     return response.serverError(res, 'Error generating token');
   }
 };
+
+exports.removeApiKey = async (req, res) => {
+  try {
+    const newData = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $pull: { tokens: { token: req.body.token } } },
+      { new: true }
+    );
+
+    // eslint-disable-next-line no-underscore-dangle
+    response.success(res, { data: newData._doc.tokens });
+  } catch (e) {
+    logger.error(e);
+    return response.serverError(res, 'Error removing token');
+  }
+};

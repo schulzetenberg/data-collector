@@ -3,6 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const User = require('../models/User');
 const response = require('../nodejs/response');
+const logger = require('../nodejs/log');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -33,4 +34,21 @@ passport.use(
 exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) return next();
   response.loginRequired(res);
+};
+
+exports.validateApiToken = async (req, res, next) => {
+  const errorMessage = 'Invalid API token';
+
+  try {
+    const userId = await User.findOne({ 'tokens.token': req.headers.token }, { _id: 1 });
+
+    if (!userId) return response.serverError(res, errorMessage);
+
+    // Append the userId to the request to be used in the API route handlers
+    req.userId = userId;
+    next();
+  } catch (e) {
+    logger.error(e);
+    response.serverError(res, errorMessage);
+  }
 };
