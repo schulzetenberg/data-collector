@@ -14,6 +14,7 @@ const passport = require('passport');
 const expressValidator = require('express-validator');
 const assets = require('express-asset-versions');
 const Agendash = require('agendash');
+const cors = require('cors');
 
 // Logging configuration
 const logger = require('./nodejs/log.js');
@@ -59,6 +60,8 @@ app.use(methodOverride());
 app.use(cookieParser());
 
 // Disable CORS
+app.use(cors());
+app.options('*', cors()); // Enable CORS Pre-Flight (Since I have custom headers for the token)
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-xsrf-token');
