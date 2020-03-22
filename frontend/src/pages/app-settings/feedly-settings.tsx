@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type FormData = {
   active: boolean;
   schedule: string;
-  opml: string;
+  token: string;
 };
 
 const FeedlySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
@@ -27,12 +27,12 @@ const FeedlySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
 
   useEffect(() => {
     if (data) {
-      const { active, schedule, opml } = data;
+      const { active, schedule, token } = data;
 
       reset({
         active,
         schedule,
-        opml,
+        token,
       });
     }
   }, [data, reset]);
@@ -43,7 +43,7 @@ const FeedlySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
         <SwitchForm {...formProps} name="active" label="Active" />
       </div>
       <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
-      <TextField {...formProps} name="opml" label="OPML" type="text" />
+      <TextField {...formProps} name="token" label="Access Token" type="text" />
       <Button {...formProps} type="submit">
         Save
       </Button>

@@ -5,11 +5,14 @@ const opmlToJSONPromise = util.promisify(opmlToJSON);
 
 const appConfig = require('./app-config');
 const FeedlyModel = require('../models/feedly-model');
+const api = require('./api');
 
 exports.save = (userId) => {
   return appConfig
     .get(userId)
     .then(getCurrentBlogs)
+    .then(opmlToJSONPromise)
+    .then(parseResponse)
     .then((feeds) => {
       const doc = new FeedlyModel({ feeds, userId });
       return doc.save();
@@ -17,13 +20,31 @@ exports.save = (userId) => {
 };
 
 function getCurrentBlogs(config) {
-  const opml = config && config.feedly && config.feedly.opml;
+  const token = config && config.feedly && config.feedly.token;
 
-  if (!opml) {
-    return Promise.reject('Missing Feedly opml config');
+  if (!token) {
+    return Promise.reject('Missing Feedly access token');
   }
 
-  return opmlToJSONPromise(opml).then((json) => {
-    return json && json.children;
+  return api.get({
+    url: 'https://cloud.feedly.com/v3/opml',
+    headers: { Authorization: token },
   });
+}
+
+function parseResponse(responseData) {
+  const blogArray = [];
+
+  responseData.children.forEach((feed) => {
+    if (feed.children) {
+      feed.children.forEach((blog) => {
+        // Remove trailing whitespace after conversion to JSON
+        Object.keys(blog).map((k) => blog[k].trim());
+
+        blogArray.push(blog);
+      });
+    }
+  });
+
+  return Promise.resolve(blogArray);
 }

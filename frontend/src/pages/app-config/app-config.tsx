@@ -194,6 +194,16 @@ const AppConfig: React.FC = () => {
             />
 
             <AppCard
+              appKey="feedly"
+              active={data && data.feedly.active}
+              {...cardDefaultProps}
+              title="Blogs"
+              image="/img/blog.jpg"
+              lastUpdated={data && data.feedly.lastUpdated}
+              summary="Collect Blog subscriptions from Feedly"
+            />
+
+            <AppCard
               appKey="trakt"
               active={data && data.trakt.active}
               {...cardDefaultProps}

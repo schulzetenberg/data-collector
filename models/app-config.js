@@ -69,7 +69,7 @@ const appConfigSchema = new mongoose.Schema(
       schedule: { type: String, default: '45 0 0 * * *' },
     },
     feedly: {
-      opml: { type: String, default: '' }, // https://feedly.com/i/opml
+      token: { type: String, default: '' }, // https://feedly.com/v3/auth/dev
       active: { type: Boolean, default: false },
       schedule: { type: String, default: '50 0 0 * * *' },
     },

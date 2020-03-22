@@ -11,6 +11,7 @@ const models = {
   github: require('../models/github-model'),
   trakt: require('../models/trakt-model'),
   fuelly: require('../models/fuelly-model'),
+  feedly: require('../models/feedly-model'),
 };
 
 exports.getLatestDocTimestamps = async () => {
