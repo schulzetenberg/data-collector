@@ -25,6 +25,12 @@ module.exports = {
     apiKey: process.env.SENDGRID_APIKEY || 'apiKey123',
   },
 
+  cloudinary: {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'Your Cloud Name here',
+    api_key: process.env.CLOUDINARY_API_KEY || 'apiKey123',
+    api_secret: process.env.CLOUDINARY_API_SECRET || 'apiSecret123',
+  },
+
   defaults: {
     emailTo: 'me@gmail.com',
     emailFrom: 'Data_Collector@me.com',

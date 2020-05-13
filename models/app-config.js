@@ -21,6 +21,7 @@ const appConfigSchema = new mongoose.Schema(
       lastFmKey: { type: String, default: '' },
       spotifyId: { type: String, default: '' },
       spotifySecret: { type: String, default: '' },
+      cloudinaryUpload: { type: Boolean, default: false },
       schedule: { type: String, default: '5 0 0 * * *' },
     },
     trakt: {

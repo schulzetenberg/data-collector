@@ -1,9 +1,13 @@
+const { promisify } = require('util');
 const moment = require('moment');
+const cloudinary = require('cloudinary').v2;
 
 const logger = require('./log');
 const MusicModel = require('../models/music-model');
 const appConfig = require('./app-config');
 const api = require('./api');
+
+const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
 exports.save = (userId) => {
   return appConfig
@@ -26,7 +30,13 @@ function getTopArtists(config) {
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=${key}&format=json&period=12month`;
 
   return api.get({ url }).then((data) => {
-    if (!data || !data.topartists || !data.topartists.artist || !data.topartists.artist.length || !data.topartists['@attr']) {
+    if (
+      !data ||
+      !data.topartists ||
+      !data.topartists.artist ||
+      !data.topartists.artist.length ||
+      !data.topartists['@attr']
+    ) {
       return Promise.reject('Could not parse top artist data');
     }
 
@@ -128,5 +138,28 @@ function getSpotifyArtist(config, artist) {
       };
 
       return updatedArtist;
+    })
+    .then(async (data) => {
+      if (!config.music.cloudinaryUpload) {
+        return data;
+      }
+
+      try {
+        const response = await cloudinaryUploadAsync(data.img, {
+          transformation: [
+            { effect: 'saturation:-15', flags: 'force_strip', height: 320, opacity: 70, width: 320, crop: 'fill' },
+            { height: 320, opacity: 60, underlay: '0858ed8417a0d064a72e5c619215ced9_jolcxh', width: 320, crop: 'fill' },
+          ],
+        });
+
+        if (response && response.secure_url) {
+          // eslint-disable-next-line no-param-reassign
+          data.img = response.secure_url;
+        }
+      } catch (e) {
+        logger.error('Error uploading artist artwork to cloudinary!', e);
+      }
+
+      return data;
     });
 }

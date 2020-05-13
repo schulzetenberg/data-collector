@@ -18,6 +18,7 @@ type FormData = {
   spotifySecret: string;
   spotifyId: string;
   lastFmKey: string;
+  cloudinaryUpload: boolean;
 };
 
 const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
@@ -29,7 +30,7 @@ const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
 
   useEffect(() => {
     if (data) {
-      const { active, schedule, spotifySecret, spotifyId, lastFmKey } = data;
+      const { active, schedule, spotifySecret, spotifyId, lastFmKey, cloudinaryUpload } = data;
 
       reset({
         active,
@@ -37,6 +38,7 @@ const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
         spotifySecret,
         spotifyId,
         lastFmKey,
+        cloudinaryUpload,
       });
     }
   }, [data, reset]);
@@ -50,6 +52,9 @@ const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
       <TextField {...formProps} name="spotifySecret" label="Spotify Secret" type="text" />
       <TextField {...formProps} name="spotifyId" label="Spotify ID" type="text" />
       <TextField {...formProps} name="lastFmKey" label="LastFM Key" type="text" />
+      <div className={classes.textCenter}>
+        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+      </div>
       <Button {...formProps} type="submit">
         Save
       </Button>

@@ -15,6 +15,7 @@ const expressValidator = require('express-validator');
 const assets = require('express-asset-versions');
 const Agendash = require('agendash');
 const cors = require('cors');
+const cloudinary = require('cloudinary').v2;
 
 // Logging configuration
 const logger = require('./nodejs/log.js');
@@ -22,6 +23,9 @@ const logger = require('./nodejs/log.js');
 // API keys and configuration.
 const secrets = require('./config/secrets');
 const response = require('./nodejs/response');
+
+// Cloudinary global config
+cloudinary.config(secrets.cloudinary);
 
 // Development options
 let cookieOpts = {
