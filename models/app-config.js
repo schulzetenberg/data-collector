@@ -11,9 +11,9 @@ const appConfigSchema = new mongoose.Schema(
     },
     goodreads: {
       active: { type: Boolean, default: false },
-      numDays: { type: Number, default: 185 },
       id: { type: Number, default: 0 },
       key: { type: String, default: '' },
+      cloudinaryUpload: { type: Boolean, default: false },
       schedule: { type: String, default: '5 0 0 * * *' },
     },
     music: {
@@ -67,6 +67,7 @@ const appConfigSchema = new mongoose.Schema(
     playerFm: {
       user: { type: String, default: '' },
       active: { type: Boolean, default: false },
+      cloudinaryUpload: { type: Boolean, default: false },
       schedule: { type: String, default: '45 0 0 * * *' },
     },
     feedly: {

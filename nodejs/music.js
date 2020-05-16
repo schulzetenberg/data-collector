@@ -147,7 +147,15 @@ function getSpotifyArtist(config, artist) {
       try {
         const response = await cloudinaryUploadAsync(data.img, {
           transformation: [
-            { effect: 'saturation:-15', flags: 'force_strip', height: 320, opacity: 70, width: 320, crop: 'fill' },
+            {
+              effect: 'saturation:-15',
+              flags: 'force_strip',
+              height: 320,
+              opacity: 70,
+              width: 320,
+              quality: 'auto:good',
+              crop: 'fill',
+            },
             { height: 320, opacity: 60, underlay: '0858ed8417a0d064a72e5c619215ced9_jolcxh', width: 320, crop: 'fill' },
           ],
         });

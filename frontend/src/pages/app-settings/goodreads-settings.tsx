@@ -17,7 +17,7 @@ type FormData = {
   schedule: string;
   key: string;
   id: number;
-  numDays: number;
+  cloudinaryUpload: boolean;
 };
 
 const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
@@ -33,14 +33,14 @@ const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: 
 
   useEffect(() => {
     if (data) {
-      const { active, schedule, key, id, numDays } = data;
+      const { active, schedule, key, id, cloudinaryUpload } = data;
 
       reset({
         active,
         schedule,
         key,
         id,
-        numDays,
+        cloudinaryUpload,
       });
     }
   }, [data, reset]);
@@ -53,7 +53,9 @@ const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: 
       <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
       <TextField {...formProps} name="key" label="Key" type="text" />
       <TextField {...formProps} name="id" label="ID" type="number" />
-      <TextField {...formProps} name="numDays" label="Number Of Days" type="number" />
+      <div className={classes.textCenter}>
+        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+      </div>
       <Button {...formProps} type="submit">
         Save
       </Button>

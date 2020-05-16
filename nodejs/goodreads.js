@@ -1,12 +1,15 @@
 const { parseString } = require('xml2js');
 const cheerio = require('cheerio');
-const util = require('util');
+const { promisify } = require('util');
+const cloudinary = require('cloudinary').v2;
 
-const parseStringPromise = util.promisify(parseString);
+const parseStringPromise = promisify(parseString);
+const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
 const GoodreadsModel = require('../models/goodreads-model');
 const appConfig = require('./app-config');
 const api = require('./api');
+const logger = require('./log');
 
 exports.save = (userId) => {
   return appConfig
@@ -27,7 +30,7 @@ function booksRead(config) {
     return Promise.reject('Missing goodreads config');
   }
 
-  const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200`;
+  const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=50`;
 
   return api
     .get({ url })
@@ -60,7 +63,7 @@ function booksRead(config) {
           readCount: books[i].read_count && parseInt(books[i].read_count[0], 10),
         };
 
-        promises.push(getPhoto(ret));
+        promises.push(getPhoto(ret).then((data) => uploadImage({ config, data })));
       }
 
       return Promise.all(promises);
@@ -94,6 +97,27 @@ function getPhoto(data) {
   }
 
   return Promise.resolve(data); // Image url from API is fine, do nothing
+}
+
+async function uploadImage({ config, data }) {
+  if (!config.goodreads.cloudinaryUpload) {
+    return data;
+  }
+
+  try {
+    const response = await cloudinaryUploadAsync(data.img, {
+      transformation: [{ flags: 'force_strip', height: 240, quality: 'auto:good', crop: 'scale' }],
+    });
+
+    if (response && response.secure_url) {
+      // eslint-disable-next-line no-param-reassign
+      data.img = response.secure_url;
+    }
+  } catch (e) {
+    logger.error('Error uploading book cover to cloudinary!', e);
+  }
+
+  return data;
 }
 
 function getTopBooks(params) {

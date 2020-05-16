@@ -50,6 +50,7 @@ SSH into the GCP VM
 $ sudo su - bitnami
 $ cd /home/bitnami/apps/collector/htdocs/
 $ git pull
+Download build.zip from https://github.com/schulzetenberg/data-collector/releases & unzip to frontend/
 $ ./start-data-collector.sh
 ```
 

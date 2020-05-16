@@ -16,6 +16,7 @@ type FormData = {
   active: boolean;
   schedule: string;
   user: string;
+  cloudinaryUpload: boolean;
 };
 
 const PlayerFmSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
@@ -31,12 +32,13 @@ const PlayerFmSettings: React.FC<{ data: FormData; isLoading: boolean; submit: a
 
   useEffect(() => {
     if (data) {
-      const { active, schedule, user } = data;
+      const { active, schedule, user, cloudinaryUpload } = data;
 
       reset({
         active,
         schedule,
         user,
+        cloudinaryUpload,
       });
     }
   }, [data, reset]);
@@ -48,6 +50,9 @@ const PlayerFmSettings: React.FC<{ data: FormData; isLoading: boolean; submit: a
       </div>
       <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
       <TextField {...formProps} name="user" label="User" type="text" />
+      <div className={classes.textCenter}>
+        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+      </div>
       <Button {...formProps} type="submit">
         Save
       </Button>

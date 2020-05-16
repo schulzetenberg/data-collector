@@ -1,8 +1,10 @@
 const opmlToJSON = require('opml-to-json');
 const { parseString } = require('xml2js');
-const util = require('util');
+const { promisify } = require('util');
+const cloudinary = require('cloudinary').v2;
 
-const opmlToJSONPromise = util.promisify(opmlToJSON);
+const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
+const opmlToJSONPromise = promisify(opmlToJSON);
 
 const logger = require('./log');
 const appConfig = require('./app-config');
@@ -13,8 +15,8 @@ exports.save = (userId) => {
   return appConfig
     .get(userId)
     .then(currentPodcasts)
-    .then((podcasts) => {
-      const artworkPromises = podcasts.map((podcast) => getArtwork(podcast));
+    .then(({ config, podcasts }) => {
+      const artworkPromises = podcasts.map((podcast) => getArtwork({ config, podcast }));
       return Promise.all(artworkPromises);
     })
     .then((podcasts) => {
@@ -35,10 +37,10 @@ function currentPodcasts(config) {
   return api
     .get({ url })
     .then(opmlToJSONPromise)
-    .then((data) => data.children);
+    .then((data) => ({ config, podcasts: data.children }));
 }
 
-function getArtwork(podcast) {
+function getArtwork({ config, podcast }) {
   // Make a HTTP request to the podcast URL to find the artwork URL
   return api
     .get({ url: podcast.xmlurl })
@@ -63,6 +65,26 @@ function getArtwork(podcast) {
       };
 
       return podcastData;
+    })
+    .then(async (data) => {
+      if (!config.playerFm.cloudinaryUpload) {
+        return data;
+      }
+
+      try {
+        const response = await cloudinaryUploadAsync(data.imgUrl, {
+          transformation: [{ flags: 'force_strip', height: 200, width: 200, quality: 'auto:good', crop: 'fill' }],
+        });
+
+        if (response && response.secure_url) {
+          // eslint-disable-next-line no-param-reassign
+          data.imgUrl = response.secure_url;
+        }
+      } catch (e) {
+        logger.error('Error uploading podcast artwork to cloudinary!', e);
+      }
+
+      return data;
     })
     .catch((err) => {
       logger.error(`Error getting podcast artwork for ${podcast.text}`);
