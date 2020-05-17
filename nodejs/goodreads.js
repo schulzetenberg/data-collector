@@ -106,6 +106,13 @@ async function uploadImage({ config, data }) {
 
   try {
     const response = await cloudinaryUploadAsync(data.img, {
+      folder: 'books',
+      // Assign a public id so that when we upload an image with the same id, it will replace the previous one
+      public_id: `${data.title}-book`
+        .replace(/ /g, '-')
+        .replace(/[^a-zA-Z0-9-_]/g, '')
+        .toLowerCase()
+        .substring(0, 100),
       transformation: [{ flags: 'force_strip', height: 220, quality: 'auto:good', crop: 'scale' }],
     });
 

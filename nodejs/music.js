@@ -146,6 +146,13 @@ function getSpotifyArtist(config, artist) {
 
       try {
         const response = await cloudinaryUploadAsync(data.img, {
+          folder: 'music',
+          // Assign a public id so that when we upload an image with the same id, it will replace the previous one
+          public_id: `${data.artist}-artist`
+            .replace(/ /g, '-')
+            .replace(/[^a-zA-Z0-9-_]/g, '')
+            .toLowerCase()
+            .substring(0, 100),
           transformation: [
             {
               effect: 'saturation:-15',
@@ -156,7 +163,7 @@ function getSpotifyArtist(config, artist) {
               quality: 'auto:good',
               crop: 'fill',
             },
-            { height: 240, width: 240, opacity: 60, underlay: '0858ed8417a0d064a72e5c619215ced9_jolcxh', crop: 'fill' },
+            { height: 240, width: 240, opacity: 60, underlay: 'music-overlay', crop: 'fill' },
           ],
         });
 
