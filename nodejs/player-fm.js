@@ -58,13 +58,33 @@ function getArtwork({ config, podcast }) {
       }
 
       const podcastData = {
-        title: podcast.text,
-        xmlUrl: podcast.xmlurl,
-        htmlUrl: podcast.htmlurl,
-        imgUrl: img,
+        title: podcast.text.trim(),
+        xmlUrl: podcast.xmlurl.trim(),
+        htmlUrl: podcast.htmlurl.trim(),
+        imgUrl: img.trim(),
       };
 
       return podcastData;
+    })
+    .then((data) => {
+      // If the image is hosted in S3, Cloudinary does not allow us to use other people's buckets
+      // We have to download this image and upload our local copy
+      if (data.imgUrl.includes('s3://')) {
+        return api
+          .get({
+            url: data.imgUrl,
+            encoding: null,
+            fullResponse: true,
+          })
+          .then((response) => {
+            // eslint-disable-next-line no-param-reassign
+            data.imgUrl = `data:${response.headers['content-type']};base64,${response.body.toString('base64')}`;
+            return data;
+          });
+        // eslint-disable-next-line no-else-return
+      } else {
+        return Promise.resolve(data);
+      }
     })
     .then(async (data) => {
       if (!config.playerFm.cloudinaryUpload) {
@@ -73,7 +93,7 @@ function getArtwork({ config, podcast }) {
 
       try {
         const response = await cloudinaryUploadAsync(data.imgUrl, {
-          transformation: [{ flags: 'force_strip', height: 200, width: 200, quality: 'auto:good', crop: 'fill' }],
+          transformation: [{ flags: 'force_strip', height: 160, width: 160, quality: 'auto:good', crop: 'fill' }],
         });
 
         if (response && response.secure_url) {

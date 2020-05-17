@@ -106,7 +106,7 @@ async function uploadImage({ config, data }) {
 
   try {
     const response = await cloudinaryUploadAsync(data.img, {
-      transformation: [{ flags: 'force_strip', height: 240, quality: 'auto:good', crop: 'scale' }],
+      transformation: [{ flags: 'force_strip', height: 220, quality: 'auto:good', crop: 'scale' }],
     });
 
     if (response && response.secure_url) {
