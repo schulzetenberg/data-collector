@@ -45,6 +45,7 @@ module.exports = (app) => {
   app.get('/api/fuelly', passportConf.validateApiToken, apiController.getFuelly);
   app.get('/api/fuelly-avg', passportConf.validateApiToken, apiController.getFuellyAvg);
   app.get('/api/player-fm', passportConf.validateApiToken, apiController.getPlayerFm);
+  app.get('/api/instagram', passportConf.validateApiToken, apiController.getInstagram);
   app.get('/api/*', (req, res) => {
     response.notFound(res, `Requested API resource at '${req.path}' not found`);
   });

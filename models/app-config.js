@@ -75,6 +75,12 @@ const appConfigSchema = new mongoose.Schema(
       active: { type: Boolean, default: false },
       schedule: { type: String, default: '50 0 0 * * *' },
     },
+    instagram: {
+      user: { type: String, default: '' },
+      active: { type: Boolean, default: false },
+      schedule: { type: String, default: '55 0 0 * * *' },
+      cloudinaryUpload: { type: Boolean, default: false },
+    },
   },
   { timestamps: true }, // Save createdAt and updatedAt fields
   { minimize: false }, // Save empty objects

@@ -213,6 +213,16 @@ const AppConfig: React.FC = () => {
               summary="Collect TV & movie viewing data from Trakt"
               description="The data being collected includes the number of episodes & movies, ratings, and time spent watching"
             />
+
+            <AppCard
+              appKey="instagram"
+              active={data && data.instagram.active}
+              {...cardDefaultProps}
+              title="Instagram"
+              image="/img/phone.jpg"
+              lastUpdated={data && data.instagram.lastUpdated}
+              summary="Collect public Instagram images"
+            />
           </Grid>
         </Box>
       </Container>

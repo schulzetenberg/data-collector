@@ -8,6 +8,7 @@ const states = require('../nodejs/states');
 const countries = require('../nodejs/countries');
 const fuelly = require('../models/fuelly-model');
 const playerFm = require('../models/player-fm-model');
+const instagram = require('../models/instagram-model');
 const response = require('../nodejs/response');
 const logger = require('../nodejs/log');
 
@@ -230,5 +231,16 @@ exports.getFuellyAvg = (req, res) => {
     .catch((err) => {
       logger.error('Get Fuelly averages error', err);
       response.serverError(res, 'Error getting Fuelly averages data');
+    });
+};
+
+exports.getInstagram = (req, res) => {
+  instagram
+    .findOne({ userId: req.userId }, {}, { sort: { _id: -1 } })
+    .lean()
+    .then((data) => res.json(data))
+    .catch((err) => {
+      logger.error('Error getting Instagram data', err);
+      response.serverError(res, 'Error getting Instagram data');
     });
 };

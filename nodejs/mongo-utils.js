@@ -12,6 +12,7 @@ const models = {
   trakt: require('../models/trakt-model'),
   fuelly: require('../models/fuelly-model'),
   feedly: require('../models/feedly-model'),
+  instagram: require('../models/instagram-model'),
 };
 
 exports.getLatestDocTimestamps = async () => {

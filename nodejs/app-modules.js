@@ -8,4 +8,5 @@ module.exports = {
   fuelly: require('./fuelly'),
   playerFm: require('./player-fm'),
   feedly: require('./feedly'),
+  instagram: require('./instagram'),
 };

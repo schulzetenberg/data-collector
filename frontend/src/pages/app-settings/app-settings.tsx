@@ -19,6 +19,7 @@ import GithubSettings from './github-settings';
 import FuellySettings from './fuelly-settings';
 import TmdbSettings from './tmdb-settings';
 import TraktSettings from './trakt-settings';
+import InstagramSettings from './instagram-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -136,6 +137,7 @@ const AppSettings: React.FC = () => {
                   fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
                   tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
                   trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
+                  instagram: <InstagramSettings data={data && data.instagram} {...baseAppProps} />,
                 } as any)[appName]
               }
             </div>
