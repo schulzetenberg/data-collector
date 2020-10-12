@@ -7,6 +7,7 @@ module.exports = mongoose.model('instagram', {
     {
       caption: String,
       imgUrl: String,
+      postUrl: String,
       id: String,
     },
   ],

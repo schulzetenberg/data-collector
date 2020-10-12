@@ -30,6 +30,7 @@ function getProfile(config) {
         .map(({ node }) => ({
           caption: node.edge_media_to_caption.edges[0].node.text,
           imgUrl: node.display_url,
+          postUrl: `https://www.instagram.com/p/${node.shortcode}/`,
           id: node.id,
           is_video: node.is_video,
         }))
