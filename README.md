@@ -45,12 +45,15 @@ Deployment on Google Cloud Platform - Compute
 
 Re-deploy on GCP
 --------
+Run build script from frontend/package.json
+Create a build.zip file & upload to a new Github release
+
 SSH into the GCP VM
 ```console
 $ sudo su - bitnami
 $ cd /home/bitnami/apps/collector/htdocs/
 $ git pull
-Download build.zip from https://github.com/schulzetenberg/data-collector/releases & unzip to frontend/
+Download build.zip from https://github.com/schulzetenberg/data-collector/releases & unzip to frontend/  (the index.html path should be ~/apps/collector/htdocs/frontend/build/index.html)
 $ ./start-data-collector.sh
 ```
 

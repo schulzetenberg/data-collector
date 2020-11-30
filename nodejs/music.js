@@ -27,16 +27,10 @@ function getTopArtists(config) {
 
   if (!key) return Promise.reject('Missing LastFM key');
 
-  const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=waterland15&limit=15&page=1&api_key=${key}&format=json&period=12month`;
+  const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${config.music.lastFmUsername}&limit=15&page=1&api_key=${key}&format=json&period=12month`;
 
   return api.get({ url }).then((data) => {
-    if (
-      !data ||
-      !data.topartists ||
-      !data.topartists.artist ||
-      !data.topartists.artist.length ||
-      !data.topartists['@attr']
-    ) {
+    if (!data || !data.topartists || !data.topartists.artist || !data.topartists.artist.length || !data.topartists['@attr']) {
       return Promise.reject('Could not parse top artist data');
     }
 
@@ -65,7 +59,9 @@ function recentTracks(promiseData) {
     .unix();
 
   const toDate = moment().unix();
-  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=waterland15&limit=1&page=1&api_key=${promiseData.key}&format=json&from=${fromDate}&to=${toDate}`;
+
+  // eslint-disable-next-line max-len
+  const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${promiseData.config.music.lastFmUsername}&limit=1&page=1&api_key=${promiseData.key}&format=json&from=${fromDate}&to=${toDate}`;
 
   return api.get({ url }).then((data) => {
     if (!data || !data.recenttracks || !data.recenttracks['@attr']) {

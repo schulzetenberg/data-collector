@@ -14,6 +14,10 @@ const ErrorList: React.FC<{
 }> = ({ errors }) => {
   const classes = useStyles();
 
+  if (!errors || errors.length === 0) {
+    return <></>;
+  }
+
   return (
     <>
       {errors.map((error: string, index: number) => (

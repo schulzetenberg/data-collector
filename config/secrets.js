@@ -15,7 +15,13 @@ module.exports = {
 
   SSL: process.env.ssl || false,
 
-  db: process.env.DB || 'mongodb://localhost:27017/data-collector',
+  sslKeyPath: process.env.SSL_key_path || './key.pem',
+
+  sslCertPath: process.env.SSL_cert_path || './cert.pem',
+
+  MongoUrl: process.env.MongoUrl || 'mongodb://localhost:27017/',
+
+  db: process.env.DB || 'data-collector',
 
   logLevel: process.env.LOG_LEVEL || 'debug',
 
@@ -25,11 +31,9 @@ module.exports = {
     apiKey: process.env.SENDGRID_APIKEY || 'apiKey123',
   },
 
-  cloudinary: {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'Your Cloud Name here',
-    api_key: process.env.CLOUDINARY_API_KEY || 'apiKey123',
-    api_secret: process.env.CLOUDINARY_API_SECRET || 'apiSecret123',
-  },
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'Your Cloud Name here',
+  api_key: process.env.CLOUDINARY_API_KEY || 'apiKey123',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'apiSecret123',
 
   defaults: {
     emailTo: 'me@gmail.com',

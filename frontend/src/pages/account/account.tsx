@@ -48,7 +48,7 @@ const Account: React.FC = () => {
     loadData();
   }, []);
 
-  const handleSaveData = async (updatedData: any) => {
+  const handleSaveData = async (updatedData: any): Promise<void> => {
     setLoading(true);
 
     try {
@@ -79,7 +79,7 @@ const Account: React.FC = () => {
     setShowProfile(false);
   };
 
-  const handleSavePassword = async (body: { password: string; confirmPassword: string }) => {
+  const handleSavePassword = async (body: { password: string; confirmPassword: string }): Promise<void> => {
     setLoadingPassword(true);
 
     try {
@@ -98,7 +98,7 @@ const Account: React.FC = () => {
     }
   };
 
-  const handleRemove = async () => {
+  const handleRemove = async (): Promise<void> => {
     setRemoveErrors([]);
     setRemoveLoading(true);
 

@@ -24,7 +24,7 @@ exports.save = (userId) => {
 
 function getProfile(config) {
   return api
-    .get({ url: 'https://www.instagram.com/schulzetenberg/?__a=1' })
+    .get({ url: `https://www.instagram.com/${config.instagram.user}/?__a=1` })
     .then((data) => {
       const images = data.graphql.user.edge_owner_to_timeline_media.edges
         .map(({ node }) => ({

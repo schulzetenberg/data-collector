@@ -97,7 +97,7 @@ app.use(
     saveUninitialized: true,
     secret: secrets.sessionSecret,
     store: new MongoStore({
-      url: secrets.db,
+      url: secrets.MongoUrl + secrets.db,
       autoReconnect: true,
     }),
     cookie: cookieOpts,

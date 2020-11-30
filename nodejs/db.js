@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const secrets = require('../config/secrets');
 const logger = require('./log');
 
-const url = secrets.db;
+const url = secrets.MongoUrl + secrets.db;
 mongoose.connect(url);
 const db = mongoose.connection;
 

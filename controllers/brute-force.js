@@ -5,10 +5,14 @@ const { MongoClient } = require('mongodb');
 
 const response = require('../nodejs/response');
 const secrets = require('../config/secrets');
+const logger = require('../nodejs/log');
 
 const store = new MongoStore((ready) => {
-  MongoClient.connect(secrets.db, (err, db) => {
+  MongoClient.connect(secrets.MongoUrl, (err, client) => {
     if (err) throw err;
+
+    const db = client.db(secrets.db);
+
     ready(db.collection('bruteforce-store'));
   });
 });
@@ -21,7 +25,7 @@ const failCallback = (req, res, next, nextValidRequestDate) => {
 };
 
 const handleStoreError = (error) => {
-  console.log(error);
+  logger.error(error);
 
   // cause node to exit, hopefully restarting the process fixes the problem
   // eslint-disable-next-line no-throw-literal

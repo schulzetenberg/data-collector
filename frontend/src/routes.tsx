@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 // import Home from './pages/home/home';
@@ -12,18 +12,18 @@ import Account from './pages/account/account';
 import PasswordReset from './pages/account/password-reset';
 import AppSettings from './pages/app-settings/app-settings';
 
-const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): any => {
+const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): ReactElement => {
   return (
     <Route
       {...rest}
-      render={(props: any): any =>
+      render={(props: any): ReactElement =>
         session ? <Component {...props} /> : <Redirect to={`/sign-in?redirect=${props.location.pathname}`} />
       }
     />
   );
 };
 
-const PublicRoute = ({ component: Component, ...rest }: any): any => {
+const PublicRoute = ({ component: Component, ...rest }: any): ReactElement => {
   return <Route {...rest} render={(props: any): any => <Component {...props} />} />;
 };
 

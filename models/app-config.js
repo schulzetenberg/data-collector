@@ -19,6 +19,7 @@ const appConfigSchema = new mongoose.Schema(
     music: {
       active: { type: Boolean, default: false },
       lastFmKey: { type: String, default: '' },
+      lastFmUsername: { type: String, default: '' },
       spotifyId: { type: String, default: '' },
       spotifySecret: { type: String, default: '' },
       cloudinaryUpload: { type: Boolean, default: false },
@@ -84,7 +85,8 @@ const appConfigSchema = new mongoose.Schema(
   },
   { timestamps: true }, // Save createdAt and updatedAt fields
   { minimize: false }, // Save empty objects
-  { strict: true } // Save only fields defined in the schema
+  { strict: true }, // Save only fields defined in the schema
+  { setDefaultsOnInsert: true }
 );
 
 module.exports = mongoose.model('appconfig', appConfigSchema);
