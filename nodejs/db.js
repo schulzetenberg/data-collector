@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const secrets = require('../config/secrets');
 const logger = require('./log');
 
-const url = secrets.MongoUrl + secrets.db;
+const url = `${secrets.MongoUrl + secrets.db}?authSource=admin`;
 mongoose.connect(url);
 const db = mongoose.connection;
 

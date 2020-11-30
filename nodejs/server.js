@@ -14,8 +14,8 @@ let server;
 if (!secrets.SSL) {
   server = http.createServer(app);
 } else {
-  const privateKey = fs.readFileSync('./key.pem', 'utf8');
-  const certificate = fs.readFileSync('./cert.pem', 'utf8');
+  const privateKey = fs.readFileSync(secrets.sslKeyPath, 'utf8');
+  const certificate = fs.readFileSync(secrets.sslCertPath, 'utf8');
   const credentials = { key: privateKey, cert: certificate };
 
   server = https.createServer(credentials, app);

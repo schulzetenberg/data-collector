@@ -11,7 +11,7 @@ const store = new MongoStore((ready) => {
   MongoClient.connect(secrets.MongoUrl, (err, client) => {
     if (err) throw err;
 
-    const db = client.db(secrets.db);
+    const db = client.db(secrets.db, { authSource: 'admin' });
 
     ready(db.collection('bruteforce-store'));
   });

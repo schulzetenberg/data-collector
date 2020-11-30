@@ -97,7 +97,7 @@ app.use(
     saveUninitialized: true,
     secret: secrets.sessionSecret,
     store: new MongoStore({
-      url: secrets.MongoUrl + secrets.db,
+      url: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
       autoReconnect: true,
     }),
     cookie: cookieOpts,
