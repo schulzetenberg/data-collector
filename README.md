@@ -1,11 +1,8 @@
-Data Collector Web App
-----------------------------------
-
- - Using Express, MongoDB, & React
+# Data Collector Web App
+### Built with Express, MongoDB, & React, deployed to Google Cloud 🚀
 
 Features
---------
-
+-------
 - Local Authentication using Email and Password
 - Material UI
 - **Account Management**
@@ -33,22 +30,22 @@ $ npm i
 
 Run
 -------
-- $ npm run start
+$ npm run start
 
 Sign Up
 -------
-- Signing up is currently locked down to admin@1.com to prevent multiple users
+Signing up is currently locked down to admin@1.com to prevent multiple users
 
 Deployment on Google Cloud Platform - Compute
 --------
-- See this  [link](https://cloud.google.com/community/tutorials/deploy-mean-app-mongodb-replication) for instructions setting up a MEAN application on Google Cloud
+See this  [link](https://cloud.google.com/community/tutorials/deploy-mean-app-mongodb-replication) for instructions setting up a MEAN application on Google Cloud
 
 Re-deploy on GCP
 --------
-Run build script from frontend/package.json
-Create a build.zip file & upload to a new Github release
+- Run build script from frontend/package.json
+- Create a build.zip file & upload to a new Github release
+- SSH into the GCP VM
 
-SSH into the GCP VM
 ```console
 $ sudo su - bitnami
 $ cd /home/bitnami/apps/collector/htdocs/
@@ -59,7 +56,7 @@ $ ./start-data-collector.sh
 
 Agenda Scheduler
 --------
-- http://localhost:3000/agenda/
+http://localhost:3000/agenda/
 
 Requirements
 --------
@@ -68,13 +65,13 @@ Requirements
 
 Run Locally (Backend)
 --------
-$ npm i
-$ npm run start
-Express server will start on localhost:3000
+- $ npm i
+- $ npm run start
+- Express server will start on localhost:3000
 
 Run Locally (Frontend)
 --------
-$ npm i
-$ npm run build (first time only)
-$ npm run start
-Local web server will start & open webpage to localhost:8999, with a proxy to the backend server on port 3000
+- $ npm i
+- $ npm run build (first time only)
+- $ npm run start
+- Local web server will start & open webpage to localhost:8999, with a proxy to the backend server on port 3000
