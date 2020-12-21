@@ -6,7 +6,6 @@
     "url": "https://github.com/schulzetenberg/data-collector.git"
   },
   "scripts": {
-    "postinstall": "export HOME=app-root/runtime/repo",
     "start": "nodemon nodejs/server.js",
     "precommit": "lint-staged"
   },
