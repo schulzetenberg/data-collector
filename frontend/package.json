@@ -44,7 +44,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns '/node_modules/'",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "browserslist": {
     "production": [
@@ -60,6 +62,12 @@
   },
   "devDependencies": {
     "@schulzetenberg/eslint-config-react": "^0.0.9",
+    "@storybook/addon-actions": "6.1.11",
+    "@storybook/addon-essentials": "6.1.11",
+    "@storybook/addon-links": "6.1.11",
+    "@storybook/node-logger": "6.1.11",
+    "@storybook/preset-create-react-app": "3.1.5",
+    "@storybook/react": "6.1.11",
     "@typescript-eslint/eslint-plugin": "2.14.0",
     "@typescript-eslint/parser": "2.14.0",
     "eslint": "6.8.0",
@@ -71,6 +79,8 @@
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-react": "7.17.0",
     "eslint-plugin-react-hooks": "2.3.0",
-    "prettier": "1.19.1"
+    "prettier": "1.19.1",
+    "storybook-dark-mode": "1.0.3",
+    "storybook-react-router": "1.0.8"
   }
 }
