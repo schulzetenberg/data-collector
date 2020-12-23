@@ -11,7 +11,7 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Button from '../../components/button/button';
+import { Button } from '@schulzetenberg/component-library';
 import Checkbox from '../../components/checkbox/checkbox';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';

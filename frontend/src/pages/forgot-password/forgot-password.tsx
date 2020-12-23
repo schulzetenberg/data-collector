@@ -11,7 +11,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Button from '../../components/button/button';
+import { Button } from '@schulzetenberg/component-library';
 import Form from '../../components/form/form';
 import TextField from '../../components/text-field/text-field';
 import Request from '../../util/request';

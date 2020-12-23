@@ -4,7 +4,7 @@ import { Checkbox as MaterialCheckbox, FormControlLabel } from '@material-ui/cor
 
 const RHFInputAny = RHFInput as any; // TODO: Clean up
 
-const Checkbox: React.FC<{
+export interface CheckboxProps {
   name: string;
   label?: string;
   register?: Function;
@@ -12,14 +12,16 @@ const Checkbox: React.FC<{
   errors?: any;
   fullWidth?: boolean;
   [x: string]: any;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-}> = ({ name, label, register, setValue, errors, fullWidth, ...rest }) => {
+}
+
+const Checkbox: React.FC<CheckboxProps> = ({ name, label, register, setValue, color = 'primary', errors, ...rest }) => {
   return (
     <FormControlLabel
       control={
         <RHFInputAny
           as={<MaterialCheckbox />}
           name={name}
+          color={color}
           type="checkbox"
           error={errors[name] ? true : undefined}
           register={register}

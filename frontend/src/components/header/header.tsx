@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
+import { Button } from '@schulzetenberg/component-library';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header: React.FC = () => {
+const Header: React.FC<{ forceLoggedIn: boolean }> = ({ forceLoggedIn = false }) => {
   const classes = useStyles();
   const history = useHistory();
   const { session, setSession }: any = React.useContext(SessionContext);
   const [isLoading, setLoading] = useState(false);
   const [logoutErrors, setLogoutErrors] = useState<string[]>([]);
-  const isLoggedIn = !!session && session.email;
+  const isLoggedIn = (!!session && session.email) || forceLoggedIn;
 
   const handleLogout = async () => {
     setLogoutErrors([]);

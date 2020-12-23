@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Modal as MaterialModal } from '@material-ui/core';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -11,16 +11,26 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
+    backdrop: {
+      background: theme.palette.background.default,
+    },
     paper: {
       backgroundColor: theme.palette.background.paper,
-      border: '2px solid #000',
-      boxShadow: theme.shadows[5],
+      outline: 0,
+      borderRadius: 5,
       padding: theme.spacing(2, 4, 3),
     },
   })
 );
 
-const Modal = ({ open, handleClose, title, children }: any): any => {
+export interface ModalProps {
+  open: boolean;
+  title: string;
+  handleClose: any;
+  children: ReactElement;
+}
+
+const Modal: React.FC<ModalProps> = ({ open, handleClose, title, children }) => {
   const classes = useStyles();
 
   return (
@@ -33,7 +43,10 @@ const Modal = ({ open, handleClose, title, children }: any): any => {
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
-        timeout: 300,
+        timeout: 250,
+        classes: {
+          root: classes.backdrop,
+        },
       }}
     >
       <Fade in={open}>

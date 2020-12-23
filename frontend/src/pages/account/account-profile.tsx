@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardActions, CardContent, Avatar, Typography, Divider, Button, Grid } from '@material-ui/core';
+import { Card, CardActions, CardContent, Avatar, Typography, Divider, Grid } from '@material-ui/core';
+import { Button } from '@schulzetenberg/component-library';
 
 import Modal from '../../components/modal/modal';
 import ErrorList from '../../components/error-list/error-list';

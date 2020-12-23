@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import Form from '../../components/form/form';
-import Button from '../../components/button/button';
+import { Button } from '@schulzetenberg/component-library';
 import TextField from '../../components/text-field/text-field';
 
 const useStyles = makeStyles((theme: Theme) => ({

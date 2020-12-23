@@ -88,3 +88,5 @@ config/tmdb.json
 *.launch
 .settings/
 *.sublime-workspace
+
+frontend/playground
