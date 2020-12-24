@@ -1,10 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardActions, CardContent, Avatar, Typography, Divider, Grid } from '@material-ui/core';
-import { Button } from '@schulzetenberg/component-library';
 
-import Modal from '../../components/modal/modal';
-import ErrorList from '../../components/error-list/error-list';
+import { ErrorList, Modal, Button } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme) => ({
   details: {
@@ -84,29 +82,31 @@ const AccountProfile: React.FC<{
       </CardActions>
       {open && (
         <Modal title="Delete Account" open={open} handleClose={handleClose}>
-          <ErrorList errors={errors} />
-          <p>
-            If you delete your account, all data related to your account will be <strong>permanently deleted</strong>.
-            Are you sure you want to proceed?
-          </p>
-          <Button
-            disabled={isLoading}
-            className={classes.modalButton}
-            onClick={handleRemove}
-            color="primary"
-            variant="contained"
-          >
-            Confirm
-          </Button>
-          <Button
-            disabled={isLoading}
-            className={classes.modalButton}
-            onClick={handleClose}
-            color="primary"
-            variant="text"
-          >
-            Cancel
-          </Button>
+					<>
+						<ErrorList errors={errors} />
+						<p>
+							If you delete your account, all data related to your account will be <strong>permanently deleted</strong>.
+							Are you sure you want to proceed?
+						</p>
+						<Button
+							disabled={isLoading}
+							className={classes.modalButton}
+							onClick={handleRemove}
+							color="primary"
+							variant="contained"
+						>
+							Confirm
+						</Button>
+						<Button
+							disabled={isLoading}
+							className={classes.modalButton}
+							onClick={handleClose}
+							color="primary"
+							variant="text"
+						>
+							Cancel
+						</Button>
+					</>
         </Modal>
       )}
     </Card>

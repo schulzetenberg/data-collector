@@ -90,3 +90,4 @@ config/tmdb.json
 *.sublime-workspace
 
 frontend/playground
+frontend/storybook-static

@@ -14,7 +14,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { Grid, Menu, MenuItem, Box } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 
-import Switch from '../../components/switch/switch';
+import { SwitchComponent } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -104,7 +104,7 @@ const AppCard: React.FC<AppCardProps> = ({
               <Skeleton variant="circle" width={40} height={30} />
             ) : (
               // TODO: Change Switch component to SwitchForm
-              active !== undefined && <Switch onChange={handleActiveChange} checked={active} />
+              active !== undefined && <SwitchComponent onChange={handleActiveChange} checked={active} />
             )
           }
           action={

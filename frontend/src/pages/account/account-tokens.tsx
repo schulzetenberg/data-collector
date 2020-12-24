@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 
-import ErrorList from '../../components/error-list/error-list';
-import Request from '../../util/request';
+import { ErrorList, Request } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {

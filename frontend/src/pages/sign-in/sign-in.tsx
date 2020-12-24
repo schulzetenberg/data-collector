@@ -11,13 +11,7 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button } from '@schulzetenberg/component-library';
-import Checkbox from '../../components/checkbox/checkbox';
-import Form from '../../components/form/form';
-import TextField from '../../components/text-field/text-field';
-import Request from '../../util/request';
-import { SessionContext } from '../../util/session-context';
-import ErrorList from '../../components/error-list/error-list';
+import { ErrorList, Checkbox, Form, Button, TextField, SessionContext, Request } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {

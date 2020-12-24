@@ -1,13 +1,14 @@
 import React, { ReactElement } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+import { SessionContext } from '@schulzetenberg/component-library';
+
 // import Home from './pages/home/home';
 import SignIn from './pages/sign-in/sign-in';
 import NotFound from './pages/not-found/not-found';
 import ForgotPassword from './pages/forgot-password/forgot-password';
 import SignUp from './pages/sign-up/sign-up';
 import AppConfig from './pages/app-config/app-config';
-import { SessionContext } from './util/session-context';
 import Account from './pages/account/account';
 import PasswordReset from './pages/account/password-reset';
 import AppSettings from './pages/app-settings/app-settings';

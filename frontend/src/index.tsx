@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import theme from './theme';
 import './index.scss';
 import App from './app';
-import { SessionProvider } from './util/session-context';
+import { SessionProvider } from '@schulzetenberg/component-library';
 
 import * as serviceWorker from './service-worker';
 

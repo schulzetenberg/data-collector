@@ -2,9 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
-import Header from './components/header/header';
+import { Header, SessionContext } from '@schulzetenberg/component-library';
+
 import Routes from './routes';
-import { SessionContext } from './util/session-context';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 

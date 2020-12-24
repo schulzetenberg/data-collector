@@ -4,9 +4,7 @@ import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@mate
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Form from '../../components/form/form';
-import { Button } from '@schulzetenberg/component-library';
-import TextField from '../../components/text-field/text-field';
+import { Button, Form, TextField } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonGrid: {

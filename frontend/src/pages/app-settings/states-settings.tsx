@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
-
 import { InputLabel, Select, MenuItem, FormControl, Input } from '@material-ui/core';
-import { Button } from '@schulzetenberg/component-library';
-import Form from '../../components/form/form';
-import TextField from '../../components/text-field/text-field';
 
-import SwitchForm from '../../components/switch/switch-form';
-import MultiSelect from '../../components/multi-select/multi-select';
+import { Button, Form, TextField, SwitchForm, MultiSelect } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },

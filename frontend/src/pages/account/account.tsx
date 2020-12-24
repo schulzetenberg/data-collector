@@ -3,12 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 
-import { SessionContext } from '../../util/session-context';
+import { ErrorList, SessionContext, Request } from '@schulzetenberg/component-library';
+
 import AccountProfile from './account-profile';
 import AccountDetails from './account-details';
 import AccountPassword from './account-password';
-import Request from '../../util/request';
-import ErrorList from '../../components/error-list/error-list';
 import AccountTokens from './account-tokens';
 
 const useStyles = makeStyles((theme) => ({

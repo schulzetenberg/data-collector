@@ -3,10 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 import MaterialTable from 'material-table';
 
-import { Button } from '@schulzetenberg/component-library';
-import Form from '../../components/form/form';
-import TextField from '../../components/text-field/text-field';
-import SwitchForm from '../../components/switch/switch-form';
+import { Button, Form, TextField, SwitchForm } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },

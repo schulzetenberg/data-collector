@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
-import Request from '../../util/request';
+import { ErrorList, SessionContext, Request } from '@schulzetenberg/component-library';
+
 import AccountPassword from './account-password';
-import { SessionContext } from '../../util/session-context';
-import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme: Theme) => ({}));
 

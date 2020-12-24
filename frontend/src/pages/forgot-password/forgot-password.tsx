@@ -11,11 +11,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button } from '@schulzetenberg/component-library';
-import Form from '../../components/form/form';
-import TextField from '../../components/text-field/text-field';
-import Request from '../../util/request';
-import ErrorList from '../../components/error-list/error-list';
+import { Button, ErrorList, Form, TextField, Request } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {

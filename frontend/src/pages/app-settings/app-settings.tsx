@@ -6,10 +6,9 @@ import { Snackbar, SnackbarContent, Avatar } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useParams } from 'react-router-dom';
-import Request from '../../util/request';
 
-import ErrorList from '../../components/error-list/error-list';
-import { parseCamelCase } from '../../util/helpers';
+import { ErrorList, Request, parseCamelCase } from '@schulzetenberg/component-library';
+
 import MusicSettings from './music-settings';
 import GoodreadsSettings from './goodreads-settings';
 import PlayerFmSettings from './player-fm-settings';

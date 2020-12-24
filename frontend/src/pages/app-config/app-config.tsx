@@ -8,9 +8,9 @@ import { Grid, Snackbar, SnackbarContent } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
-import Request from '../../util/request';
+import { ErrorList, Request } from '@schulzetenberg/component-library';
+
 import AppCard from './app-card';
-import ErrorList from '../../components/error-list/error-list';
 
 const useStyles = makeStyles((theme) => ({
   snackbarContent: {
