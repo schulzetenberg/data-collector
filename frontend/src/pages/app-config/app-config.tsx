@@ -22,7 +22,7 @@ const AppConfig: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const [errors, setErrors] = useState<string[]>([]);
-  const [data, setData] = useState();
+  const [data, setData]: any = useState();
   const [isLoading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 

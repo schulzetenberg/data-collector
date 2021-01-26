@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Account: React.FC = () => {
   const classes = useStyles();
-  const [data, setData] = useState();
+  const [data, setData]: any = useState();
   const history = useHistory();
   const { session, setSession }: any = React.useContext(SessionContext);
   const [isLoading, setLoading] = useState(false);

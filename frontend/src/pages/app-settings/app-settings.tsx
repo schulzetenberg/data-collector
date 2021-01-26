@@ -44,10 +44,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AppSettings: React.FC = () => {
-  const { appName = '' } = useParams();
+  const { appName = '' } = useParams<{ appName: string }>();
   const classes = useStyles();
   const [responseErrors, setResponseErrors] = useState<string[]>([]);
-  const [data, setData] = useState();
+  const [data, setData]: any = useState();
   const [isLoading, setLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
