@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
-import { Header, SessionContext } from '@schulzetenberg/component-library';
+import { Header, SessionContext, ErrorBoundary } from '@schulzetenberg/component-library';
 
 import Routes from './routes';
 
@@ -27,10 +27,10 @@ const App: React.FC = ({ location }: any) => {
   );
 
   return (
-    <>
+    <ErrorBoundary>
       {noHeaderPages.indexOf(location.pathname) < 0 && <Header />}
       <Routes />
-    </>
+    </ErrorBoundary>
   );
 };
 
