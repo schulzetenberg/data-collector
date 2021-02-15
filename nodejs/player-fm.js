@@ -51,7 +51,12 @@ function getArtwork({ config, podcast }) {
         parseString(xmlData, (err, result) => {
           if (err) Error(err);
 
-          img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
+          if (result.rss.channel[0].title[0] === 'Reply All') {
+            // RSS feed image is 20MB, use hardcoded value instead
+            img = 'https://cdn.player.fm/images/192225/series/f90YJXRWZCrEzwXn/512.png';
+          } else {
+            img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
+          }
         });
       } catch (err) {
         logger.error(`Could not get podcast artwork for ${podcast.text}`, err);
