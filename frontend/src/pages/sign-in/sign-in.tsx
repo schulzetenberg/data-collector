@@ -66,7 +66,7 @@ const SignIn: React.FC = ({ location }: any) => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/signin', body });
+      const { data: response }: ServerResponse = await Request.post({ url: '/signin', body });
       setSession({ email: response.data.email });
       history.push(redirectPath);
     } catch (e) {

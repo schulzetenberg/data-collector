@@ -55,7 +55,7 @@ const AppSettings: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.get({ url: '/app-config/config' });
+      const { data: response }: ServerResponse = await Request.get({ url: '/app-config/config' });
       setData(response.data);
     } catch (e) {
       setResponseErrors(e);
@@ -69,7 +69,7 @@ const AppSettings: React.FC = () => {
     setSaveSuccess(false);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/app-config/config', body });
+      const { data: response }: ServerResponse = await Request.post({ url: '/app-config/config', body });
       setData(response.data);
       setSaveSuccess(true);
     } catch (e) {

@@ -42,7 +42,7 @@ const SignUp: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/signup', body: inputs });
+      const { data: response }: ServerResponse = await Request.post({ url: '/signup', body: inputs });
       setSession({ email: response.data.email });
       history.push('/');
     } catch (e) {

@@ -35,7 +35,7 @@ const AppConfig: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.get({ url: 'app-config/config' });
+      const { data: response }: ServerResponse = await Request.get({ url: 'app-config/config' });
       setData(response.data);
     } catch (e) {
       setErrors(e);
@@ -48,7 +48,7 @@ const AppConfig: React.FC = () => {
     setSuccessMessage('');
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/app-config/config', body });
+      const { data: response }: ServerResponse = await Request.post({ url: '/app-config/config', body });
       setData(response.data);
       setSuccessMessage(messageConstants.saveSuccess);
     } catch (e) {
@@ -62,7 +62,7 @@ const AppConfig: React.FC = () => {
 
   const handleManualUpdate = async (appName: string) => {
     try {
-      const response: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
+      const { data: response }: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
       setSuccessMessage(messageConstants.runSuccess);
     } catch (e) {
       setErrors(e);

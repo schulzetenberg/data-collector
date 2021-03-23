@@ -26,7 +26,7 @@ const PasswordReset: React.FC = (props: any) => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({
+      const { data: response }: ServerResponse = await Request.post({
         url: '/reset',
         body: { ...passwords, token },
       });

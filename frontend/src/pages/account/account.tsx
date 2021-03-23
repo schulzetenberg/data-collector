@@ -34,7 +34,7 @@ const Account: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.get({ url: 'account/profile' });
+      const { data: response }: ServerResponse = await Request.get({ url: 'account/profile' });
       setData(response.data);
     } catch (e) {
       setServerErrors(e);
@@ -51,7 +51,7 @@ const Account: React.FC = () => {
     setLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/account/profile', body: updatedData });
+      const { data: response }: ServerResponse = await Request.post({ url: '/account/profile', body: updatedData });
       setData(response.data);
       setShowProfile(false);
     } catch (e) {
@@ -82,7 +82,7 @@ const Account: React.FC = () => {
     setLoadingPassword(true);
 
     try {
-      const response: ServerResponse = await Request.post({
+      const { data: response }: ServerResponse = await Request.post({
         url: '/account/password',
         body,
       });
@@ -102,7 +102,7 @@ const Account: React.FC = () => {
     setRemoveLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/account/delete' });
+      const { data: response }: ServerResponse = await Request.post({ url: '/account/delete' });
       setSession();
       history.push('/sign-in');
       setRemoveErrors(response.errors);

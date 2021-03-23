@@ -27,7 +27,7 @@ const AccountTokens: React.FC<{
     setTokenLoading(true);
 
     try {
-      const response: ServerResponse = await Request.get({ url: '/account/api-key' });
+      const { data: response }: ServerResponse = await Request.get({ url: '/account/api-key' });
       if (response.errors) {
         setTokenErrors(response.errors);
       } else {
@@ -45,7 +45,7 @@ const AccountTokens: React.FC<{
     setTokenLoading(true);
 
     try {
-      const response: ServerResponse = await Request.post({ url: '/account/remove-api-key', body: { token } });
+      const { data: response }: ServerResponse = await Request.post({ url: '/account/remove-api-key', body: { token } });
       if (response.errors) {
         setTokenErrors(response.errors);
       } else {
