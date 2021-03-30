@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorHandler = require('errorhandler');
 const methodOverride = require('method-override');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const path = require('path');
 const passport = require('passport');
 const expressValidator = require('express-validator');
@@ -96,13 +96,14 @@ app.use(
     resave: true,
     saveUninitialized: true,
     secret: secrets.sessionSecret,
-    store: new MongoStore({
-      url: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
-      autoReconnect: true,
+    store: MongoStore.create({
+      mongoUrl: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
+      mongoOptions: { useUnifiedTopology: true, useNewUrlParser: true },
     }),
     cookie: cookieOpts,
   })
 );
+
 app.use(express.static(path.join(__dirname, 'public'), publicOpts));
 app.use('/', express.static(path.join(__dirname, 'frontend/build'), publicOpts));
 app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files

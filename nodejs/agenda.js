@@ -3,7 +3,12 @@ const Agenda = require('agenda');
 const secrets = require('../config/secrets');
 const logger = require('./log');
 
-const agenda = new Agenda({ db: { address: `${secrets.MongoUrl + secrets.db}?authSource=admin` } });
+const agenda = new Agenda({
+  db: {
+    address: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
+  },
+});
 exports.agenda = agenda;
 
 const appModules = require('./app-modules');
