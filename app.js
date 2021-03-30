@@ -110,9 +110,6 @@ app.use(assets('', path.join(__dirname, 'public'))); // Append checksum to files
 app.use(passport.initialize());
 app.use(passport.session());
 
-// App routes
-require('./routes')(app);
-
 // Agenda scheduler
 const { agenda } = require('./nodejs/agenda');
 
@@ -128,6 +125,9 @@ app.use(
   },
   Agendash(agenda)
 );
+
+// App routes
+require('./routes')(app);
 
 if (app.get('env') === 'production') {
   // production error handler, no stacktraces shown
