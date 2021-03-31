@@ -134,6 +134,7 @@ const Account: React.FC = () => {
           <AccountProfile
             handleRemove={handleRemove}
             isLoading={!data || isRemoveLoading}
+            data={data}
             errors={removeErrors}
             setShowProfile={handleShowProfile}
             setShowPassword={handleShowPassword}
