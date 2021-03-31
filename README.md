@@ -18,7 +18,7 @@ Features
 
 Requirements
 -------
-Node (Tested on v12)
+Node (Tested on v14)
 MongoDB (Tested on v4)
 
 Install
@@ -26,6 +26,8 @@ Install
 After installing Node.js:
 ```console
 $ npm i
+$ npm i -g nodemon
+$ npm i -g forever
 ```
 
 Run
@@ -57,11 +59,6 @@ $ ./start-data-collector.sh
 Agenda Scheduler
 --------
 http://localhost:3000/agenda/
-
-Requirements
---------
-- MongoDB
-- NodeJS
 
 Run Locally (Backend)
 --------
