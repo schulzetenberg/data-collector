@@ -8,12 +8,18 @@ const User = require('../models/User');
 const AppConfig = require('../models/app-config');
 const response = require('../nodejs/response');
 
+const formatError = (errors) => errors[0].msg;
+
 exports.postSignin = (req, res, next) => {
   req.assert('email', 'Email address is not valid').isEmail();
   req.assert('password', 'Password cannot be blank').notEmpty();
 
   const errors = req.validationErrors();
-  if (errors) return response.userError(res, errors);
+
+  if (errors) {
+    const errorMessage = formatError(errors);
+    return response.userError(res, errorMessage);
+  }
 
   return passport.authenticate('local', async (err, user, info) => {
     if (err) {
@@ -66,7 +72,8 @@ exports.postSignup = async (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    return response.userError(res, errors);
+    const errorMessage = formatError(errors);
+    return response.userError(res, errorMessage);
   }
 
   const user = new User({
@@ -158,7 +165,8 @@ exports.postUpdatePassword = (req, res, next) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    return response.userError(res, errors);
+    const errorMessage = formatError(errors);
+    return response.userError(res, errorMessage);
   }
 
   User.findById(req.user.id, (err, user) => {
@@ -203,7 +211,8 @@ exports.postReset = async (req, res) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    return response.userError(res, errors);
+    const errorMessage = formatError(errors);
+    return response.userError(res, errorMessage);
   }
 
   let user;
@@ -268,7 +277,8 @@ exports.postForgot = async (req, res) => {
   const errors = req.validationErrors();
 
   if (errors) {
-    return response.userError(res, errors);
+    const errorMessage = formatError(errors);
+    return response.userError(res, errorMessage);
   }
 
   let token;
