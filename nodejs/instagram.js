@@ -1,3 +1,5 @@
+// NOTE: This only works for public instagram accounts
+
 const { promisify } = require('util');
 const cloudinary = require('cloudinary').v2;
 

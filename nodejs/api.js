@@ -20,14 +20,12 @@ exports.get = (params) => {
   return request
     .get({
       url: formatUrl(params.url),
-      headers: params.headers || { 'Content-Type': 'application/json' },
+      headers: params.headers || { 'Content-Type': 'application/json', Accept: 'application/json' },
       encoding: params.encoding !== undefined ? params.encoding : 'utf8',
     })
     .then((data) => {
       if (data.statusCode !== 201 && data.statusCode !== 200) {
-        return Promise.reject(
-          `API GET error for: ${params.url}. Status Code: ${data.statusCode}. Status Message: ${data.statusMessage}`
-        );
+        return Promise.reject(`API GET error for: ${params.url}. Status Code: ${data.statusCode}. Status Message: ${data.statusMessage}`);
       }
 
       return params.fullResponse ? data : data.body;

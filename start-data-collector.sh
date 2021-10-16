@@ -10,7 +10,7 @@ export CLOUDINARY_API_SECRET=WRONGAPISECRET!!!
 
 cd frontend
 npm i --production
-npm run build
+# npm run build
 
 cd ..
 npm i --production
