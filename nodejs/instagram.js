@@ -1,4 +1,4 @@
-// NOTE: This only works for public instagram accounts
+// NOTE: This only works for public instagram accounts. Also, Instagram blocks profile requests from GCP and AWS
 
 const { promisify } = require('util');
 const cloudinary = require('cloudinary').v2;

@@ -6,7 +6,7 @@
     "url": "https://github.com/schulzetenberg/data-collector.git"
   },
   "scripts": {
-    "start": "nodemon nodejs/server.js",
+    "start": "export NODE_ENV=development || set NODE_ENV=development && nodemon nodejs/server.js",
     "precommit": "lint-staged"
   },
   "author": "Jacob Schulzetenberg <jacob.schulzetenberg@gmail.com>",

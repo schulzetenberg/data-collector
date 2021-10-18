@@ -32,7 +32,7 @@ exports.getConfig = async (req, res) => {
         // eslint-disable-next-line no-param-reassign
         data.countries.visited = data.countries.visited.map((x) => ({ value: x, label: x }));
         // eslint-disable-next-line no-param-reassign
-        data.countries.options = countriesList.map((x) => ({ value: x, label: x }));
+        data.countries.options = countriesList.map(({ country }) => ({ value: country, label: country }));
 
         _.forIn(data, (value, key) => {
           // eslint-disable-next-line no-param-reassign
