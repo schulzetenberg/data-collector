@@ -19,6 +19,7 @@ import FuellySettings from './fuelly-settings';
 import TmdbSettings from './tmdb-settings';
 import TraktSettings from './trakt-settings';
 import InstagramSettings from './instagram-settings';
+import ParksSettings from './parks-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -131,6 +132,7 @@ const AppSettings: React.FC = () => {
                   feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
                   playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
                   states: <StatesSettings data={data && data.states} {...baseAppProps} />,
+                  parks: <ParksSettings data={data && data.parks} {...baseAppProps} />,
                   countries: <StatesSettings data={data && data.countries} {...baseAppProps} />,
                   github: <GithubSettings data={data && data.github} {...baseAppProps} />,
                   fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,

@@ -177,6 +177,14 @@ const AppConfig: React.FC = () => {
               summary="Collect images of TV shows & movies using TMDB"
             />
 
+						<AppCard
+              appKey="parks"
+              {...cardDefaultProps}
+              title="National Parks"
+              image="/img/mountains.jpg"
+              summary="Track the United States national parks that have been visited"
+            />
+
             <AppCard
               appKey="states"
               {...cardDefaultProps}

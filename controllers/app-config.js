@@ -25,6 +25,11 @@ exports.getConfig = async (req, res) => {
     .then((data) => {
       if (data) {
         // eslint-disable-next-line no-param-reassign
+        data.parks.visited = data.parks.visited.map((x) => ({ value: x, label: x }));
+        // eslint-disable-next-line no-param-reassign
+        data.parks.options = statesList.map((x) => ({ value: x, label: x }));
+
+        // eslint-disable-next-line no-param-reassign
         data.states.visited = data.states.visited.map((x) => ({ value: x, label: x }));
         // eslint-disable-next-line no-param-reassign
         data.states.options = statesList.map((x) => ({ value: x, label: x }));
