@@ -18,8 +18,8 @@ Features
 
 Requirements
 -------
-Node (Tested on v14)
-MongoDB (Tested on v4)
+Node (Tested on v16)
+MongoDB (Tested on v5)
 
 Install
 -------
