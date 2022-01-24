@@ -74,13 +74,19 @@ const appConfigSchema = new mongoose.Schema(
     feedly: {
       token: { type: String, default: '' }, // https://feedly.com/v3/auth/dev
       active: { type: Boolean, default: false },
-      schedule: { type: String, default: '50 0 0 * * *' },
+      schedule: { type: String, default: '50 2 0 * * *' },
     },
     instagram: {
       user: { type: String, default: '' },
       active: { type: Boolean, default: false },
-      schedule: { type: String, default: '55 0 0 * * *' },
+      schedule: { type: String, default: '55 1 0 * * *' },
       cloudinaryUpload: { type: Boolean, default: false },
+    },
+    parks: {
+      active: { type: Boolean, default: false },
+      schedule: { type: String, default: '10 10 0 * * 1' },
+      cloudinaryUpload: { type: Boolean, default: false },
+      visited: { type: [] },
     },
   },
   { timestamps: true }, // Save createdAt and updatedAt fields

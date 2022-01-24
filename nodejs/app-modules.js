@@ -9,4 +9,5 @@ module.exports = {
   playerFm: require('./player-fm'),
   feedly: require('./feedly'),
   instagram: require('./instagram'),
+  parks: require('./parks'),
 };

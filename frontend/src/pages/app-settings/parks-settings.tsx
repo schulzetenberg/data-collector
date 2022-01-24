@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
-import { InputLabel, Select, MenuItem, FormControl, Input } from '@material-ui/core';
 
-import { Button, Form, TextField, SwitchForm, MultiSelect } from '@schulzetenberg/component-library';
+import { Button, Form, SwitchForm, TextField, MultiSelect } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },
 }));
 
 type FormData = {
+	active: boolean;
   visited: { value: string; label: string }[];
   options: { value: string; label: string }[];
+	schedule: string;
+	cloudinaryUpload: boolean;
 };
 
 const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
@@ -26,8 +28,8 @@ const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
     if (data) {
       setOptions(data.options);
 
-      const { visited } = data;
-      reset({ visited });
+      const { active, visited, schedule, cloudinaryUpload } = data;
+      reset({ active, visited, schedule, cloudinaryUpload });
     }
   }, [data, reset]);
 
@@ -36,7 +38,11 @@ const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
       <div className={classes.textCenter}>
         <SwitchForm {...formProps} name="active" label="Active" />
       </div>
+			<TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
       <MultiSelect name="visited" options={options} {...formProps} />
+			<div className={classes.textCenter}>
+        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+      </div>
       <Button {...formProps} type="submit">
         Save
       </Button>

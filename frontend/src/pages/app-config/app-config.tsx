@@ -179,6 +179,7 @@ const AppConfig: React.FC = () => {
 
 						<AppCard
               appKey="parks"
+							active={data && data.parks.active}
               {...cardDefaultProps}
               title="National Parks"
               image="/img/mountains.jpg"
