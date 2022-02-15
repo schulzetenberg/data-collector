@@ -10,8 +10,8 @@ const appConfig = require('./app-config');
 const api = require('./api');
 const InstagramModel = require('../models/instagram-model');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(getProfile)
     .then(({ config, images }) => {
@@ -22,7 +22,6 @@ exports.save = (userId) => {
       const doc = new InstagramModel({ images, userId });
       return doc.save();
     });
-};
 
 function getProfile(config) {
   return api

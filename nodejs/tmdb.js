@@ -12,8 +12,8 @@ const api = require('./api');
 const appConfig = require('./app-config');
 
 // Get updated configuration & save to file for future use
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then((config) => {
       if (!config || !config.tmdb || !config.tmdb.key) {
@@ -28,7 +28,4 @@ exports.save = (userId) => {
       return options;
     })
     .then(api.get)
-    .then((body) => {
-      return writeFileAsync('./config/tmdb.json', JSON.stringify(body, null, 4));
-    });
-};
+    .then((body) => writeFileAsync('./config/tmdb.json', JSON.stringify(body, null, 4)));

@@ -11,8 +11,8 @@ const appConfig = require('./app-config');
 const api = require('./api');
 const PlayerFmModel = require('../models/player-fm-model');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(currentPodcasts)
     .then(({ config, podcasts }) => {
@@ -23,7 +23,6 @@ exports.save = (userId) => {
       const doc = new PlayerFmModel({ podcasts, userId });
       return doc.save();
     });
-};
 
 function currentPodcasts(config) {
   const user = config && config.playerFm && config.playerFm.user;

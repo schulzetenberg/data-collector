@@ -2,8 +2,8 @@ const GithubModel = require('../models/github-model.js');
 const appConfig = require('./app-config');
 const api = require('./api');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .app(userId, 'github')
     .then((githubConfig) => {
       if (!githubConfig || !githubConfig.user || !githubConfig.token) {
@@ -49,4 +49,3 @@ exports.save = (userId) => {
 
       return doc.save();
     });
-};

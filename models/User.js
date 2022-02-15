@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
  * Password hash middleware.
  */
 // eslint-disable-next-line func-names
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   const user = this;
   if (!user.isModified('password')) return next();
   bcrypt.genSalt(10, (err, salt) => {
@@ -38,7 +38,7 @@ userSchema.pre('save', function(next) {
  * Helper method for validating user's password.
  */
 // eslint-disable-next-line func-names
-userSchema.methods.comparePassword = function(candidatePassword, cb) {
+userSchema.methods.comparePassword = function (candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
     if (err) return cb(err);
     cb(null, isMatch);
@@ -49,13 +49,10 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
  * Helper method for getting user's gravatar.
  */
 // eslint-disable-next-line func-names
-userSchema.methods.gravatar = function(size) {
+userSchema.methods.gravatar = function (size) {
   if (!size) size = 200;
   if (!this.email) return `https://gravatar.com/avatar/?s=${size}&d=retro`;
-  const md5 = crypto
-    .createHash('md5')
-    .update(this.email)
-    .digest('hex');
+  const md5 = crypto.createHash('md5').update(this.email).digest('hex');
   return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
 };
 

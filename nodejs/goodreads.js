@@ -11,8 +11,8 @@ const appConfig = require('./app-config');
 const api = require('./api');
 const logger = require('./log');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(booksRead)
     .then(getTopBooks)
@@ -20,7 +20,6 @@ exports.save = (userId) => {
       const doc = new GoodreadsModel({ ...data, userId });
       return doc.save();
     });
-};
 
 function booksRead(config) {
   const id = config && config.goodreads && config.goodreads.id;
@@ -30,6 +29,7 @@ function booksRead(config) {
     return Promise.reject('Missing goodreads config');
   }
 
+  // eslint-disable-next-line max-len
   const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=50`;
 
   return api
@@ -68,12 +68,10 @@ function booksRead(config) {
 
       return Promise.all(promises);
     })
-    .then((data) => {
-      return {
-        booksRead: data,
-        config,
-      };
-    });
+    .then((data) => ({
+      booksRead: data,
+      config,
+    }));
 }
 
 /* If image not returned from Goodreads API, get the image from the webpage */
@@ -135,6 +133,7 @@ function getTopBooks(params) {
     return Promise.reject('Missing goodreads config');
   }
 
+  // eslint-disable-next-line max-len
   const url = `https://www.goodreads.com/review/list/${id}?format=xml&key=${key}&sort=shelves&v=2&shelf=read&sort=date_read&per_page=200`;
 
   return api

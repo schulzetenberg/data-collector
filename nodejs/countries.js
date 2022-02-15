@@ -1,8 +1,8 @@
 const appConfig = require('./app-config');
 const countriesList = require('../config/countries');
 
-exports.get = (userId) => {
-  return appConfig.get(userId).then((config) => {
+exports.get = (userId) =>
+  appConfig.get(userId).then((config) => {
     const visited = (config && config.countries && config.countries.visited) || [];
     const visitedList = visited.map((x) => countriesList.find((y) => y.country === x));
 
@@ -12,4 +12,3 @@ exports.get = (userId) => {
 
     return visitedList;
   });
-};

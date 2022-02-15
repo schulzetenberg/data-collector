@@ -1,325 +1,304 @@
-var cheerio = require('cheerio')
-var chai = require('chai');
-var should = chai.should();
-var User = require('../models/User');
-var Session = require('supertest-session')({
-    app: require('../app.js')
+const cheerio = require('cheerio');
+const chai = require('chai');
+
+const should = chai.should();
+const User = require('../models/User');
+const Session = require('supertest-session')({
+  app: require('../app.js'),
 });
 
-function extractCsrfToken (res) {
-  var $ = cheerio.load(res.text);
+function extractCsrfToken(res) {
+  const $ = cheerio.load(res.text);
   return $('[name=_csrf]').val();
 }
 
 // Remove test user (if exists)
-before(function(done) {
-  User.remove({ email: 'testing@1.com' }, function(err) {
+before((done) => {
+  User.remove({ email: 'testing@1.com' }, (err) => {
     if (err) return done(err);
     done();
   });
 });
 // Remove delete user (if exists)
-before(function(done) {
-  User.remove({ email: 'testing@2.com' }, function(err) {
+before((done) => {
+  User.remove({ email: 'testing@2.com' }, (err) => {
     if (err) return done(err);
     done();
   });
 });
 // Remove updated user (if exists)
-before(function(done) {
-  User.remove({ email: 'testing-new@1.com' }, function(err) {
+before((done) => {
+  User.remove({ email: 'testing-new@1.com' }, (err) => {
     if (err) return done(err);
     done();
   });
 });
 
-describe('GET: user not logged in', function () {
+describe('GET: user not logged in', () => {
+  let session;
 
-  var session;
-
-  beforeEach(function () {
+  beforeEach(() => {
     session = new Session();
   });
 
-  describe('GET /', function() {
-    it('should return 200 OK', function(done) {
-      session
-        .get('/')
-        .expect(200, done);
+  describe('GET /', () => {
+    it('should return 200 OK', (done) => {
+      session.get('/').expect(200, done);
     });
   });
 
-  describe('GET /random-url', function() {
-    it('should return 404', function(done) {
-      session
-        .get('/reset')
-        .expect(404, done);
+  describe('GET /random-url', () => {
+    it('should return 404', (done) => {
+      session.get('/reset').expect(404, done);
     });
   });
 
-  describe('GET /forgot', function() {
-    it('should return 200 OK', function(done) {
-      session
-        .get('/forgot')
-        .expect(200, done);
+  describe('GET /forgot', () => {
+    it('should return 200 OK', (done) => {
+      session.get('/forgot').expect(200, done);
     });
   });
 
-  describe('GET /account', function() {
-    it('should return 302 redirect to /login', function(done) {
-      session
-        .get('/account')
-        .expect(302)
-        .expect('Location', '/login')
-        .end(done)
+  describe('GET /account', () => {
+    it('should return 302 redirect to /login', (done) => {
+      session.get('/account').expect(302).expect('Location', '/login').end(done);
     });
   });
 
-  describe('GET /reset/:token', function() {
-    it('should return 302 redirect to /forgot', function(done) {
-      session
-        .get('/reset/123')
-        .expect(302)
-        .expect('Location', '/forgot')
-        .end(done)
+  describe('GET /reset/:token', () => {
+    it('should return 302 redirect to /forgot', (done) => {
+      session.get('/reset/123').expect(302).expect('Location', '/forgot').end(done);
     });
   });
 
-  describe('GET /logout', function() {
-    it('should return 302 redirect to /', function(done) {
-      session
-        .get('/logout')
-        .expect(302)
-        .expect('Location', '/')
-        .end(done)
+  describe('GET /logout', () => {
+    it('should return 302 redirect to /', (done) => {
+      session.get('/logout').expect(302).expect('Location', '/').end(done);
     });
   });
 });
 
-describe('POST /signup', function () {
+describe('POST /signup', () => {
+  let session;
 
-  var session;
-
-  beforeEach(function () {
+  beforeEach(() => {
     session = new Session();
   });
 
-  describe('CSRF token is invalid', function () {
-    it('should be unauthorized', function (done) {
+  describe('CSRF token is invalid', () => {
+    it('should be unauthorized', (done) => {
       session
         .post('/signup')
         .send({
-            name:"Tester",
-            email:"testing@1.com",
-            password:"123456",
-            confirmPassword:"123456",
-            _csrf: "123" })
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: '123',
+        })
         .expect(403)
-        .end(done)
+        .end(done);
     });
   });
 
-  describe('when valid CSRF token is provided', function () {
-    var csrfToken;
+  describe('when valid CSRF token is provided', () => {
+    let csrfToken;
 
-  beforeEach(function (done) {
-    session.get('/signup')
-      .end(function (err, res) {
-        if (err) return done(err);
-        csrfToken = extractCsrfToken(res);
-        done();
-    });
-  });
-
-  it('should accept the result', function (done) {
-    session
-      .post('/signup')
-      .send({name:"Tester", email:"testing@1.com", password:"123456", confirmPassword:"123456", _csrf: csrfToken })
-      .expect(302)
-      .expect('Location', '/')
-      .end(done)
-  });
-
-  });
-});
-
-describe('POST /account/delete', function () {
-
-  var session;
-  var csrfToken;
-
-  before(function (done) {
-    session = new Session();
-    session.get('/signup')
-      .end(function (err, res) {
+    beforeEach((done) => {
+      session.get('/signup').end((err, res) => {
         if (err) return done(err);
         csrfToken = extractCsrfToken(res);
         done();
       });
-  });
-  before(function (done) {
-    session
-      .post('/signup')
-      .send({name:"Tester 2", email:"testing@2.com", password:"123456", confirmPassword:"123456", _csrf: csrfToken })
-      .expect(302)
-      .expect('Location', '/')
-      .end(done)
-  });
-  before(function (done) {
-      session.get('/account')
-      .end(function (err, res) {
-          if (err) return done(err);
-          csrfToken = extractCsrfToken(res);
-          done();
-      });
-  });
+    });
 
-  describe('POST /account/delete', function() {
-    it('should return 200 OK', function(done) {
-        session
-        .post('/account/delete')
+    it('should accept the result', (done) => {
+      session
+        .post('/signup')
+        .send({
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: csrfToken,
+        })
         .expect(302)
         .expect('Location', '/')
-        .send({ _csrf: csrfToken})
         .end(done);
-
-    });
-
-    it('should not find user in DB', function(done) {
-        User.findOne({ email: 'testing@2.com' }, function(err, user) {
-            if (err) return done(err);
-            should.not.exist(user);
-            done();
-        });
     });
   });
 });
 
-describe('POST /login', function () {
-  var session;
+describe('POST /account/delete', () => {
+  let session;
+  let csrfToken;
 
-  beforeEach(function () {
+  before((done) => {
     session = new Session();
+    session.get('/signup').end((err, res) => {
+      if (err) return done(err);
+      csrfToken = extractCsrfToken(res);
+      done();
+    });
   });
-
-  describe('CSRF token is invalid', function () {
-    it('should be unauthorized', function (done) {
-      session
-      .post('/login')
+  before((done) => {
+    session
+      .post('/signup')
       .send({
-        name:"Tester",
-        email:"testing@1.com",
-        password:"123456",
-        confirmPassword:"123456",
-        _csrf: "123" })
-      .expect(403)
-      .end(done)
+        name: 'Tester 2',
+        email: 'testing@2.com',
+        password: '123456',
+        confirmPassword: '123456',
+        _csrf: csrfToken,
+      })
+      .expect(302)
+      .expect('Location', '/')
+      .end(done);
+  });
+  before((done) => {
+    session.get('/account').end((err, res) => {
+      if (err) return done(err);
+      csrfToken = extractCsrfToken(res);
+      done();
     });
   });
 
-  describe('when valid CSRF token is provided', function () {
-    var csrfToken;
+  describe('POST /account/delete', () => {
+    it('should return 200 OK', (done) => {
+      session.post('/account/delete').expect(302).expect('Location', '/').send({ _csrf: csrfToken }).end(done);
+    });
 
-    beforeEach(function (done) {
-      session.get('/login')
-      .end(function (err, res) {
+    it('should not find user in DB', (done) => {
+      User.findOne({ email: 'testing@2.com' }, (err, user) => {
+        if (err) return done(err);
+        should.not.exist(user);
+        done();
+      });
+    });
+  });
+});
+
+describe('POST /login', () => {
+  let session;
+
+  beforeEach(() => {
+    session = new Session();
+  });
+
+  describe('CSRF token is invalid', () => {
+    it('should be unauthorized', (done) => {
+      session
+        .post('/login')
+        .send({
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: '123',
+        })
+        .expect(403)
+        .end(done);
+    });
+  });
+
+  describe('when valid CSRF token is provided', () => {
+    let csrfToken;
+
+    beforeEach((done) => {
+      session.get('/login').end((err, res) => {
         if (err) return done(err);
         csrfToken = extractCsrfToken(res);
         done();
       });
     });
 
-    it('should accept the result', function (done) {
+    it('should accept the result', (done) => {
       session
-      .post('/login')
-      .send({
-        name:"Tester",
-        email:"testing@1.com",
-        password:"123456",
-        confirmPassword:"123456",
-        _csrf: csrfToken })
-      .expect(302)
-      .expect('Location', '/')
-      .end(done)
-    });
-
-  });
-});
-
-describe('GET: user logged in', function () {
-  var session;
-  var csrfToken;
-
-  // Get the CSRF token then log in
-  beforeEach(function (done) {
-    session = new Session();
-    session.get('/login')
-    .end(function (err, res) {
-        if (err) return done(err);
-        csrfToken = extractCsrfToken(res);
-          session
-          .post('/login')
-          .send({
-            name:"Tester",
-            email:"testing@1.com",
-            password:"123456",
-            confirmPassword:"123456",
-            _csrf: csrfToken })
-            .end(done);
-      });
-  });
-
-  describe('GET /account', function() {
-    it('should return 200 OK', function(done) {
-      session
-      .get('/account')
-      .expect(200)
-      .end(done)
-    });
-  });
-
-});
-
-describe('POST: user logged in', function () {
-  var session;
-  var csrfToken;
-
-  // Get the CSRF token then log in
-  beforeEach(function (done) {
-    session = new Session();
-    session.get('/login')
-    .end(function (err, res) {
-      if (err) return done(err);
-      csrfToken = extractCsrfToken(res);
-        session
         .post('/login')
         .send({
-          name:"Tester",
-          email:"testing@1.com",
-          password:"123456",
-          confirmPassword:"123456",
-          _csrf: csrfToken })
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: csrfToken,
+        })
+        .expect(302)
+        .expect('Location', '/')
         .end(done);
-      });
     });
+  });
+});
 
-  describe('POST /account/profile', function() {
-    it('should return 200 OK', function(done) {
+describe('GET: user logged in', () => {
+  let session;
+  let csrfToken;
+
+  // Get the CSRF token then log in
+  beforeEach((done) => {
+    session = new Session();
+    session.get('/login').end((err, res) => {
+      if (err) return done(err);
+      csrfToken = extractCsrfToken(res);
       session
-      .post('/account/profile')
-      .expect(302)
-      .expect('Location', '/account')
-      .send({
-        name:"New Name",
-        email:"testing-new@1.com",
-        location:"Denver, CO",
-        website:"www.test.com",
-        _csrf: csrfToken })
+        .post('/login')
+        .send({
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: csrfToken,
+        })
         .end(done);
-
     });
-    it('should find updated user info', function(done) {
-      User.findOne({ email: 'testing-new@1.com' }, function(err, user) {
+  });
+
+  describe('GET /account', () => {
+    it('should return 200 OK', (done) => {
+      session.get('/account').expect(200).end(done);
+    });
+  });
+});
+
+describe('POST: user logged in', () => {
+  let session;
+  let csrfToken;
+
+  // Get the CSRF token then log in
+  beforeEach((done) => {
+    session = new Session();
+    session.get('/login').end((err, res) => {
+      if (err) return done(err);
+      csrfToken = extractCsrfToken(res);
+      session
+        .post('/login')
+        .send({
+          name: 'Tester',
+          email: 'testing@1.com',
+          password: '123456',
+          confirmPassword: '123456',
+          _csrf: csrfToken,
+        })
+        .end(done);
+    });
+  });
+
+  describe('POST /account/profile', () => {
+    it('should return 200 OK', (done) => {
+      session
+        .post('/account/profile')
+        .expect(302)
+        .expect('Location', '/account')
+        .send({
+          name: 'New Name',
+          email: 'testing-new@1.com',
+          location: 'Denver, CO',
+          website: 'www.test.com',
+          _csrf: csrfToken,
+        })
+        .end(done);
+    });
+    it('should find updated user info', (done) => {
+      User.findOne({ email: 'testing-new@1.com' }, (err, user) => {
         if (err) return done(err);
         user.email.should.equal('testing-new@1.com');
         user.firstName.should.equal('New Name');
@@ -327,7 +306,6 @@ describe('POST: user logged in', function () {
       });
     });
   });
-
 });
 
 /*

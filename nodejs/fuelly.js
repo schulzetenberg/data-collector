@@ -4,8 +4,8 @@ const FuellyModel = require('../models/fuelly-model.js');
 const appConfig = require('./app-config');
 const api = require('./api');
 
-exports.save = (userId) => {
-  return appConfig.get(userId).then((config) => {
+exports.save = (userId) =>
+  appConfig.get(userId).then((config) => {
     if (!config && config.fuelly && config.fuelly.vehicles && config.fuelly.vehicles.length) {
       return Promise.reject('No vehicles');
     }
@@ -14,7 +14,6 @@ exports.save = (userId) => {
 
     return Promise.all(vehiclePromises).then(() => Promise.resolve());
   });
-};
 
 function carData(config, userId) {
   const url = config && config.url;

@@ -185,9 +185,7 @@ exports.getFuelly = (req, res) => {
 exports.getFuellyAvg = (req, res) => {
   // Get all data from the past year
   const numDays = 365;
-  const start = moment()
-    .subtract(numDays, 'days')
-    .toDate();
+  const start = moment().subtract(numDays, 'days').toDate();
   const end = moment().toDate();
 
   const filter = {
