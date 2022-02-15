@@ -37,6 +37,7 @@ module.exports = (app) => {
   app.post('/account/remove-api-key', passportConf.isAuthenticated, userController.removeApiKey);
 
   app.get('/api/music', passportConf.validateApiToken, apiController.getMusic);
+  app.get('/api/goodreads-raw', passportConf.validateApiToken, apiController.getGoodreadsRaw);
   app.get('/api/goodreads', passportConf.validateApiToken, apiController.getGoodreads);
   app.get('/api/github', passportConf.validateApiToken, apiController.getGithub);
   app.get('/api/trakt', passportConf.validateApiToken, apiController.getTrakt);

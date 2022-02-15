@@ -11,6 +11,7 @@ const playerFm = require('../models/player-fm-model');
 const instagram = require('../models/instagram-model');
 const response = require('../nodejs/response');
 const logger = require('../nodejs/log');
+const booksHelper = require('./helpers/books-helper');
 
 exports.getMusic = (req, res) => {
   music
@@ -32,7 +33,7 @@ exports.getMusic = (req, res) => {
     });
 };
 
-exports.getGoodreads = (req, res) => {
+exports.getGoodreadsRaw = (req, res) => {
   goodreads
     .findOne(
       // eslint-disable-next-line no-underscore-dangle
@@ -45,6 +46,27 @@ exports.getGoodreads = (req, res) => {
     .lean()
     .then((data) => {
       res.json(data);
+    })
+    .catch((err) => {
+      logger.error('Error getting Goodreads raw data', err);
+      response.serverError(res, 'Error getting Goodreads raw data');
+    });
+};
+
+exports.getGoodreads = (req, res) => {
+  goodreads
+    .findOne(
+      // eslint-disable-next-line no-underscore-dangle
+      { userId: req.userId },
+      {},
+      {
+        sort: { _id: -1 },
+      }
+    )
+    .lean()
+    .then((data) => {
+      const parsedData = booksHelper.processBookData(data);
+      res.json(parsedData);
     })
     .catch((err) => {
       logger.error('Error getting Goodreads data', err);
