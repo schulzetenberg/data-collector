@@ -9,8 +9,8 @@ const api = require('./api');
 
 const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(getTopArtists)
     .then(recentTracks)
@@ -19,7 +19,6 @@ exports.save = (userId) => {
       const doc = new MusicModel({ ...data, userId });
       return doc.save();
     });
-};
 
 // Get the top 15 artists & total artists listened to in the past 12 months
 function getTopArtists(config) {
@@ -27,17 +26,25 @@ function getTopArtists(config) {
 
   if (!key) return Promise.reject('Missing LastFM key');
 
+  // eslint-disable-next-line max-len
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${config.music.lastFmUsername}&limit=15&page=1&api_key=${key}&format=json&period=12month`;
 
   return api.get({ url }).then((data) => {
-    if (!data || !data.topartists || !data.topartists.artist || !data.topartists.artist.length || !data.topartists['@attr']) {
+    if (
+      !data ||
+      !data.topartists ||
+      !data.topartists.artist ||
+      !data.topartists.artist.length ||
+      !data.topartists['@attr']
+    ) {
       return Promise.reject('Could not parse top artist data');
     }
 
     const artistData = data.topartists.artist;
     const artistCount = data.topartists['@attr'].total;
 
-    // NOTE: Do not get the artist images from last.fm because their API is unreliable. We are going to use Spotify instead
+    // NOTE: Do not get the artist images from last.fm because their API is unreliable.
+    // We are going to use Spotify instead
     // img: artist.image[2]['#text'] // IMAGE SIZES: 0 = S, 1 = M, 2 = L, 3 = XL, 4 = Mega
     const topArtists = artistData.map((artist) => ({ artist: artist.name }));
 
@@ -54,9 +61,7 @@ function getTopArtists(config) {
 
 // Get song count (past year)
 function recentTracks(promiseData) {
-  const fromDate = moment()
-    .subtract(1, 'years')
-    .unix();
+  const fromDate = moment().subtract(1, 'years').unix();
 
   const toDate = moment().unix();
 

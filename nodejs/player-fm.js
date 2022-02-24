@@ -54,7 +54,8 @@ function getArtwork({ config, podcast }) {
             // RSS feed image is 20MB, use hardcoded value instead
             img = 'https://cdn.player.fm/images/192225/series/f90YJXRWZCrEzwXn/512.png';
           } else {
-            img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
+            // Use itunes image since it seems more universal than the 'image' attribute
+            img = result.rss.channel[0]['itunes:image'][0].$.href;
           }
         });
       } catch (err) {

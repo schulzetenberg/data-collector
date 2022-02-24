@@ -1,4 +1,4 @@
-const GithubModel = require('../models/github-model.js');
+const GithubModel = require('../models/github-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 

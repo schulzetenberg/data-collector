@@ -1,6 +1,6 @@
 const { parseString } = require('xml2js');
 
-const FuellyModel = require('../models/fuelly-model.js');
+const FuellyModel = require('../models/fuelly-model');
 const appConfig = require('./app-config');
 const api = require('./api');
 

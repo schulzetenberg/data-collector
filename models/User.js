@@ -50,6 +50,7 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
  */
 // eslint-disable-next-line func-names
 userSchema.methods.gravatar = function (size) {
+  // eslint-disable-next-line no-param-reassign
   if (!size) size = 200;
   if (!this.email) return `https://gravatar.com/avatar/?s=${size}&d=retro`;
   const md5 = crypto.createHash('md5').update(this.email).digest('hex');

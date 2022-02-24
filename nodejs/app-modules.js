@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 module.exports = {
   music: require('./music'),
+  allocation: require('./allocation'),
   goodreads: require('./goodreads'),
   github: require('./github'),
   trakt: require('./trakt'),
