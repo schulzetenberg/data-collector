@@ -20,6 +20,7 @@ import TmdbSettings from './tmdb-settings';
 import TraktSettings from './trakt-settings';
 import InstagramSettings from './instagram-settings';
 import ParksSettings from './parks-settings';
+import AllocationSettings from './allocation-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -73,7 +74,7 @@ const AppSettings: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/app-config/config', body });
       setData(response.data);
       setSaveSuccess(true);
-    } catch (e) {
+    } catch (e: any) {
       setResponseErrors(e);
     }
   };
@@ -139,6 +140,7 @@ const AppSettings: React.FC = () => {
                   tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
                   trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
                   instagram: <InstagramSettings data={data && data.instagram} {...baseAppProps} />,
+									allocation: <AllocationSettings data={data && data.allocation} {...baseAppProps} />,
                 } as any)[appName]
               }
             </div>

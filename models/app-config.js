@@ -88,6 +88,21 @@ const appConfigSchema = new mongoose.Schema(
       cloudinaryUpload: { type: Boolean, default: false },
       visited: { type: [] },
     },
+    allocation: {
+      list: {
+        type: [],
+        default: [
+          {
+            tableData: {
+              index: Number,
+            },
+            name: '',
+            value: '',
+            isStock: false,
+          },
+        ],
+      },
+    },
   },
   { timestamps: true }, // Save createdAt and updatedAt fields
   { minimize: false }, // Save empty objects

@@ -64,7 +64,7 @@ const AppConfig: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
       setSuccessMessage(messageConstants.runSuccess);
-    } catch (e) {
+    } catch (e: any) {
       setErrors(e);
     }
   };
@@ -231,6 +231,15 @@ const AppConfig: React.FC = () => {
               image="/img/phone.jpg"
               lastUpdated={data && data.instagram.lastUpdated}
               summary="Collect public Instagram images"
+            />
+
+						<AppCard
+              appKey="allocation"
+              {...cardDefaultProps}
+              title="Asset Allocations"
+              image="/img/stocks.jpg"
+              lastUpdated={data && data.allocations?.lastUpdated}
+              summary="Allocation of financial assets"
             />
           </Grid>
         </Box>

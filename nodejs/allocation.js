@@ -7,7 +7,7 @@ exports.save = (userId) => {
   appConfig
     .app(userId)
     .then((allocationConfig) => {
-      if (!allocationConfig || !allocationConfig.user || !allocationConfig.token) {
+      if (!allocationConfig || !allocationConfig.list) {
         return Promise.reject('Allocation config missing');
       }
       const ticker = 'VV';
