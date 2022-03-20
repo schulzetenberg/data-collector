@@ -11,7 +11,16 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { ErrorList, Checkbox, Form, Button, TextField, SessionContext, Request } from '@schulzetenberg/component-library';
+import {
+	ErrorList,
+	Form,
+	Button,
+	Checkbox2,
+	TextField2,
+	useValidation,
+	SessionContext,
+	Request
+} from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -42,24 +51,23 @@ const SignIn: React.FC = ({ location }: any) => {
 
   const { setSession }: any = React.useContext(SessionContext);
 
-  const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required('Required')
-      .email('Invalid email'),
-    password: yup.string().required('Required'),
-  });
-
   type FormData = {
-    email: string;
+		email: string;
     password: string;
   };
 
-  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
-    validationSchema,
-  });
+	const validationSchema = yup.object().shape({
+		email: yup
+			.string()
+			.required('Required')
+			.email('Invalid email'),
+		password: yup.string().required('Required'),
+	});
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+	const resolver = useValidation(validationSchema);
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver });
+
+  const formProps = { control, errors, disabled: isLoading, fullWidth: true };
 
   const submit = async (body: FormData): Promise<void> => {
     setLoginErrors([]);
@@ -69,7 +77,7 @@ const SignIn: React.FC = ({ location }: any) => {
       const { data: response }: ServerResponse = await Request.post({ url: '/signin', body });
       setSession({ email: response.data.email });
       history.push(redirectPath);
-    } catch (e) {
+    } catch (e: any) {
       setLoading(false);
       setLoginErrors(e);
     }
@@ -92,7 +100,7 @@ const SignIn: React.FC = ({ location }: any) => {
           </Typography>
           <ErrorList errors={loginErrors} />
           <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
-            <TextField
+            <TextField2
               {...formProps}
               name="email"
               label="Email Address"
@@ -102,7 +110,7 @@ const SignIn: React.FC = ({ location }: any) => {
               autoFocus
             />
 
-            <TextField
+            <TextField2
               {...formProps}
               name="password"
               label="Password"
@@ -111,7 +119,7 @@ const SignIn: React.FC = ({ location }: any) => {
               autoComplete="current-password"
             />
 
-            <Checkbox {...formProps} name="remember" errors={errors} color="primary" label="Remember me" />
+            <Checkbox2 {...formProps} name="remember" color="primary" label="Remember me" />
 
             <Button {...formProps} name="sign-in" type="submit">
               Sign In
