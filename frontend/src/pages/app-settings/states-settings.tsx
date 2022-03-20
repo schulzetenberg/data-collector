@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
-import { InputLabel, Select, MenuItem, FormControl, Input } from '@material-ui/core';
 
-import { Button, Form, TextField, SwitchForm, MultiSelect } from '@schulzetenberg/component-library';
+import { Button, Form, SwitchForm2, MultiSelect2 } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },
@@ -14,13 +13,17 @@ type FormData = {
   options: { value: string; label: string }[];
 };
 
-const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
+	data,
+	isLoading,
+	submit
+}) => {
   const classes = useStyles();
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>({});
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>({});
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   useEffect(() => {
     if (data) {
@@ -34,9 +37,9 @@ const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
   return (
     <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
       <div className={classes.textCenter}>
-        <SwitchForm {...formProps} name="active" label="Active" />
+        <SwitchForm2 {...formProps} name="active" label="Active" />
       </div>
-      <MultiSelect name="visited" options={options} {...formProps} />
+      <MultiSelect2 name="visited" options={options} {...formProps} />
       <Button {...formProps} type="submit">
         Save
       </Button>

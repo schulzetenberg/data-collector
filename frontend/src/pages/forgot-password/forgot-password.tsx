@@ -11,7 +11,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, ErrorList, Form, TextField, Request } from '@schulzetenberg/component-library';
+import { Button, ErrorList, Form, TextField2, Request, useValidation } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -51,11 +51,10 @@ const ForgotPassword: React.FC = () => {
     email: string;
   };
 
-  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
-    validationSchema,
-  });
+	const resolver = useValidation(validationSchema);
+  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   const submit = async (inputs: { email: string }): Promise<void> => {
     setLoginErrors([]);
@@ -94,7 +93,7 @@ const ForgotPassword: React.FC = () => {
               <p>Enter your email address to receive password reset instructions</p>
               <Grid item xs={12} sm={10}>
                 <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>
-                  <TextField
+                  <TextField2
                     {...formProps}
                     name="email"
                     label="Email Address"

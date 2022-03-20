@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
-import { Button, Form, TextField, SwitchForm } from '@schulzetenberg/component-library';
+import { Button, Form, TextField2, SwitchForm2 } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },
@@ -22,9 +22,9 @@ const PlayerFmSettings: React.FC<{ data: FormData; isLoading: boolean; submit: a
 }) => {
   const classes = useStyles();
 
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>();
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>();
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   useEffect(() => {
     if (data) {
@@ -42,12 +42,12 @@ const PlayerFmSettings: React.FC<{ data: FormData; isLoading: boolean; submit: a
   return (
     <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
       <div className={classes.textCenter}>
-        <SwitchForm {...formProps} name="active" label="Active" />
+        <SwitchForm2 {...formProps} name="active" label="Active" />
       </div>
-      <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
-      <TextField {...formProps} name="user" label="User" type="text" />
+      <TextField2 {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
+      <TextField2 {...formProps} name="user" label="User" type="text" />
       <div className={classes.textCenter}>
-        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+        <SwitchForm2 {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
       </div>
       <Button {...formProps} type="submit">
         Save

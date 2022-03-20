@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
-import { Button, Form, TextField2, SwitchForm2 } from '@schulzetenberg/component-library';
-import EditableTable from '../../components/editable-table';
+import { Button, Form, TextField2, SwitchForm2, EditableTable } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },

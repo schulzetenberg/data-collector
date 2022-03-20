@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@mate
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, Form, TextField } from '@schulzetenberg/component-library';
+import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonGrid: {
@@ -21,12 +21,10 @@ const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ save
   });
 
   type FormData = { password: string; confirmPassword: string };
+	const resolver = useValidation(validationSchema);
+  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
 
-  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
-    validationSchema,
-  });
-
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   return (
     <Card>
@@ -36,10 +34,10 @@ const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ save
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
-              <TextField {...formProps} label="New Password" name="password" type="password" required />
+              <TextField2 {...formProps} label="New Password" name="password" type="password" required />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField {...formProps} label="Confirm Password" name="confirmPassword" type="password" required />
+              <TextField2 {...formProps} label="Confirm Password" name="confirmPassword" type="password" required />
             </Grid>
           </Grid>
         </CardContent>

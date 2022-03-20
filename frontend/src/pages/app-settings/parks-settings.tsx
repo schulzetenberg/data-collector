@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
-import { Button, Form, SwitchForm, TextField, MultiSelect } from '@schulzetenberg/component-library';
+import { Button, Form, SwitchForm2, TextField2, MultiSelect2 } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },
@@ -16,13 +16,17 @@ type FormData = {
 	cloudinaryUpload: boolean;
 };
 
-const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
+	data,
+	isLoading,
+	submit
+}) => {
   const classes = useStyles();
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>({});
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>({});
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   useEffect(() => {
     if (data) {
@@ -36,12 +40,12 @@ const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any 
   return (
     <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
       <div className={classes.textCenter}>
-        <SwitchForm {...formProps} name="active" label="Active" />
+        <SwitchForm2 {...formProps} name="active" label="Active" />
       </div>
-			<TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
-      <MultiSelect name="visited" options={options} {...formProps} />
+			<TextField2 {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
+      <MultiSelect2 name="visited" options={options} {...formProps} />
 			<div className={classes.textCenter}>
-        <SwitchForm {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
+        <SwitchForm2 {...formProps} name="cloudinaryUpload" label="Upload Images to Cloudinary" />
       </div>
       <Button {...formProps} type="submit">
         Save
