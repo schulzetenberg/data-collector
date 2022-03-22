@@ -1,5 +1,6 @@
 // See here for the list from Google: https://www.gstatic.com/charts/regioncoder/0/geocodes/countries_en.js
-// See here for countries matched to region & continent https://statisticstimes.com/geography/countries-by-continents.php
+// See here for countries matched to region & continent:
+// https://statisticstimes.com/geography/countries-by-continents.php
 
 module.exports = [
   {
