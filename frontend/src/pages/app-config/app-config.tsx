@@ -177,14 +177,14 @@ const AppConfig: React.FC = () => {
               summary="Collect images of TV shows & movies using TMDB"
             />
 
-						<AppCard
+						{/* <AppCard
               appKey="parks"
 							active={data && data.parks.active}
               {...cardDefaultProps}
               title="National Parks"
               image="/img/mountains.jpg"
               summary="Track the United States national parks that have been visited"
-            />
+            /> */}
 
             <AppCard
               appKey="states"
@@ -233,14 +233,14 @@ const AppConfig: React.FC = () => {
               summary="Collect public Instagram images"
             />
 
-						<AppCard
+						{/* <AppCard
               appKey="allocation"
               {...cardDefaultProps}
               title="Asset Allocations"
               image="/img/stocks.jpg"
               lastUpdated={data && data.allocations?.lastUpdated}
               summary="Allocation of financial assets"
-            />
+            /> */}
           </Grid>
         </Box>
       </Container>
