@@ -1,14 +1,9 @@
 const configModel = require('../models/app-config');
 
-exports.get = (userId) => {
-  return configModel.findOne({ userId }, {}, { sort: { _id: -1 } }).lean();
-};
+exports.get = (userId) => configModel.findOne({ userId }, {}, { sort: { _id: -1 } }).lean();
 
-exports.app = (userId, filter) => {
-  // eslint-disable-next-line no-param-reassign
-  filter = filter || ''; // Set filter to '' if not specified
-
-  return configModel
+exports.app = (userId, filter = '') =>
+  configModel
     .findOne({ userId }, filter, { sort: { _id: -1 } })
     .lean()
     .then((data) => {
@@ -27,4 +22,3 @@ exports.app = (userId, filter) => {
 
       return data;
     });
-};

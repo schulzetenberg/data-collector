@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@mate
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, Form, TextField } from '@schulzetenberg/component-library';
+import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,12 +27,9 @@ const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }>
   });
 
   type FormData = { firstName: string; lastName: string; email: string };
-
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>({
-    validationSchema,
-  });
-
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+	const resolver = useValidation(validationSchema);
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>({ resolver });
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   useEffect(() => {
     if (data) {
@@ -53,13 +50,13 @@ const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }>
         <CardContent>
           <Grid container spacing={2}>
             <Grid item md={6} xs={12}>
-              <TextField {...formProps} label="First Name" name="firstName" required />
+              <TextField2 {...formProps} label="First Name" name="firstName" required />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField {...formProps} label="Last Name" name="lastName" required />
+              <TextField2 {...formProps} label="Last Name" name="lastName" required />
             </Grid>
             <Grid item xs={12}>
-              <TextField {...formProps} label="Email Address" name="email" type="email" required />
+              <TextField2 {...formProps} label="Email Address" name="email" type="email" required />
             </Grid>
           </Grid>
         </CardContent>

@@ -11,8 +11,8 @@ const appConfig = require('./app-config');
 const api = require('./api');
 const PlayerFmModel = require('../models/player-fm-model');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(currentPodcasts)
     .then(({ config, podcasts }) => {
@@ -23,7 +23,6 @@ exports.save = (userId) => {
       const doc = new PlayerFmModel({ podcasts, userId });
       return doc.save();
     });
-};
 
 function currentPodcasts(config) {
   const user = config && config.playerFm && config.playerFm.user;
@@ -55,7 +54,8 @@ function getArtwork({ config, podcast }) {
             // RSS feed image is 20MB, use hardcoded value instead
             img = 'https://cdn.player.fm/images/192225/series/f90YJXRWZCrEzwXn/512.png';
           } else {
-            img = result.rss.channel[0]['itunes:image'][0].$.href; // Use itunes image since it seems more universal than the 'image' attribute
+            // Use itunes image since it seems more universal than the 'image' attribute
+            img = result.rss.channel[0]['itunes:image'][0].$.href;
           }
         });
       } catch (err) {

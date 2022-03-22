@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 const _ = require('lodash');
 const parser = require('cron-parser');
 
@@ -8,6 +10,7 @@ const response = require('../nodejs/response');
 const mongoUtils = require('../nodejs/mongo-utils');
 const scheduler = require('../nodejs/scheduler');
 const { agenda } = require('../nodejs/agenda');
+const parksList = require('../config/parks');
 const statesList = require('../config/states');
 const countriesList = require('../config/countries');
 const appModules = require('../nodejs/app-modules');
@@ -24,18 +27,20 @@ exports.getConfig = async (req, res) => {
     .get(req.user._id)
     .then((data) => {
       if (data) {
-        // eslint-disable-next-line no-param-reassign
+        data.parks = data.parks || {};
+        data.states = data.states || {};
+        data.countries = data.countries || {};
+
+        data.parks.visited = data.parks.visited?.map((x) => ({ value: x, label: x }));
+        data.parks.options = parksList.map(({ name }) => ({ value: name, label: name }));
+
         data.states.visited = data.states.visited.map((x) => ({ value: x, label: x }));
-        // eslint-disable-next-line no-param-reassign
         data.states.options = statesList.map((x) => ({ value: x, label: x }));
 
-        // eslint-disable-next-line no-param-reassign
         data.countries.visited = data.countries.visited.map((x) => ({ value: x, label: x }));
-        // eslint-disable-next-line no-param-reassign
         data.countries.options = countriesList.map(({ country }) => ({ value: country, label: country }));
 
         _.forIn(data, (value, key) => {
-          // eslint-disable-next-line no-param-reassign
           data[key].lastUpdated = lastUpdateData[key] ? lastUpdateData[key] : null;
 
           if (value && value.schedule) {
@@ -48,7 +53,6 @@ exports.getConfig = async (req, res) => {
                 scheduleArr.push(nextInterval.toString());
               }
 
-              // eslint-disable-next-line no-param-reassign
               data[key].scheduleList = scheduleArr;
             } catch (err) {
               logger.error(`Cannot parse schedule ${value.schedule}. Err:${err.message}`);
@@ -76,6 +80,10 @@ exports.saveConfig = (req, res, next) => {
     return next('No config data to save');
   }
 
+  if (data.parks && data.parks.visited) {
+    data.parks.visited = data.parks.visited.map((x) => x.value);
+  }
+
   if (data.states && data.states.visited) {
     data.states.visited = data.states.visited.map((x) => x.value);
   }
@@ -92,13 +100,11 @@ exports.saveConfig = (req, res, next) => {
 
   doc
     .save()
-    .then(() => {
-      return exports.getConfig(req, res, next);
-    })
-    .then(() => {
+    .then(() => exports.getConfig(req, res, next))
+    .then(() =>
       // eslint-disable-next-line no-underscore-dangle
-      return scheduler.run(agenda, req.user._id);
-    })
+      scheduler.run(agenda, req.user._id)
+    )
     .catch((err) => {
       logger.error(err);
       return next('Error saving config');

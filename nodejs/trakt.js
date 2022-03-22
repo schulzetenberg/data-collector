@@ -1,7 +1,7 @@
 const logger = require('./log');
 
 const appConfig = require('./app-config');
-const TraktModel = require('../models/trakt-model.js');
+const TraktModel = require('../models/trakt-model');
 const api = require('./api');
 
 exports.save = (userId) => {

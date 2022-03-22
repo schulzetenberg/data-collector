@@ -21,7 +21,10 @@ const store = new MongoStore((ready) => {
 new ExpressBrute(store);
 
 const failCallback = (req, res, next, nextValidRequestDate) => {
-  response.userError(res, `You've made too many failed login attempts, please try again ${moment(nextValidRequestDate).fromNow()}`);
+  response.userError(
+    res,
+    `You've made too many failed login attempts, please try again ${moment(nextValidRequestDate).fromNow()}`
+  );
 };
 
 const handleStoreError = (error) => {

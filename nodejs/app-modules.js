@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 module.exports = {
   music: require('./music'),
+  allocation: require('./allocation'),
   goodreads: require('./goodreads'),
   github: require('./github'),
   trakt: require('./trakt'),
@@ -9,4 +10,5 @@ module.exports = {
   playerFm: require('./player-fm'),
   feedly: require('./feedly'),
   instagram: require('./instagram'),
+  parks: require('./parks'),
 };

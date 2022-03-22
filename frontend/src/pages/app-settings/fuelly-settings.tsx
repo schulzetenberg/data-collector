@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
-import MaterialTable from 'material-table';
 
-import { Button, Form, TextField, SwitchForm } from '@schulzetenberg/component-library';
+import { Button, Form, TextField2, SwitchForm2, EditableTable } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textCenter: { textAlign: 'center' },
@@ -21,16 +20,20 @@ type FormData = {
   vehicles: Vehicle[];
 };
 
-const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
+	data,
+	isLoading,
+	submit
+}) => {
   const classes = useStyles();
 
   // NOTE: Since we need to have the latest data to keep the table updated, have this (dangerous) state value.
   //	A better option would be to figure out how to update the table based on the react hook forms change event
   const [unsavedVehicles, setUnsavedVehicles] = useState<Vehicle[]>([]);
 
-  const { handleSubmit, register, setValue, errors, reset } = useForm<FormData>();
+  const { handleSubmit, register, control, setValue, formState: { errors }, reset } = useForm<FormData>();
 
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, errors, control, fullWidth: true };
 
   useEffect(() => {
     if (data) {
@@ -50,53 +53,22 @@ const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
     <>
       <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
         <div className={classes.textCenter}>
-          <SwitchForm {...formProps} name="active" label="Active" />
+          <SwitchForm2 {...formProps} name="active" label="Active" />
         </div>
-        <TextField {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
+        <TextField2 {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
 
-        <MaterialTable
-          options={{
-            search: false,
-          }}
-          editable={{
-            onRowAdd: (newData): Promise<void> =>
-              new Promise((resolve) => {
-                const newVehicleList = [...unsavedVehicles, newData];
-                setValue('vehicles', newVehicleList);
-                setUnsavedVehicles(newVehicleList);
-                resolve();
-              }),
-            onRowUpdate: (newData: any, oldData: any): Promise<void> =>
-              new Promise((resolve) => {
-                const changedVehicleIndex = unsavedVehicles.findIndex((x) => x.tableData?.id === oldData.tableData?.id);
-
-                const newVehicleList = [...unsavedVehicles];
-                newVehicleList[changedVehicleIndex].name = newData.name;
-                newVehicleList[changedVehicleIndex].url = newData.url;
-
-                setValue('vehicles', newVehicleList);
-                setUnsavedVehicles(newVehicleList);
-                resolve();
-              }),
-            onRowDelete: (oldData: any): Promise<void> =>
-              new Promise((resolve) => {
-                const changedVehicleIndex = unsavedVehicles.findIndex((x) => x.tableData?.id === oldData.tableData?.id);
-
-                const newVehicleList = [...unsavedVehicles];
-                newVehicleList.splice(changedVehicleIndex, 1);
-
-                setValue('vehicles', newVehicleList);
-                setUnsavedVehicles(newVehicleList);
-                resolve();
-              }),
-          }}
-          columns={[
-            { title: 'Name', field: 'name' },
-            { title: 'URL', field: 'url' },
-          ]}
-          data={unsavedVehicles}
-          title="Vehicles"
-        />
+				<EditableTable
+					tableState={unsavedVehicles}
+					setTableState={setUnsavedVehicles}
+					setValue={setValue}
+					register={register}
+					name='vehicles'
+					title='Vehicles'
+					columns={[
+						{ title: 'Name', field: 'name' },
+						{ title: 'URL', field: 'url' },
+					]}
+				/>
 
         <Button {...formProps} type="submit">
           Save

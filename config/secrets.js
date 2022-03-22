@@ -32,9 +32,9 @@ module.exports = {
   },
 
   cloudinary: {
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'Your Cloud Name here',
-    api_key: process.env.CLOUDINARY_API_KEY || 'apiKey123',
-    api_secret: process.env.CLOUDINARY_API_SECRET || 'apiSecret123',
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'schulzetenberg',
+    api_key: process.env.CLOUDINARY_API_KEY || '492124289684554',
+    api_secret: process.env.CLOUDINARY_API_SECRET || 's5vohDSDkQK5r2TBmVLedGFqKAs',
   },
 
   defaults: {

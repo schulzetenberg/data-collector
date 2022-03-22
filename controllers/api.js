@@ -11,11 +11,12 @@ const playerFm = require('../models/player-fm-model');
 const instagram = require('../models/instagram-model');
 const response = require('../nodejs/response');
 const logger = require('../nodejs/log');
+const booksHelper = require('./helpers/books-helper');
+const allocation = require('../models/allocation-model');
 
 exports.getMusic = (req, res) => {
   music
     .findOne(
-      // eslint-disable-next-line no-underscore-dangle
       { userId: req.userId },
       {},
       {
@@ -32,10 +33,9 @@ exports.getMusic = (req, res) => {
     });
 };
 
-exports.getGoodreads = (req, res) => {
+exports.getGoodreadsRaw = (req, res) => {
   goodreads
     .findOne(
-      // eslint-disable-next-line no-underscore-dangle
       { userId: req.userId },
       {},
       {
@@ -47,6 +47,26 @@ exports.getGoodreads = (req, res) => {
       res.json(data);
     })
     .catch((err) => {
+      logger.error('Error getting Goodreads raw data', err);
+      response.serverError(res, 'Error getting Goodreads raw data');
+    });
+};
+
+exports.getGoodreads = (req, res) => {
+  goodreads
+    .findOne(
+      { userId: req.userId },
+      {},
+      {
+        sort: { _id: -1 },
+      }
+    )
+    .lean()
+    .then((data) => {
+      const parsedData = booksHelper.processBookData(data);
+      res.json(parsedData);
+    })
+    .catch((err) => {
       logger.error('Error getting Goodreads data', err);
       response.serverError(res, 'Error getting Goodreads data');
     });
@@ -55,7 +75,6 @@ exports.getGoodreads = (req, res) => {
 exports.getPlayerFm = (req, res) => {
   playerFm
     .findOne(
-      // eslint-disable-next-line no-underscore-dangle
       { userId: req.userId },
       {},
       {
@@ -75,7 +94,6 @@ exports.getPlayerFm = (req, res) => {
 exports.getGithub = (req, res) => {
   github
     .findOne(
-      // eslint-disable-next-line no-underscore-dangle
       { userId: req.userId },
       {},
       {
@@ -92,10 +110,28 @@ exports.getGithub = (req, res) => {
     });
 };
 
+exports.getAllocation = (req, res) => {
+  allocation
+    .findOne(
+      { userId: req.userId },
+      {},
+      {
+        sort: { _id: -1 },
+      }
+    )
+    .lean()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      logger.error('Error getting allocation data', err);
+      response.serverError(res, 'Error getting allocation data');
+    });
+};
+
 exports.getTrakt = (req, res) => {
   trakt
     .findOne(
-      // eslint-disable-next-line no-underscore-dangle
       { userId: req.userId },
       {},
       {
@@ -124,7 +160,6 @@ exports.getTrakt = (req, res) => {
 
 exports.getStates = (req, res) => {
   states
-    // eslint-disable-next-line no-underscore-dangle
     .get(req.userId)
     .then((data) => {
       res.json(data);
@@ -137,7 +172,6 @@ exports.getStates = (req, res) => {
 
 exports.getCountries = (req, res) => {
   countries
-    // eslint-disable-next-line no-underscore-dangle
     .get(req.userId)
     .then((data) => {
       res.json(data);
@@ -153,7 +187,6 @@ exports.getFuelly = (req, res) => {
   if (!req.query.name) return response.userError(res, 'Vehicle name required');
 
   const by = {
-    // eslint-disable-next-line no-underscore-dangle
     userId: req.userId,
     name: req.query.name,
     fillTime: {
@@ -185,13 +218,10 @@ exports.getFuelly = (req, res) => {
 exports.getFuellyAvg = (req, res) => {
   // Get all data from the past year
   const numDays = 365;
-  const start = moment()
-    .subtract(numDays, 'days')
-    .toDate();
+  const start = moment().subtract(numDays, 'days').toDate();
   const end = moment().toDate();
 
   const filter = {
-    // eslint-disable-next-line no-underscore-dangle
     userId: req.userId,
     fillTime: {
       $gte: start,

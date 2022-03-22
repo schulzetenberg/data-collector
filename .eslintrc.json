@@ -2,6 +2,7 @@
 	"extends": [
 	  "@schulzetenberg/eslint-config-node"
 	],
+
 	// Rule overrides go here
 	"rules": {
 	}

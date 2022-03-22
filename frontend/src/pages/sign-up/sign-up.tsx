@@ -11,7 +11,15 @@ import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { Button, Form, TextField, ErrorList, Request, SessionContext } from '@schulzetenberg/component-library';
+import {
+	Button,
+	Form,
+	TextField2,
+	ErrorList,
+	Request,
+	SessionContext,
+	useValidation
+} from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -45,7 +53,7 @@ const SignUp: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/signup', body: inputs });
       setSession({ email: response.data.email });
       history.push('/');
-    } catch (e) {
+    } catch (e: any) {
       setLoading(false);
       setSignupErrors(e);
     }
@@ -69,12 +77,10 @@ const SignUp: React.FC = () => {
   });
 
   type FormData = { firstName: string; lastName: string; email: string; password: string; confirmPassword: string };
+	const resolver = useValidation(validationSchema);
+  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
 
-  const { handleSubmit, register, setValue, errors } = useForm<FormData>({
-    validationSchema,
-  });
-
-  const formProps = { disabled: isLoading, errors, register, setValue, fullWidth: true };
+  const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -93,7 +99,7 @@ const SignUp: React.FC = () => {
           </Typography>
           <ErrorList errors={signupErrors} />
           <Form disabled={isLoading} onSubmit={handleSubmit(submit)}>
-            <TextField
+            <TextField2
               {...formProps}
               required
               label="First Name"
@@ -101,9 +107,22 @@ const SignUp: React.FC = () => {
               autoComplete="first-name"
               autoFocus
             />
-            <TextField {...formProps} required label="Last Name" name="lastName" autoComplete="last-name" />
-            <TextField {...formProps} required type="email" label="Email Address" name="email" autoComplete="email" />
-            <TextField
+            <TextField2
+							{...formProps}
+							required
+							label="Last Name"
+							name="lastName"
+							autoComplete="last-name"
+						/>
+            <TextField2
+							{...formProps}
+							required
+							type="email"
+							label="Email Address"
+							name="email"
+							autoComplete="email"
+						/>
+            <TextField2
               {...formProps}
               required
               name="password"
@@ -111,7 +130,7 @@ const SignUp: React.FC = () => {
               type="password"
               autoComplete="current-password"
             />
-            <TextField
+            <TextField2
               {...formProps}
               required
               name="confirmPassword"

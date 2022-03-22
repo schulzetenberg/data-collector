@@ -59,7 +59,5 @@ function objectList(o) {
 }
 
 function isEmptyObject(o) {
-  return Object.keys(o).every((x) => {
-    return !o[x] || (Array.isArray(o[x]) && o[x].length === 0);
-  });
+  return Object.keys(o).every((x) => !o[x] || (Array.isArray(o[x]) && o[x].length === 0));
 }

@@ -5,7 +5,7 @@
   "homepage": "/",
   "proxy": "http://localhost:3000",
   "dependencies": {
-    "@schulzetenberg/component-library": "^1.0.13"
+    "@schulzetenberg/component-library": "^1.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -26,6 +26,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {}
+  }
 }

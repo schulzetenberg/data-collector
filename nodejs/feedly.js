@@ -7,8 +7,8 @@ const appConfig = require('./app-config');
 const FeedlyModel = require('../models/feedly-model');
 const api = require('./api');
 
-exports.save = (userId) => {
-  return appConfig
+exports.save = (userId) =>
+  appConfig
     .get(userId)
     .then(getCurrentBlogs)
     .then(opmlToJSONPromise)
@@ -17,7 +17,6 @@ exports.save = (userId) => {
       const doc = new FeedlyModel({ feeds, userId });
       return doc.save();
     });
-};
 
 function getCurrentBlogs(config) {
   const token = config && config.feedly && config.feedly.token;

@@ -67,7 +67,9 @@ exports.postSignup = async (req, res, next) => {
   req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
   // Allow only one account (For now)
-  req.assert('email', 'Sorry! No public accounts are allowed currently! (Only admin@1.com is allowed)').equals('admin@1.com');
+  req
+    .assert('email', 'Sorry! No public accounts are allowed currently! (Only admin@1.com is allowed)')
+    .equals('admin@1.com');
 
   const errors = req.validationErrors();
 
@@ -341,7 +343,11 @@ exports.getNewApiKey = async (req, res) => {
   try {
     const token = await crypto.randomBytes(16).toString('hex');
 
-    const newData = await User.findOneAndUpdate({ _id: req.user.id }, { $push: { tokens: [{ token, createdAt: moment() }] } }, { new: true });
+    const newData = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $push: { tokens: [{ token, createdAt: moment() }] } },
+      { new: true }
+    );
 
     // eslint-disable-next-line no-underscore-dangle
     response.success(res, { data: newData._doc.tokens });
@@ -353,7 +359,11 @@ exports.getNewApiKey = async (req, res) => {
 
 exports.removeApiKey = async (req, res) => {
   try {
-    const newData = await User.findOneAndUpdate({ _id: req.user.id }, { $pull: { tokens: { token: req.body.token } } }, { new: true });
+    const newData = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $pull: { tokens: { token: req.body.token } } },
+      { new: true }
+    );
 
     // eslint-disable-next-line no-underscore-dangle
     response.success(res, { data: newData._doc.tokens });

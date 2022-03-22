@@ -64,7 +64,7 @@ const AppConfig: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.post({ url: '/app-config/run-app', body: { app: appName } });
       setSuccessMessage(messageConstants.runSuccess);
-    } catch (e) {
+    } catch (e: any) {
       setErrors(e);
     }
   };
@@ -177,6 +177,15 @@ const AppConfig: React.FC = () => {
               summary="Collect images of TV shows & movies using TMDB"
             />
 
+						{/* <AppCard
+              appKey="parks"
+							active={data && data.parks.active}
+              {...cardDefaultProps}
+              title="National Parks"
+              image="/img/mountains.jpg"
+              summary="Track the United States national parks that have been visited"
+            /> */}
+
             <AppCard
               appKey="states"
               {...cardDefaultProps}
@@ -223,6 +232,15 @@ const AppConfig: React.FC = () => {
               lastUpdated={data && data.instagram.lastUpdated}
               summary="Collect public Instagram images"
             />
+
+						{/* <AppCard
+              appKey="allocation"
+              {...cardDefaultProps}
+              title="Asset Allocations"
+              image="/img/stocks.jpg"
+              lastUpdated={data && data.allocations?.lastUpdated}
+              summary="Allocation of financial assets"
+            /> */}
           </Grid>
         </Box>
       </Container>

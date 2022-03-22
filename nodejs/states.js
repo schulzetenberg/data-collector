@@ -1,7 +1,7 @@
 const appConfig = require('./app-config');
 
-exports.get = (userId) => {
-  return appConfig.get(userId).then((config) => {
+exports.get = (userId) =>
+  appConfig.get(userId).then((config) => {
     const visited = config && config.states && config.states.visited;
 
     if (!visited) {
@@ -10,4 +10,3 @@ exports.get = (userId) => {
 
     return visited;
   });
-};

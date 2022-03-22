@@ -16,8 +16,8 @@ const email = require('./email');
 		encoding, optional
   }
 */
-exports.get = (params) => {
-  return request
+exports.get = (params) =>
+  request
     .get({
       url: formatUrl(params.url),
       headers: params.headers || { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -25,12 +25,13 @@ exports.get = (params) => {
     })
     .then((data) => {
       if (data.statusCode !== 201 && data.statusCode !== 200) {
-        return Promise.reject(`API GET error for: ${params.url}. Status Code: ${data.statusCode}. Status Message: ${data.statusMessage}`);
+        return Promise.reject(
+          `API GET error for: ${params.url}. Status Code: ${data.statusCode}. Status Message: ${data.statusMessage}`
+        );
       }
 
       return params.fullResponse ? data : data.body;
     });
-};
 
 /*
   params = {
@@ -58,9 +59,7 @@ exports.post = (params) => {
 
   return request
     .post(options)
-    .then((data) => {
-      return data.body;
-    })
+    .then((data) => data.body)
     .catch((err) => {
       if (params.emailSubject) {
         return email.send({ to: params.emailTo, subject: params.emailSubject, html: params.body });
