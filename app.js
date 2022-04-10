@@ -52,7 +52,7 @@ app.use(
     }, // log only HTTP request errors
   })
 );
-app.use(favicon(path.join(__dirname, 'frontend/build', 'favicon.png')));
+app.use(favicon(path.join(__dirname, 'frontend/public', 'favicon.png')));
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
