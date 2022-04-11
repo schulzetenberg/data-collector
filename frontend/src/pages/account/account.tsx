@@ -9,6 +9,7 @@ import AccountProfile from './account-profile';
 import AccountDetails from './account-details';
 import AccountPassword from './account-password';
 import AccountTokens from './account-tokens';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +21,7 @@ const Account: React.FC = () => {
   const classes = useStyles();
   const [data, setData]: any = useState();
   const history = useHistory();
-  const { session, setSession }: any = React.useContext(SessionContext);
+  const { setSession }: any = React.useContext(SessionContext);
   const [isLoading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -36,7 +37,7 @@ const Account: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.get({ url: 'account/profile' });
       setData(response.data);
-    } catch (e) {
+    } catch (e: any) {
       setServerErrors(e);
     } finally {
       setLoading(false);
@@ -54,7 +55,7 @@ const Account: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/account/profile', body: updatedData });
       setData(response.data);
       setShowProfile(false);
-    } catch (e) {
+    } catch (e: any) {
       setServerErrors(e);
     } finally {
       setLoading(false);
@@ -82,6 +83,7 @@ const Account: React.FC = () => {
     setLoadingPassword(true);
 
     try {
+      // eslint-disable-next-line no-unused-vars
       const { data: response }: ServerResponse = await Request.post({
         url: '/account/password',
         body,
@@ -90,7 +92,7 @@ const Account: React.FC = () => {
       // TODO: add toast messages & error handling
       alert('Updated');
       // TODO: Clear out password fields
-    } catch (e) {
+    } catch (e: any) {
       setServerErrors(e);
     } finally {
       setLoadingPassword(false);
@@ -106,7 +108,7 @@ const Account: React.FC = () => {
       setSession();
       history.push('/sign-in');
       setRemoveErrors(response.errors);
-    } catch (e) {
+    } catch (e: any) {
       setRemoveLoading(false);
       setRemoveErrors(e);
     }
@@ -142,7 +144,7 @@ const Account: React.FC = () => {
           <AccountTokens
             tokens={data && data.tokens}
             updateTokens={handleUpdateTokens}
-            saveData={handleUpdateUser}
+            // saveData={handleUpdateUser}
             isLoading={!data}
           />
         </Grid>

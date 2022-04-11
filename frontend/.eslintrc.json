@@ -1,5 +1,9 @@
 {
+	"root": true, // Do not inherit rules from the eslintrc configured for the node code
 	"extends": [
 	  "@schulzetenberg/eslint-config-react"
-	]
+	],
+	"rules": {
+		"import/no-extraneous-dependencies": 0
+	}
 }

@@ -12,14 +12,15 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import {
-	Button,
-	Form,
-	TextField2,
-	ErrorList,
-	Request,
-	SessionContext,
-	useValidation
+  Button,
+  Form,
+  TextField2,
+  ErrorList,
+  Request,
+  SessionContext,
+  useValidation,
 } from '@schulzetenberg/component-library';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -62,23 +63,18 @@ const SignUp: React.FC = () => {
   const validationSchema = yup.object().shape({
     firstName: yup.string().required('Required'),
     lastName: yup.string().required('Required'),
-    email: yup
-      .string()
-      .required('Required')
-      .email('Invalid email'),
-    password: yup
-      .string()
-      .required('Required')
-      .min(4, 'Password must be at least 4 characters long'),
-    confirmPassword: yup
-      .string()
-      .required('Required')
-      .min(4, 'Password must be at least 4 characters long'),
+    email: yup.string().required('Required').email('Invalid email'),
+    password: yup.string().required('Required').min(4, 'Password must be at least 4 characters long'),
+    confirmPassword: yup.string().required('Required').min(4, 'Password must be at least 4 characters long'),
   });
 
   type FormData = { firstName: string; lastName: string; email: string; password: string; confirmPassword: string };
-	const resolver = useValidation(validationSchema);
-  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
+  const resolver = useValidation(validationSchema);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormData>({ resolver });
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
@@ -107,21 +103,8 @@ const SignUp: React.FC = () => {
               autoComplete="first-name"
               autoFocus
             />
-            <TextField2
-							{...formProps}
-							required
-							label="Last Name"
-							name="lastName"
-							autoComplete="last-name"
-						/>
-            <TextField2
-							{...formProps}
-							required
-							type="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
-						/>
+            <TextField2 {...formProps} required label="Last Name" name="lastName" autoComplete="last-name" />
+            <TextField2 {...formProps} required type="email" label="Email Address" name="email" autoComplete="email" />
             <TextField2
               {...formProps}
               required
@@ -149,7 +132,7 @@ const SignUp: React.FC = () => {
               </Grid>
               <Grid item>
                 <Link component={RouterLink} to="/sign-in" variant="body2">
-                  {'Already have an account? Sign In'}
+                  Already have an account? Sign In
                 </Link>
               </Grid>
             </Grid>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   buttonGrid: {
     'margin-left': '0.75em',
   },
@@ -21,8 +21,12 @@ const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ save
   });
 
   type FormData = { password: string; confirmPassword: string };
-	const resolver = useValidation(validationSchema);
-  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
+  const resolver = useValidation(validationSchema);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormData>({ resolver });
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 

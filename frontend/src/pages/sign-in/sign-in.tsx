@@ -12,15 +12,16 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import {
-	ErrorList,
-	Form,
-	Button,
-	Checkbox2,
-	TextField2,
-	useValidation,
-	SessionContext,
-	Request
+  ErrorList,
+  Form,
+  Button,
+  Checkbox2,
+  TextField2,
+  useValidation,
+  SessionContext,
+  Request,
 } from '@schulzetenberg/component-library';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -52,20 +53,21 @@ const SignIn: React.FC = ({ location }: any) => {
   const { setSession }: any = React.useContext(SessionContext);
 
   type FormData = {
-		email: string;
+    email: string;
     password: string;
   };
 
-	const validationSchema = yup.object().shape({
-		email: yup
-			.string()
-			.required('Required')
-			.email('Invalid email'),
-		password: yup.string().required('Required'),
-	});
+  const validationSchema = yup.object().shape({
+    email: yup.string().required('Required').email('Invalid email'),
+    password: yup.string().required('Required'),
+  });
 
-	const resolver = useValidation(validationSchema);
-  const { control, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver });
+  const resolver = useValidation(validationSchema);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({ resolver });
 
   const formProps = { control, errors, disabled: isLoading, fullWidth: true };
 

@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, ErrorList, Form, TextField2, Request, useValidation } from '@schulzetenberg/component-library';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -41,18 +42,19 @@ const ForgotPassword: React.FC = () => {
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
 
   const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required('Required')
-      .email('Invalid email'),
+    email: yup.string().required('Required').email('Invalid email'),
   });
 
   type FormData = {
     email: string;
   };
 
-	const resolver = useValidation(validationSchema);
-  const { handleSubmit, control, formState: { errors } } = useForm<FormData>({ resolver });
+  const resolver = useValidation(validationSchema);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormData>({ resolver });
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
@@ -65,7 +67,7 @@ const ForgotPassword: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/forgot', body: inputs });
       setResetSuccess(true);
       setLoginErrors(response.errors);
-    } catch (e) {
+    } catch (e: any) {
       setLoginErrors(e);
     } finally {
       setLoading(false);

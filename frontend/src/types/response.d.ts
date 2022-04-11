@@ -8,4 +8,4 @@ interface ReponseError {
   errors: string[];
 }
 
-interface ServerResponse extends ResponseSuccess, ReponseError {}
+export interface ServerResponse extends ResponseSuccess, ReponseError {}

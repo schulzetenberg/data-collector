@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
 import { Button, Form, SwitchForm2, MultiSelect2 } from '@schulzetenberg/component-library';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   textCenter: { textAlign: 'center' },
 }));
 
@@ -13,15 +13,16 @@ type FormData = {
   options: { value: string; label: string }[];
 };
 
-const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
-	data,
-	isLoading,
-	submit
-}) => {
+const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
   const classes = useStyles();
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>({});
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({});
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 

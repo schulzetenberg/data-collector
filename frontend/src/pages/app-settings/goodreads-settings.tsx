@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
 import { Button, Form, TextField2, SwitchForm2 } from '@schulzetenberg/component-library';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   textCenter: { textAlign: 'center' },
 }));
 
@@ -23,7 +23,12 @@ const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: 
 }) => {
   const classes = useStyles();
 
-  const { handleSubmit, control, formState: { errors }, reset } = useForm<FormData>();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>();
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 

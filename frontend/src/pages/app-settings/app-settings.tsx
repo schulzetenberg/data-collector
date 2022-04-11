@@ -21,6 +21,7 @@ import TraktSettings from './trakt-settings';
 import InstagramSettings from './instagram-settings';
 import ParksSettings from './parks-settings';
 import AllocationSettings from './allocation-settings';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -59,7 +60,7 @@ const AppSettings: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.get({ url: '/app-config/config' });
       setData(response.data);
-    } catch (e) {
+    } catch (e: any) {
       setResponseErrors(e);
     } finally {
       setLoading(false);
@@ -127,21 +128,23 @@ const AppSettings: React.FC = () => {
             <div className={classes.content}>
               <ErrorList errors={responseErrors} />
               {
-                ({
-                  music: <MusicSettings data={data && data.music} {...baseAppProps} />,
-                  goodreads: <GoodreadsSettings data={data && data.goodreads} {...baseAppProps} />,
-                  feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
-                  playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
-                  states: <StatesSettings data={data && data.states} {...baseAppProps} />,
-                  parks: <ParksSettings data={data && data.parks} {...baseAppProps} />,
-                  countries: <StatesSettings data={data && data.countries} {...baseAppProps} />,
-                  github: <GithubSettings data={data && data.github} {...baseAppProps} />,
-                  fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
-                  tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
-                  trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
-                  instagram: <InstagramSettings data={data && data.instagram} {...baseAppProps} />,
-									allocation: <AllocationSettings data={data && data.allocation} {...baseAppProps} />,
-                } as any)[appName]
+                (
+                  {
+                    music: <MusicSettings data={data && data.music} {...baseAppProps} />,
+                    goodreads: <GoodreadsSettings data={data && data.goodreads} {...baseAppProps} />,
+                    feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
+                    playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
+                    states: <StatesSettings data={data && data.states} {...baseAppProps} />,
+                    parks: <ParksSettings data={data && data.parks} {...baseAppProps} />,
+                    countries: <StatesSettings data={data && data.countries} {...baseAppProps} />,
+                    github: <GithubSettings data={data && data.github} {...baseAppProps} />,
+                    fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
+                    tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
+                    trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
+                    instagram: <InstagramSettings data={data && data.instagram} {...baseAppProps} />,
+                    allocation: <AllocationSettings data={data && data.allocation} {...baseAppProps} />,
+                  } as any
+                )[appName]
               }
             </div>
           </div>

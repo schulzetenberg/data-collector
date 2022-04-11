@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 
 import { ErrorList, Request } from '@schulzetenberg/component-library';
+import { ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -15,7 +16,7 @@ type Token = { _id?: string; token: string; createdAt: string; tableData?: { id:
 const AccountTokens: React.FC<{
   tokens: Token[];
   updateTokens: any;
-  saveData: any;
+  // saveData: any;
   isLoading: boolean;
 }> = ({ tokens, updateTokens, isLoading }) => {
   const [isTokenLoading, setTokenLoading] = useState(false);
@@ -33,7 +34,7 @@ const AccountTokens: React.FC<{
       } else {
         updateTokens(response.data);
       }
-    } catch (e) {
+    } catch (e: any) {
       setTokenErrors(e);
     } finally {
       setTokenLoading(false);
@@ -45,13 +46,16 @@ const AccountTokens: React.FC<{
     setTokenLoading(true);
 
     try {
-      const { data: response }: ServerResponse = await Request.post({ url: '/account/remove-api-key', body: { token } });
+      const { data: response }: ServerResponse = await Request.post({
+        url: '/account/remove-api-key',
+        body: { token },
+      });
       if (response.errors) {
         setTokenErrors(response.errors);
       } else {
         updateTokens(response.data);
       }
-    } catch (e) {
+    } catch (e: any) {
       setTokenErrors(e);
     } finally {
       setTokenLoading(false);
