@@ -40,9 +40,16 @@ exports.validateApiToken = async (req, res, next) => {
   const errorMessage = 'Invalid API token';
 
   try {
-    const userId = await User.findOne({ 'tokens.token': req.headers.token }, { _id: 1 });
+    let userId = await User.findOne({ 'tokens.token': req.headers.token }, { _id: 1 });
 
-    if (!userId) return response.serverError(res, errorMessage);
+    if (!userId) {
+      if (!process.env.NODE_ENV === 'development') {
+        return response.serverError(res, errorMessage);
+      }
+
+      logger.warn(`${errorMessage}: disabled in dev mode`);
+      userId = '5e4c9b10231dc32fa0870be7';
+    }
 
     // Append the userId to the request to be used in the API route handlers
     req.userId = userId;
