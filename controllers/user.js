@@ -153,7 +153,7 @@ exports.postUpdateProfile = (req, res, next) => {
         return response.serverError(res, 'Error saving profile updates');
       }
 
-      response.success(res, { user });
+      response.success(res, { data: user });
     });
   });
 };
