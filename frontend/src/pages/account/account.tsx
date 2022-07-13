@@ -69,6 +69,11 @@ const Account: React.FC = () => {
     });
   };
 
+  const handleCancel = (): void => {
+    setShowProfile(false);
+    setShowPassword(false);
+  };
+
   const handleShowProfile = (): void => {
     setShowPassword(false);
     setShowProfile(!showProfile);
@@ -124,30 +129,41 @@ const Account: React.FC = () => {
   return (
     <div className={classes.root}>
       <ErrorList errors={serverErrors} />
-      <Grid container spacing={4}>
+      <Grid container spacing={4} justify="center">
         {(showProfile || showPassword) && (
-          <Grid item lg={8} md={6} xl={8} xs={12}>
-            {showProfile && <AccountDetails data={data} saveData={handleUpdateUser} isLoading={isLoading} />}
-            {showPassword && <AccountPassword saveData={handleSavePassword} isLoading={!data || isLoadingPassword} />}
+          <Grid item sm={12} md={6}>
+            {showProfile && (
+              <AccountDetails
+                data={data}
+                saveData={handleUpdateUser}
+                handleCancel={handleCancel}
+                isLoading={isLoading}
+              />
+            )}
+
+            {showPassword && (
+              <AccountPassword
+                saveData={handleSavePassword}
+                handleCancel={handleCancel}
+                isLoading={!data || isLoadingPassword}
+              />
+            )}
           </Grid>
         )}
-        {!showProfile && !showPassword && <Grid item lg={4} md={3} xl={4} xs={12} />}
-        <Grid item lg={4} md={6} xl={4} xs={12}>
-          <AccountProfile
-            handleRemove={handleRemove}
-            isLoading={!data || isRemoveLoading}
-            data={data}
-            errors={removeErrors}
-            setShowProfile={handleShowProfile}
-            setShowPassword={handleShowPassword}
-          />
-          <AccountTokens
-            tokens={data && data.tokens}
-            updateTokens={handleUpdateTokens}
-            // saveData={handleUpdateUser}
-            isLoading={!data}
-          />
-        </Grid>
+
+        {!showProfile && !showPassword && (
+          <Grid item lg={4} md={6} xl={4} xs={12}>
+            <AccountProfile
+              handleRemove={handleRemove}
+              isLoading={!data || isRemoveLoading}
+              data={data}
+              errors={removeErrors}
+              setShowProfile={handleShowProfile}
+              setShowPassword={handleShowPassword}
+            />
+            <AccountTokens tokens={data && data.tokens} updateTokens={handleUpdateTokens} isLoading={!data} />
+          </Grid>
+        )}
       </Grid>
     </div>
   );

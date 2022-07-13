@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     marginLeft: 'auto',
-    height: 110,
+    height: 100,
     width: 100,
     flexShrink: 0,
     flexGrow: 0,
@@ -18,8 +18,7 @@ const useStyles = makeStyles((theme) => ({
   uploadButton: {
     marginRight: theme.spacing(2),
   },
-  modalButton: {
-    marginRight: theme.spacing(2),
+  modalButtonConfirm: {
     float: 'right',
   },
 }));
@@ -87,20 +86,14 @@ const AccountProfile: React.FC<{
             </p>
             <Button
               disabled={isLoading}
-              className={classes.modalButton}
+              className={classes.modalButtonConfirm}
               onClick={handleRemove}
               color="primary"
               variant="contained"
             >
               Confirm
             </Button>
-            <Button
-              disabled={isLoading}
-              className={classes.modalButton}
-              onClick={handleClose}
-              color="primary"
-              variant="text"
-            >
+            <Button disabled={isLoading} onClick={handleClose} color="primary" variant="text">
               Cancel
             </Button>
           </>

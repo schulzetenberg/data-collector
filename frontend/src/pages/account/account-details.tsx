@@ -1,20 +1,25 @@
 import React, { useEffect } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
+import { Card, Container, CardHeader, CardContent, Divider, Grid } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     buttonGrid: {
-      'margin-left': '0.75em',
+      marginTop: theme.spacing(2),
     },
   })
 );
 
-const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }> = ({ data, saveData, isLoading }) => {
+const AccountDetails: React.FC<{ data: any; saveData: any; handleCancel: any; isLoading: boolean }> = ({
+  data,
+  saveData,
+  handleCancel,
+  isLoading,
+}) => {
   const classes = useStyles();
 
   const validationSchema = yup.object().shape({
@@ -44,36 +49,38 @@ const AccountDetails: React.FC<{ data: any; saveData: any; isLoading: boolean }>
   }, [data, reset]);
 
   return (
-    <Card>
-      <CardHeader title="Edit Profile" />
-      <Divider />
+    <Container maxWidth="sm">
+      <Card>
+        <CardHeader title="Edit Profile" />
+        <Divider />
 
-      <Form disabled={isLoading} onSubmit={handleSubmit(saveData)}>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item md={6} xs={12}>
-              <TextField2 {...formProps} label="First Name" name="firstName" required />
+        <Form disabled={isLoading} onSubmit={handleSubmit(saveData)}>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField2 {...formProps} label="First Name" name="firstName" required />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField2 {...formProps} label="Last Name" name="lastName" required />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField2 {...formProps} label="Email Address" name="email" type="email" required />
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField2 {...formProps} label="Last Name" name="lastName" required />
+            <Grid item xs={12} className={classes.buttonGrid}>
+              <Button {...formProps} variant="text" onClick={handleCancel}>
+                Cancel
+              </Button>
             </Grid>
             <Grid item xs={12}>
-              <TextField2 {...formProps} label="Email Address" name="email" type="email" required />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        <CardActions>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12} className={classes.buttonGrid}>
               <Button {...formProps} type="submit">
                 Save Changes
               </Button>
             </Grid>
-          </Grid>
-        </CardActions>
-      </Form>
-    </Card>
+          </CardContent>
+        </Form>
+      </Card>
+    </Container>
   );
 };
 

@@ -1,18 +1,22 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardContent, CardActions, Divider, Grid } from '@material-ui/core';
+import { Card, Container, CardHeader, CardContent, Divider, Grid } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   buttonGrid: {
-    'margin-left': '0.75em',
+    marginTop: theme.spacing(2),
   },
 }));
 
-const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ saveData, isLoading }) => {
+const AccountPassword: React.FC<{ saveData: any; handleCancel?: any; isLoading: boolean }> = ({
+  saveData,
+  handleCancel,
+  isLoading,
+}) => {
   const classes = useStyles();
 
   const validationSchema = yup.object().shape({
@@ -31,31 +35,36 @@ const AccountPassword: React.FC<{ saveData: any; isLoading: boolean }> = ({ save
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
 
   return (
-    <Card>
-      <Form autocomplete="off" disabled={isLoading} onSubmit={handleSubmit(saveData)}>
-        <CardHeader title="Change Password" />
-        <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <TextField2 {...formProps} label="New Password" name="password" type="password" required />
+    <Container maxWidth="sm">
+      <Card>
+        <Form autocomplete="off" disabled={isLoading} onSubmit={handleSubmit(saveData)}>
+          <CardHeader title="Change Password" />
+          <Divider />
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField2 {...formProps} label="New Password" name="password" type="password" required />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField2 {...formProps} label="Confirm Password" name="confirmPassword" type="password" required />
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField2 {...formProps} label="Confirm Password" name="confirmPassword" type="password" required />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <CardActions>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12} className={classes.buttonGrid}>
+            {handleCancel && (
+              <Grid item xs={12} className={classes.buttonGrid}>
+                <Button {...formProps} variant="text" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </Grid>
+            )}
+            <Grid item xs={12}>
               <Button {...formProps} type="submit">
                 Update Password
               </Button>
             </Grid>
-          </Grid>
-        </CardActions>
-      </Form>
-    </Card>
+          </CardContent>
+        </Form>
+      </Card>
+    </Container>
   );
 };
 

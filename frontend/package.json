@@ -5,7 +5,7 @@
   "homepage": "/",
   "proxy": "http://localhost:3000",
   "dependencies": {
-    "@schulzetenberg/component-library": "^1.0.22",
+    "@schulzetenberg/component-library": "^1.0.23",
     "cross-env": "7.0.3"
   },
   "scripts": {
