@@ -18,7 +18,7 @@ const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
 
 // Logging configuration
-const logger = require('./nodejs/log.js');
+const logger = require('./nodejs/log');
 
 // API keys and configuration.
 const secrets = require('./config/secrets');

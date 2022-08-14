@@ -44,6 +44,7 @@ module.exports = (app) => {
   app.get('/api/trakt', passportConf.validateApiToken, apiController.getTrakt);
   app.get('/api/states', passportConf.validateApiToken, apiController.getStates);
   app.get('/api/countries', passportConf.validateApiToken, apiController.getCountries);
+  app.get('/api/parks', passportConf.validateApiToken, apiController.getParks);
   app.get('/api/fuelly', passportConf.validateApiToken, apiController.getFuelly);
   app.get('/api/fuelly-avg', passportConf.validateApiToken, apiController.getFuellyAvg);
   app.get('/api/player-fm', passportConf.validateApiToken, apiController.getPlayerFm);

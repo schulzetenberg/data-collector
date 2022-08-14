@@ -8,6 +8,19 @@ const parksList = require('../config/parks');
 
 const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
+exports.get = (userId) =>
+  appConfig.get(userId).then((config) => {
+    const visited = config && config.parks && config.parks.visited;
+
+    if (!visited) {
+      return Promise.reject('Parks config is missing');
+    }
+
+    const parkListVisited = visited.map((vistitedPark) => parksList.find((park) => park.name === vistitedPark));
+
+    return parkListVisited;
+  });
+
 exports.save = (userId) =>
   appConfig
     .get(userId)
@@ -24,6 +37,7 @@ function uploadAllImages(config) {
 }
 
 async function uploadImage(config, park) {
+  // NOTE: This config is not availible yet, so we will never upload any images
   if (!config.parks.cloudinaryUpload) {
     return park;
   }

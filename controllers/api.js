@@ -6,6 +6,7 @@ const github = require('../models/github-model');
 const trakt = require('../models/trakt-model');
 const states = require('../nodejs/states');
 const countries = require('../nodejs/countries');
+const parks = require('../nodejs/parks');
 const fuelly = require('../models/fuelly-model');
 const playerFm = require('../models/player-fm-model');
 const instagram = require('../models/instagram-model');
@@ -179,6 +180,18 @@ exports.getCountries = (req, res) => {
     .catch((err) => {
       logger.error('Get countries error', err);
       response.serverError(res, 'Error getting countries data');
+    });
+};
+
+exports.getParks = (req, res) => {
+  parks
+    .get(req.userId)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      logger.error('Get parks error', err);
+      response.serverError(res, 'Error getting parks data');
     });
 };
 
