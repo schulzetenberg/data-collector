@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { useForm } from 'react-hook-form';
 
-import { Button, Form, SwitchForm2, MultiSelect2 } from '@schulzetenberg/component-library';
-
-const useStyles = makeStyles(() => ({
-  textCenter: { textAlign: 'center' },
-}));
+import { Button, Form, MultiSelect2 } from '@schulzetenberg/component-library';
 
 type FormData = {
   visited: { value: string; label: string }[];
@@ -14,7 +9,6 @@ type FormData = {
 };
 
 const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
-  const classes = useStyles();
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const {
@@ -37,9 +31,6 @@ const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
 
   return (
     <Form disabled={formProps.disabled} onSubmit={handleSubmit(submit)}>
-      <div className={classes.textCenter}>
-        <SwitchForm2 {...formProps} name="active" label="Active" />
-      </div>
       <MultiSelect2 name="visited" options={options} {...formProps} />
       <Button {...formProps} type="submit">
         Save
