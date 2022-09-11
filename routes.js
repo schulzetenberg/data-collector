@@ -7,23 +7,13 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const appConfigController = require('./controllers/app-config');
 const apiController = require('./controllers/api');
-const bruteforceController = require('./controllers/brute-force');
 
 module.exports = (app) => {
   app.get('/app-config/config', passportConf.isAuthenticated, appConfigController.getConfig);
   app.post('/app-config/config', passportConf.isAuthenticated, appConfigController.saveConfig);
   app.post('/app-config/run-app', passportConf.isAuthenticated, appConfigController.runApp);
 
-  app.post(
-    '/signin',
-    bruteforceController.globalBruteforce.prevent,
-    bruteforceController.userBruteforce.getMiddleware({
-      key(req, res, next) {
-        next(req.body.email);
-      },
-    }),
-    userController.postSignin
-  );
+  app.post('/signin', userController.postSignin);
   app.post('/logout', userController.logout);
   app.post('/forgot', userController.postForgot);
   app.post('/reset', userController.postReset);

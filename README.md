@@ -13,7 +13,6 @@ Features
  - Reset Password
  - Delete Account
 - **Security**
- - Brute force protection
  - Secure cookies
 
 Requirements

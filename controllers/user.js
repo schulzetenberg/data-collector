@@ -44,11 +44,8 @@ exports.postSignin = (req, res, next) => {
         return response.serverError(res, 'Error logging in user');
       }
 
-      // Reset the failure counter for this user
-      req.brute.reset(() => {
-        const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
-        response.success(res, { data });
-      });
+      const data = { firstName: user.firstName, lastName: user.lastName, email: user.email };
+      response.success(res, { data });
     });
   })(req, res, next);
 };

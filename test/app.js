@@ -314,9 +314,3 @@ describe('POST: user logged in', () => {
     * Log out
     * Change password
 */
-
-/*
-    TODO:
-    * Brute force tests
-    * HTTPS redirection
-*/
