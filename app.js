@@ -98,7 +98,7 @@ app.use(
     secret: secrets.sessionSecret,
     store: MongoStore.create({
       mongoUrl: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
-      mongoOptions: { useUnifiedTopology: true, useNewUrlParser: true },
+      mongoOptions: {},
     }),
     cookie: cookieOpts,
   })

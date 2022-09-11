@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+  },
+  "include": ["models/*.js", "controllers/*.js", "nodejs/*.js", "app.js", "routes.js"],
+  "exclude": ["node_modules", "**/node_modules", "dist", "frontend"]
+}

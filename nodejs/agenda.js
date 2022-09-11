@@ -6,7 +6,7 @@ const logger = require('./log');
 const agenda = new Agenda({
   db: {
     address: `${secrets.MongoUrl + secrets.db}?authSource=admin`,
-    options: { useNewUrlParser: true, useUnifiedTopology: true },
+    options: {},
   },
 });
 exports.agenda = agenda;

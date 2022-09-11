@@ -4,8 +4,7 @@ const secrets = require('../config/secrets');
 const logger = require('./log');
 
 const url = `${secrets.MongoUrl + secrets.db}?authSource=admin`;
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.set('useCreateIndex', true);
+mongoose.connect(url);
 const db = mongoose.connection;
 
 // When successfully connected

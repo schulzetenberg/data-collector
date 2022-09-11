@@ -220,7 +220,7 @@ module.exports = [
     name: 'Hot Springs',
     imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Hots_Springs_National_Park_aerial.jpg/300px-Hots_Springs_National_Park_aerial.jpg',
-    State: 'Arkansasa',
+    State: 'Arkansas',
     location: '34.51, -93.05',
   },
   {

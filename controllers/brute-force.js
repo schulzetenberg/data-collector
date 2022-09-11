@@ -8,7 +8,7 @@ const secrets = require('../config/secrets');
 const logger = require('../nodejs/log');
 
 const store = new MongoStore((ready) => {
-  MongoClient.connect(secrets.MongoUrl, { useUnifiedTopology: true, useNewUrlParser: true }, (err, client) => {
+  MongoClient.connect(secrets.MongoUrl, {}, (err, client) => {
     if (err) throw err;
 
     const db = client.db(secrets.db, { authSource: 'admin' });
