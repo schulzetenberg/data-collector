@@ -83,8 +83,6 @@ const appConfigSchema = new mongoose.Schema(
       cloudinaryUpload: { type: Boolean, default: false },
     },
     parks: {
-      active: { type: Boolean, default: false },
-      schedule: { type: String, default: '10 10 0 * * 1' },
       cloudinaryUpload: { type: Boolean, default: false },
       visited: { type: [] },
     },

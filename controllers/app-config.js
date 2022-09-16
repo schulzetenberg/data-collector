@@ -11,6 +11,7 @@ const mongoUtils = require('../nodejs/mongo-utils');
 const scheduler = require('../nodejs/scheduler');
 const { agenda } = require('../nodejs/agenda');
 const parksList = require('../config/parks');
+const parks = require('../nodejs/parks');
 const statesList = require('../config/states');
 const countriesList = require('../config/countries');
 const appModules = require('../nodejs/app-modules');
@@ -73,11 +74,16 @@ exports.getConfig = async (req, res) => {
  * POST /app-config
  * Save application config
  */
-exports.saveConfig = (req, res, next) => {
+exports.saveConfig = async (req, res, next) => {
   const data = req.body;
 
   if (!data) {
     return next('No config data to save');
+  }
+
+  if (data.appName === 'parks') {
+    // eslint-disable-next-line no-underscore-dangle
+    await parks.save(req.user._id);
   }
 
   if (data.parks && data.parks.visited) {

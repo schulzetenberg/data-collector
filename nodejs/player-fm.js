@@ -99,6 +99,7 @@ function getArtwork({ config, podcast }) {
       try {
         const response = await cloudinaryUploadAsync(data.imgUrl, {
           folder: 'podcasts',
+          // TODO: Use userId in public_id
           // Assign a public id so that when we upload an image with the same id, it will replace the previous one
           public_id: `${data.title}-podcast`
             .replace(/ /g, '-')

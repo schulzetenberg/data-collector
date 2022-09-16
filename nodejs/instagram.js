@@ -78,6 +78,7 @@ async function uploadImages({ config, image }) {
   try {
     const response = await cloudinaryUploadAsync(image.imgUrl, {
       folder: 'instagram',
+      // TODO: Use userId in public_id
       // Assign a public id so that when we upload an image with the same id, it will replace the previous one
       public_id: `${image.id}-instagram`,
       transformation: [{ flags: 'force_strip', height: 160, width: 160, quality: 'auto:good', crop: 'fill' }],

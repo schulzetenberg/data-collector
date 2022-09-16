@@ -24,20 +24,26 @@ exports.get = (userId) =>
 exports.save = (userId) =>
   appConfig
     .get(userId)
-    .then(uploadAllImages)
-    .then((parks) => {
-      const doc = new ParksModel({ parks, userId });
-      return doc.save();
-    });
+    .then((config) => uploadAllImages(config, userId))
+    .then((parks) =>
+      // Keep only 1 questions document in the DB per user. Override the existing doc if it exists
+      ParksModel.findOneAndUpdate(
+        { userId },
+        { parks, userId },
+        {
+          new: true,
+          upsert: true,
+        }
+      ).lean()
+    );
 
-function uploadAllImages(config) {
-  const parkPromises = parksList.map((park) => uploadImage(config, park));
+function uploadAllImages(config, userId) {
+  const parkPromises = parksList.map((park) => uploadImage(config, park, userId));
 
   return Promise.all(parkPromises);
 }
 
-async function uploadImage(config, park) {
-  // NOTE: This config is not availible yet, so we will never upload any images
+async function uploadImage(config, park, userId) {
   if (!config.parks.cloudinaryUpload) {
     return park;
   }
@@ -46,12 +52,17 @@ async function uploadImage(config, park) {
     const response = await cloudinaryUploadAsync(park.imageUrl, {
       folder: 'parks',
       // Assign a public id so that when we upload an image with the same id, it will replace the previous one
-      public_id: `${park.name}-park`
+      public_id: `${userId}-${park.name}-park`
         .replace(/ /g, '-')
         .replace(/[^a-zA-Z0-9-_]/g, '')
         .toLowerCase()
         .substring(0, 100),
       transformation: [
+        {
+          width: 140,
+          height: 140,
+          crop: 'lfill',
+        },
         {
           background: '#786262',
           effect: 'colorize:40',

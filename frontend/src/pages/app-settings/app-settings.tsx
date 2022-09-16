@@ -72,7 +72,10 @@ const AppSettings: React.FC = () => {
     setSaveSuccess(false);
 
     try {
-      const { data: response }: ServerResponse = await Request.post({ url: '/app-config/config', body });
+      const { data: response }: ServerResponse = await Request.post({
+        url: '/app-config/config',
+        body: { ...body, appName },
+      });
       setData(response.data);
       setSaveSuccess(true);
     } catch (e: any) {
