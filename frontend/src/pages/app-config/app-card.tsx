@@ -1,18 +1,19 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import createStyles from '@mui/styles/createStyles';
 import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
-import { Grid, Menu, MenuItem, Box } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
+import { Grid, Menu, MenuItem, Box, Skeleton } from '@mui/material';
 
 import { SwitchComponent } from '@schulzetenberg/component-library';
 
@@ -101,7 +102,7 @@ const AppCard: React.FC<AppCardProps> = ({
         <CardHeader
           avatar={
             isLoading ? (
-              <Skeleton variant="circle" width={40} height={30} />
+              <Skeleton variant="circular" width={40} height={30} />
             ) : (
               // TODO: Change Switch component to SwitchForm
               active !== undefined && <SwitchComponent onChange={handleActiveChange} checked={active} />
@@ -110,7 +111,7 @@ const AppCard: React.FC<AppCardProps> = ({
           action={
             !isLoading && (
               <div>
-                <IconButton aria-label="settings" onClick={handleClick}>
+                <IconButton aria-label="settings" onClick={handleClick} size="large">
                   <MoreVertIcon />
                 </IconButton>
                 <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
@@ -125,7 +126,7 @@ const AppCard: React.FC<AppCardProps> = ({
         />
 
         {isLoading ? (
-          <Skeleton variant="rect" className={classes.media} />
+          <Skeleton variant="rectangular" className={classes.media} />
         ) : (
           <CardMedia className={classes.media} image={image} title={`${title} image`} />
         )}
@@ -155,6 +156,7 @@ const AppCard: React.FC<AppCardProps> = ({
                 onClick={handleExpandClick}
                 aria-expanded={expanded}
                 aria-label="show more"
+                size="large"
               >
                 <ExpandMoreIcon />
               </IconButton>

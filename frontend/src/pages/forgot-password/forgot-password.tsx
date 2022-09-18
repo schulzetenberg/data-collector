@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Avatar from '@mui/material/Avatar';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
 import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -77,7 +77,7 @@ const ForgotPassword: React.FC = () => {
   return (
     <Container component="main" maxWidth="sm">
       <Box mt={5}>
-        <Link variant="button" component={RouterLink} to="/" color="textPrimary">
+        <Link variant="button" component={RouterLink} to="/" color="textPrimary" underline="hover">
           <Typography variant="h4" component="h1" align="center" gutterBottom>
             Data Collector
           </Typography>
@@ -109,12 +109,12 @@ const ForgotPassword: React.FC = () => {
                   </Button>
                   <Grid container>
                     <Grid item xs>
-                      <Link component={RouterLink} to="/sign-in" variant="body2">
+                      <Link component={RouterLink} to="/sign-in" variant="body2" underline="hover">
                         Sign In
                       </Link>
                     </Grid>
                     <Grid item>
-                      <Link component={RouterLink} to="/sign-in" variant="body2">
+                      <Link component={RouterLink} to="/sign-in" variant="body2" underline="hover">
                         Don't have an account? Sign Up
                       </Link>
                     </Grid>

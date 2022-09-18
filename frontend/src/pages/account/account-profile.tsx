@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardActions, CardContent, Avatar, Typography, Divider, Grid } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import { Card, CardActions, CardContent, Avatar, Typography, Divider, Grid } from '@mui/material';
 
 import { ErrorList, Modal, Button } from '@schulzetenberg/component-library';
 
@@ -70,7 +70,7 @@ const AccountProfile: React.FC<{
       </CardContent>
       <Divider />
       <CardActions>
-        <Grid container alignItems="flex-start" justify="flex-end" direction="row">
+        <Grid container alignItems="flex-start" justifyContent="flex-end" direction="row">
           <Button className={classes.uploadButton} color="primary" variant="contained" onClick={handleDelete}>
             Delete Account
           </Button>

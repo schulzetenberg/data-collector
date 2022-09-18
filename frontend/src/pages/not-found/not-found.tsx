@@ -1,10 +1,10 @@
 import React from 'react';
-import Icon from '@material-ui/core/Icon';
-import Box from '@material-ui/core/Box';
-import ErrorIcon from '@material-ui/icons/Error';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Icon from '@mui/material/Icon';
+import Box from '@mui/material/Box';
+import ErrorIcon from '@mui/icons-material/Error';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {

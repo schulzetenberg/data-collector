@@ -52,6 +52,7 @@ $ sudo su - bitnami
 $ cd /home/bitnami/apps/collector/htdocs/
 $ git pull
 Download build.zip from https://github.com/schulzetenberg/data-collector/releases & unzip to frontend/  (the index.html path should be ~/apps/collector/htdocs/frontend/build/index.html)
+$ cd ..
 $ ./start-data-collector.sh
 ```
 

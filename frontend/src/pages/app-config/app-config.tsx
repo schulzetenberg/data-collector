@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import { Grid, Snackbar, SnackbarContent } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { Grid, Snackbar, SnackbarContent } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorList, Request } from '@schulzetenberg/component-library';

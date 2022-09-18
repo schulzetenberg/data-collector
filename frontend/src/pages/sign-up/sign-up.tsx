@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import Avatar from '@mui/material/Avatar';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Container from '@mui/material/Container';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -81,7 +81,7 @@ const SignUp: React.FC = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Box mt={5}>
-        <Link variant="button" component={RouterLink} to="/" color="textPrimary">
+        <Link variant="button" component={RouterLink} to="/" color="textPrimary" underline="hover">
           <Typography variant="h4" align="center" gutterBottom>
             Data Collector
           </Typography>
@@ -126,12 +126,12 @@ const SignUp: React.FC = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link component={RouterLink} to="/forgot-password" variant="body2">
+                <Link component={RouterLink} to="/forgot-password" variant="body2" underline="hover">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link component={RouterLink} to="/sign-in" variant="body2">
+                <Link component={RouterLink} to="/sign-in" variant="body2" underline="hover">
                   Already have an account? Sign In
                 </Link>
               </Grid>

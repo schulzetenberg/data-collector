@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import { Grid } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorList, SessionContext, Request } from '@schulzetenberg/component-library';
@@ -129,7 +129,7 @@ const Account: React.FC = () => {
   return (
     <div className={classes.root}>
       <ErrorList errors={serverErrors} />
-      <Grid container spacing={4} justify="center">
+      <Grid container spacing={4} justifyContent="center">
         {(showProfile || showPassword) && (
           <Grid item sm={12} md={6}>
             {showProfile && (

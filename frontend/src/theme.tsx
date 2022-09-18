@@ -1,8 +1,7 @@
-import red from '@material-ui/core/colors/red';
-import { createMuiTheme } from '@material-ui/core/styles';
+import red from '@mui/material/colors/red';
+import { createTheme } from '@mui/material/styles';
 
-// A custom theme for this app
-const theme = createMuiTheme({
+const theme = createTheme({
   transitions: {
     duration: {
       shortest: 150,

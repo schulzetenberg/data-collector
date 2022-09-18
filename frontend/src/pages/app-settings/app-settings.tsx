@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import { Snackbar, SnackbarContent, Avatar } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import SettingsIcon from '@material-ui/icons/Settings';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { Snackbar, SnackbarContent, Avatar } from '@mui/material';
+import { Theme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useParams } from 'react-router-dom';
 
 import { ErrorList, Request, parseCamelCase } from '@schulzetenberg/component-library';
