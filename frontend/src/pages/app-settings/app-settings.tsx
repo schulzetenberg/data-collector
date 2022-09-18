@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     marginTop: theme.spacing(3),
+    width: '100%',
   },
 }));
 
@@ -107,6 +108,8 @@ const AppSettings: React.FC = () => {
     isLoading,
   };
 
+  const wideContainer = ['allocation', 'fuelly'];
+
   return (
     <>
       <Snackbar
@@ -120,7 +123,7 @@ const AppSettings: React.FC = () => {
         <SnackbarContent className={classes.snackbarContent} message={<span>Saved settings</span>} />
       </Snackbar>
 
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth={wideContainer.includes(appName) ? 'lg' : 'xs'}>
         <Box mt={5}>
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>

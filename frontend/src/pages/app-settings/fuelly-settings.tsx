@@ -5,7 +5,12 @@ import { useForm } from 'react-hook-form';
 import { Button, Form, TextField2, SwitchForm2, EditableTable } from '@schulzetenberg/component-library';
 
 const useStyles = makeStyles(() => ({
-  textCenter: { textAlign: 'center' },
+  textCenter: {
+    textAlign: 'center',
+    '& div, & button': {
+      maxWidth: 250,
+    },
+  },
 }));
 
 type Vehicle = {
@@ -57,7 +62,9 @@ const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
       <div className={classes.textCenter}>
         <SwitchForm2 {...formProps} name="active" label="Active" />
       </div>
-      <TextField2 {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
+      <div className={classes.textCenter}>
+        <TextField2 {...formProps} name="schedule" label="Schedule" type="text" autoFocus />
+      </div>
 
       <EditableTable
         tableState={unsavedVehicles}
@@ -71,10 +78,11 @@ const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any
           { title: 'URL', field: 'url' },
         ]}
       />
-
-      <Button {...formProps} type="submit">
-        Save
-      </Button>
+      <div className={classes.textCenter}>
+        <Button {...formProps} type="submit">
+          Save
+        </Button>
+      </div>
     </Form>
   );
 };

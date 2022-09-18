@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
-// import { makeStyles } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 
 import { Button, Form, EditableTable } from '@schulzetenberg/component-library';
 
-// const useStyles = makeStyles(() => ({
-//   textCenter: { textAlign: 'center' },
-// }));
+const useStyles = makeStyles(() => ({
+  textCenter: {
+    textAlign: 'center',
+    '& div, & button': {
+      maxWidth: 250,
+    },
+  },
+}));
 
 type List = {
-  name: string;
+  label: string;
   value: string;
   isStock: boolean;
   tableData?: { id: number };
@@ -24,6 +29,7 @@ const AllocationSettings: React.FC<{
   isLoading: boolean;
   submit: any;
 }> = ({ data, isLoading, submit }) => {
+  const classes = useStyles();
   // NOTE: Since we need to have the latest data to keep the table updated, have this (dangerous) state value.
   //	A better option would be to figure out how to update the table based on the react hook forms change event
   const [unsavedList, setUnsavedList] = useState<List[]>([]);
@@ -57,19 +63,22 @@ const AllocationSettings: React.FC<{
         name="list"
         title="Assets"
         columns={[
-          { title: 'Name/Stock Ticker', field: 'name' },
+          { title: 'Name/Stock Ticker', field: 'label' },
           {
             title: 'Is Stock/ETF',
             field: 'isStock',
             type: 'boolean',
             render: (x: any) => (x.isStock ? 'True' : 'False'),
           },
-          { title: '$ Value', field: 'value', type: 'currency' },
+          { title: 'Total Value $', field: 'value', type: 'currency' },
         ]}
       />
-      <Button {...formProps} type="submit">
-        Save
-      </Button>
+
+      <div className={classes.textCenter}>
+        <Button {...formProps} type="submit">
+          Save
+        </Button>
+      </div>
     </Form>
   );
 };

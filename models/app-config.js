@@ -99,9 +99,9 @@ const appConfigSchema = new mongoose.Schema(
             tableData: {
               index: Number,
             },
-            name: '',
-            value: '',
+            label: '',
             isStock: false,
+            value: Number,
           },
         ],
       },
