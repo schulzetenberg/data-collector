@@ -84,7 +84,12 @@ const appConfigSchema = new mongoose.Schema(
     },
     parks: {
       cloudinaryUpload: { type: Boolean, default: false },
-      visited: { type: [] },
+      visited: [
+        {
+          value: String,
+          imageUrl: String,
+        },
+      ],
     },
     allocation: {
       list: {

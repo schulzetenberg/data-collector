@@ -32,8 +32,11 @@ exports.getConfig = async (req, res) => {
         data.states = data.states || {};
         data.countries = data.countries || {};
 
-        data.parks.visited = data.parks.visited?.map((x) => ({ value: x, label: x }));
-        data.parks.options = parksList.map(({ name }) => ({ value: name, label: name }));
+        data.parks.visited = data.parks.visited?.map((x) => ({
+          ...x,
+          label: parksList.find((p) => x.value === p.value).label,
+        }));
+        data.parks.options = parksList;
 
         data.states.visited = data.states.visited.map((x) => ({ value: x, label: x }));
         data.states.options = statesList.map((x) => ({ value: x, label: x }));
@@ -81,13 +84,9 @@ exports.saveConfig = async (req, res, next) => {
     return next('No config data to save');
   }
 
-  if (data.appName === 'parks') {
+  if (data.appName === 'parks' && data.parks.visited.length > 0) {
     // eslint-disable-next-line no-underscore-dangle
-    await parks.save(req.user._id);
-  }
-
-  if (data.parks && data.parks.visited) {
-    data.parks.visited = data.parks.visited.map((x) => x.value);
+    data.parks.visited = await parks.uploadAllImages(data.parks, req.user._id);
   }
 
   if (data.states && data.states.visited) {

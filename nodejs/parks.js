@@ -2,9 +2,8 @@ const { promisify } = require('util');
 const cloudinary = require('cloudinary').v2;
 
 const logger = require('./log');
-const ParksModel = require('../models/parks-model');
 const appConfig = require('./app-config');
-const parksList = require('../config/parks');
+const secrets = require('../config/secrets');
 
 const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
@@ -16,35 +15,18 @@ exports.get = (userId) =>
       return Promise.reject('Parks config is missing');
     }
 
-    const parkListVisited = visited.map((vistitedPark) => parksList.find((park) => park.name === vistitedPark));
-
-    return parkListVisited;
+    return visited;
   });
 
-exports.save = (userId) =>
-  appConfig
-    .get(userId)
-    .then((config) => uploadAllImages(config, userId))
-    .then((parks) =>
-      // Keep only 1 questions document in the DB per user. Override the existing doc if it exists
-      ParksModel.findOneAndUpdate(
-        { userId },
-        { parks, userId },
-        {
-          new: true,
-          upsert: true,
-        }
-      ).lean()
-    );
-
-function uploadAllImages(config, userId) {
-  const parkPromises = parksList.map((park) => uploadImage(config, park, userId));
+exports.uploadAllImages = (parksConfig, userId) => {
+  const parkPromises = parksConfig.visited.map((park) => uploadImage(parksConfig, park, userId));
 
   return Promise.all(parkPromises);
-}
+};
 
-async function uploadImage(config, park, userId) {
-  if (!config.parks.cloudinaryUpload) {
+async function uploadImage(parksConfig, park, userId) {
+  // Dont upload image if the setting is off or the image is already uploaded
+  if (!parksConfig.cloudinaryUpload || park.imageUrl.includes(`res.cloudinary.com/${secrets.cloudinary.cloud_name}`)) {
     return park;
   }
 
