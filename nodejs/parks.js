@@ -4,6 +4,7 @@ const cloudinary = require('cloudinary').v2;
 const logger = require('./log');
 const appConfig = require('./app-config');
 const secrets = require('../config/secrets');
+const parksList = require('../config/parks');
 
 const cloudinaryUploadAsync = promisify(cloudinary.uploader.upload);
 
@@ -15,7 +16,8 @@ exports.get = (userId) =>
       return Promise.reject('Parks config is missing');
     }
 
-    return visited;
+    const responseData = visited.map((x) => ({ ...parksList.find((p) => x.value === p.value), imageUrl: x.imageUrl }));
+    return responseData;
   });
 
 exports.uploadAllImages = (parksConfig, userId) => {
@@ -34,7 +36,7 @@ async function uploadImage(parksConfig, park, userId) {
     const response = await cloudinaryUploadAsync(park.imageUrl, {
       folder: 'parks',
       // Assign a public id so that when we upload an image with the same id, it will replace the previous one
-      public_id: `${userId}-${park.name}-park`
+      public_id: `${userId}-${park.value}-park`
         .replace(/ /g, '-')
         .replace(/[^a-zA-Z0-9-_]/g, '')
         .toLowerCase()
