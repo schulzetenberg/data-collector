@@ -11,7 +11,7 @@
     "@mui/lab": "5.0.0-alpha.98",
     "@mui/material": "5.10.4",
     "@mui/styles": "5.10.3",
-    "@schulzetenberg/component-library": "1.1.4",
+    "@schulzetenberg/component-library": "1.1.5",
     "@schulzetenberg/eslint-config-react": "^0.0.16",
     "@storybook/addon-actions": "6.5.10",
     "@storybook/addon-docs": "6.5.10",
