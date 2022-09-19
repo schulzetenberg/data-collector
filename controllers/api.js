@@ -122,7 +122,7 @@ exports.getAllocation = (req, res) => {
     )
     .lean()
     .then((data) => {
-      res.json(data);
+      res.json(data.totalPortfolio);
     })
     .catch((err) => {
       logger.error('Error getting allocation data', err);
