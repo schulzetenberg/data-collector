@@ -151,7 +151,7 @@ exports.save = (userId) =>
         } else {
           totalPortfolio.push({
             ticker: x.ticker,
-            label: x.longName,
+            label: x.shortName,
             percent: (x.percentWeight * fundValue) / totalValue,
           });
         }
@@ -167,7 +167,7 @@ exports.save = (userId) =>
             addToTotalsArray(b, x.value);
           });
         } else {
-          addToTotalsArray({ percentWeight: '100', ticker: x.ticker, longName: x.label }, x.value);
+          addToTotalsArray({ percentWeight: '100', ticker: x.ticker, shortName: x.label }, x.value);
         }
       });
 
