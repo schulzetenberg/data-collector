@@ -1,6 +1,14 @@
+// TODO: Clean up file
+
 const AllocationModel = require('../models/allocation-model');
 const appConfig = require('./app-config');
 const api = require('./api');
+
+const types = {
+  etf: 'etf',
+  stock: 'stock',
+  other: 'other',
+};
 
 exports.save = (userId) =>
   appConfig
@@ -21,29 +29,58 @@ exports.save = (userId) =>
 
       const promises = [];
 
+      const getType = (x) => {
+        if (x.isETF) {
+          return types.etf;
+        }
+
+        if (x.isStock) {
+          return types.stock;
+        }
+
+        return types.other;
+      };
+
       allocationConfig.list.forEach((x) => {
-        if (x.isStock && x.label) {
-          const ticker = x.label.toUpperCase();
+        const ticker = x.label.toUpperCase();
+        const type = getType(x);
+
+        if (type === types.etf) {
           promises.push(getFund({ ticker, value: x.value }));
         }
       });
 
-      return Promise.all(promises).then((data) => {
-        const returnData = [];
+      return Promise.all(promises)
+        .then((data) => {
+          const returnData = [];
 
-        data.forEach((x) => {
-          let parsedData = x.data.slice(21); // Remove 'angular.callbacks._0(' from start of string
-          parsedData = parsedData.substring(0, parsedData.length - 1); // Remove ')' from end of string
-          const jsonData = JSON.parse(parsedData);
+          data.forEach((x) => {
+            let parsedData = x.data.slice(21); // Remove 'angular.callbacks._0(' from start of string
+            parsedData = parsedData.substring(0, parsedData.length - 1); // Remove ')' from end of string
+            const jsonData = JSON.parse(parsedData);
 
-          returnData.push({ fund: jsonData, ticker: x.ticker, value: x.value });
+            returnData.push({ fund: jsonData, ticker: x.ticker, value: x.value, type: types.etf });
+          });
+
+          return returnData;
+        })
+        .then((fundData) => {
+          allocationConfig.list.forEach((x) => {
+            const ticker = x.label.toUpperCase();
+            const type = getType(x);
+
+            if (type === types.stock) {
+              fundData.push({ ticker, value: x.value, type: types.stock });
+            } else if (type !== types.etf) {
+              fundData.push({ ticker: x.label, value: x.value, type: types.other });
+            }
+          });
+
+          return fundData;
         });
-
-        return returnData;
-      });
     })
     .then((data) => {
-      const getStocks = ({ fund, ticker, value }) =>
+      const getStocks = ({ ticker, ...rest }) =>
         api
           .get({
             // eslint-disable-next-line max-len
@@ -61,14 +98,13 @@ exports.save = (userId) =>
             }
 
             return {
-              fund,
               ticker,
-              value,
               stocks: stocks.size < 1 ? [] : stocks.fund.entity,
+              ...rest,
             };
           });
 
-      const getBonds = ({ fund, ticker, value, stocks }) =>
+      const getBonds = ({ ticker, ...rest }) =>
         api
           .get({
             // eslint-disable-next-line max-len
@@ -86,17 +122,19 @@ exports.save = (userId) =>
             }
 
             return {
-              fund,
               ticker,
-              value,
-              stocks,
               bonds: bonds.size < 1 ? [] : bonds.fund.entity,
+              ...rest,
             };
           });
 
       const promises = [];
       data.forEach((fundData) => {
-        promises.push(getStocks(fundData).then(getBonds));
+        if (fundData.type === types.etf) {
+          promises.push(getStocks(fundData).then(getBonds));
+        } else {
+          promises.push(fundData);
+        }
       });
 
       return Promise.all(promises);
@@ -105,7 +143,7 @@ exports.save = (userId) =>
       const totalValue = data.reduce((partialSum, a) => partialSum + (a.value ? a.value : 0), 0);
       const totalPortfolio = [];
 
-      const addToArray = (x, fundValue) => {
+      const addToTotalsArray = (x, fundValue) => {
         const existingIndex = totalPortfolio.findIndex((i) => i.ticker === x.ticker);
 
         if (existingIndex !== -1) {
@@ -120,13 +158,17 @@ exports.save = (userId) =>
       };
 
       data.forEach((x) => {
-        x.stocks.forEach((s) => {
-          addToArray(s, x.value);
-        });
+        if (x.type === types.etf) {
+          x.stocks.forEach((s) => {
+            addToTotalsArray(s, x.value);
+          });
 
-        x.bonds.forEach((b) => {
-          addToArray(b, x.value);
-        });
+          x.bonds.forEach((b) => {
+            addToTotalsArray(b, x.value);
+          });
+        } else {
+          addToTotalsArray({ percentWeight: '100', ticker: x.ticker, longName: x.label }, x.value);
+        }
       });
 
       const sortByPercentDesc = (a, b) => {

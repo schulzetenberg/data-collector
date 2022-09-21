@@ -42,28 +42,12 @@ async function uploadImage(parksConfig, park, userId) {
         .toLowerCase()
         .substring(0, 100),
       transformation: [
-        {
-          width: 140,
-          height: 140,
-          crop: 'lfill',
-        },
-        {
-          background: '#786262',
-          effect: 'colorize:40',
-          opacity: 100,
-          radius: 0,
-        },
-        {
-          effect: 'saturation:35',
-          radius: 0,
-        },
+        { effect: 'art:sonnet', height: 140, width: 140, crop: 'lfill', quality: 'auto:good' },
+        { effect: 'colorize:15' }, // TODO: Upload not visited with colorize 75
         {
           background: '#ffffff',
           effect: 'hue:5',
           radius: 10,
-        },
-        {
-          effect: 'brightness:10',
         },
       ],
     });

@@ -3,6 +3,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useForm } from 'react-hook-form';
 
 import { Button, Form, EditableTable } from '@schulzetenberg/component-library';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const useStyles = makeStyles(() => ({
   textCenter: {
@@ -17,6 +18,8 @@ type List = {
   label: string;
   value: string;
   isStock: boolean;
+  isETF: boolean;
+  isOther: boolean;
   tableData?: { id: number };
 };
 
@@ -64,12 +67,25 @@ const AllocationSettings: React.FC<{
         title="Assets"
         columns={[
           { title: 'Name/Stock Ticker', field: 'label' },
+          // TODO: change checkobxes to 1 dropdown
           {
-            title: 'Is Stock/ETF',
+            title: 'Is Individual Stock',
             field: 'isStock',
             type: 'boolean',
-            render: (x: any) => (x.isStock ? 'True' : 'False'),
+            render: (x: any) => (x.isStock ? <CheckCircleOutlineIcon /> : ''),
           },
+          {
+            title: 'Is Mutual Fund or ETF',
+            field: 'isETF',
+            type: 'boolean',
+            render: (x: any) => (x.isETF ? <CheckCircleOutlineIcon /> : ''),
+          },
+          // {
+          //   title: 'Is Other Asset',
+          //   field: 'isOther',
+          //   type: 'boolean',
+          //   render: (x: any) => (x.isOther ? <CheckCircleOutlineIcon /> : ''),
+          // },
           { title: 'Total Value $', field: 'value', type: 'currency' },
         ]}
       />

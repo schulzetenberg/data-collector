@@ -84,7 +84,7 @@ exports.saveConfig = async (req, res, next) => {
     return next('No config data to save');
   }
 
-  if (data.appName === 'parks' && data.parks.visited.length > 0) {
+  if (data.appName === 'parks' && data.parks.visited?.length > 0) {
     // eslint-disable-next-line no-underscore-dangle
     data.parks.visited = await parks.uploadAllImages(data.parks, req.user._id);
   }

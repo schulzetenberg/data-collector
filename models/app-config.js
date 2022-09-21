@@ -101,6 +101,7 @@ const appConfigSchema = new mongoose.Schema(
             },
             label: '',
             isStock: false,
+            isETF: false,
             value: Number,
           },
         ],
