@@ -47,6 +47,20 @@ const AllocationSettings: React.FC<{
   } = useForm<FormData>();
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
+  const sectorOptions = {
+    'N/A': 'N/A',
+    Technology: 'Technology',
+    'Health Care': 'Health Care',
+    Financials: 'Financials',
+    'Real Estate': 'Real Estate',
+    Energy: 'Energy',
+    Materials: 'Materials',
+    'Consumer Discretionary': 'Consumer Discretionary',
+    Industrials: 'Industrials',
+    Utilities: 'Utilities',
+    'Consumer Staples': 'Consumer Staples',
+    Telecommunication: 'Telecommunication',
+  };
 
   useEffect(() => {
     if (data) {
@@ -67,7 +81,7 @@ const AllocationSettings: React.FC<{
         title="Assets"
         columns={[
           { title: 'Name/Stock Ticker', field: 'label' },
-          // TODO: change checkobxes to 1 dropdown
+          // TODO: change checkboxes to 1 dropdown
           {
             title: 'Is Individual Stock',
             field: 'isStock',
@@ -80,12 +94,16 @@ const AllocationSettings: React.FC<{
             type: 'boolean',
             render: (x: any) => (x.isETF ? <CheckCircleOutlineIcon /> : ''),
           },
-          // {
-          //   title: 'Is Other Asset',
-          //   field: 'isOther',
-          //   type: 'boolean',
-          //   render: (x: any) => (x.isOther ? <CheckCircleOutlineIcon /> : ''),
-          // },
+          {
+            title: 'Sector',
+            field: 'sector',
+            lookup: sectorOptions,
+            initialEditValue: 'N/A',
+            validate: (rowData: any) =>
+              !rowData.sector ||
+              rowData.sector === 'N/A' ||
+              (rowData.isStock ? true : 'Sector is only used for Individual Stocks'),
+          },
           { title: 'Total Value $', field: 'value', type: 'currency' },
         ]}
       />

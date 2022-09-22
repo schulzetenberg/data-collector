@@ -80,13 +80,15 @@ exports.save = (userId) =>
         });
     })
     .then((data) => {
+      const baseUrl = 'https://investor.vanguard.com/investment-products/etfs/profile';
+
       const getStocks = ({ ticker, ...rest }) =>
         api
           .get({
             // eslint-disable-next-line max-len
-            url: `https://investor.vanguard.com/investment-products/etfs/profile/api/${ticker}/portfolio-holding/stock`,
+            url: `${baseUrl}/api/${ticker}/portfolio-holding/stock`,
             headers: {
-              Referer: `https://investor.vanguard.com/investment-products/etfs/profile/${ticker}`,
+              Referer: `${baseUrl}/${ticker}`,
               'user-agent':
                 // eslint-disable-next-line max-len
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
@@ -108,9 +110,9 @@ exports.save = (userId) =>
         api
           .get({
             // eslint-disable-next-line max-len
-            url: `https://investor.vanguard.com/investment-products/etfs/profile/api/${ticker}/portfolio-holding/bond`,
+            url: `${baseUrl}/api/${ticker}/portfolio-holding/bond`,
             headers: {
-              Referer: `https://investor.vanguard.com/investment-products/etfs/profile/${ticker}`,
+              Referer: `${baseUrl}/${ticker}`,
               'user-agent':
                 // eslint-disable-next-line max-len
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
@@ -128,10 +130,28 @@ exports.save = (userId) =>
             };
           });
 
+      const getDiversification = ({ ticker, ...rest }) =>
+        api
+          .get({
+            // eslint-disable-next-line max-len
+            url: `${baseUrl}/api/${ticker}/diversification`,
+            headers: {
+              Referer: `${baseUrl}/${ticker}`,
+              'user-agent':
+                // eslint-disable-next-line max-len
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+            },
+          })
+          .then((diversifications) => ({
+            ticker,
+            diversification: diversifications?.sector?.long[0]?.item || [],
+            ...rest,
+          }));
+
       const promises = [];
       data.forEach((fundData) => {
         if (fundData.type === types.etf) {
-          promises.push(getStocks(fundData).then(getBonds));
+          promises.push(getStocks(fundData).then(getBonds).then(getDiversification));
         } else {
           promises.push(fundData);
         }
@@ -140,19 +160,26 @@ exports.save = (userId) =>
       return Promise.all(promises);
     })
     .then((data) => {
-      const totalValue = data.reduce((partialSum, a) => partialSum + (a.value ? a.value : 0), 0);
+      const totalValue = data.reduce((partialSum, a) => partialSum + (a.value ? a.value : 0), 0).toFixed(2);
+
+      const totalValueEtf = data
+        .reduce((partialSum, a) => partialSum + (a.value && a.type === types.etf ? a.value : 0), 0)
+        .toFixed(2);
+      const percentIndexFunds = ((totalValueEtf * 100) / totalValue).toFixed(2);
+
       const totalPortfolio = [];
 
       const addToTotalsArray = (x, fundValue) => {
         const existingIndex = totalPortfolio.findIndex((i) => i.ticker === x.ticker);
+        const stockValue = parseFloat(x.percentWeight) * fundValue;
 
         if (existingIndex !== -1) {
-          totalPortfolio[existingIndex].percent += (x.percentWeight * fundValue) / totalValue;
+          totalPortfolio[existingIndex].percent += stockValue / totalValue;
         } else {
           totalPortfolio.push({
             ticker: x.ticker,
             label: x.shortName,
-            percent: (x.percentWeight * fundValue) / totalValue,
+            percent: stockValue / totalValue,
           });
         }
       };
@@ -189,6 +216,7 @@ exports.save = (userId) =>
         userId,
         portfolio: data,
         totalValue,
+        percentIndexFunds,
         totalPortfolio,
       });
 

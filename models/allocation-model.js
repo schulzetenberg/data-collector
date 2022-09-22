@@ -5,6 +5,7 @@ module.exports = mongoose.model('allocation', {
   timestamp: { type: Date, default: Date.now, expires: 60 * 60 * 24 * 1000 }, // Delete documents after 1000 days
   portfolio: [{}],
   totalValue: { type: Number },
+  percentIndexFunds: { type: Number },
   totalPortfolio: [
     {
       ticker: { type: String },
