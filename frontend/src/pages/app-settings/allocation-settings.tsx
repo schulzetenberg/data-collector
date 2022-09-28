@@ -48,18 +48,18 @@ const AllocationSettings: React.FC<{
 
   const formProps = { disabled: isLoading, control, errors, fullWidth: true };
   const sectorOptions = {
-    'N/A': 'N/A',
-    Technology: 'Technology',
-    'Health Care': 'Health Care',
-    Financials: 'Financials',
-    'Real Estate': 'Real Estate',
-    Energy: 'Energy',
-    Materials: 'Materials',
-    'Consumer Discretionary': 'Consumer Discretionary',
-    Industrials: 'Industrials',
+    Unknown: 'Unknown',
     Utilities: 'Utilities',
     'Consumer Staples': 'Consumer Staples',
-    Telecommunication: 'Telecommunication',
+    'Consumer Discretionary': 'Consumer Discretionary',
+    'Real Estate': 'Real Estate',
+    Energy: 'Energy',
+    Healthcare: 'Healthcare',
+    Financials: 'Financials',
+    Industrials: 'Industrials',
+    'Information Technology': 'Information Technology',
+    Materials: 'Materials',
+    'Communication Services': 'Communication Services',
   };
 
   useEffect(() => {

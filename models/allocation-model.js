@@ -13,4 +13,10 @@ module.exports = mongoose.model('allocation', {
       percent: { type: Number },
     },
   ],
+  totalDiversification: [
+    {
+      name: { type: String },
+      percent: { type: Number },
+    },
+  ],
 });

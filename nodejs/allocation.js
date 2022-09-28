@@ -10,6 +10,37 @@ const types = {
   other: 'other',
 };
 
+const sectorMapping = {
+  ICB: {
+    Unknown: 'Unknown',
+    Utilities: 'Utilities',
+    'Consumer Staples': 'Consumer Staples',
+    'Consumer Discretionary': 'Consumer Discretionary',
+    'Real Estate': 'Real Estate',
+    Energy: 'Energy',
+    Healthcare: 'Healthcare',
+    Financials: 'Financials',
+    Industrials: 'Industrials',
+    Technology: 'Information Technology',
+    'Basic Materials': 'Materials',
+    Telecommunications: 'Communication Services',
+  },
+  GICS: {
+    Unknown: 'Unknown',
+    Utilities: 'Utilities',
+    'Consumer Staples': 'Consumer Staples',
+    'Consumer Discretionary': 'Consumer Discretionary',
+    'Real Estate': 'Real Estate',
+    Energy: 'Energy',
+    Healthcare: 'Healthcare',
+    Financials: 'Financials',
+    Industrials: 'Industrials',
+    'Information Technology': 'Information Technology',
+    Materials: 'Materials',
+    'Communication Services': 'Communication Services',
+  },
+};
+
 exports.save = (userId) =>
   appConfig
     .app(userId, 'allocation')
@@ -70,7 +101,13 @@ exports.save = (userId) =>
             const type = getType(x);
 
             if (type === types.stock) {
-              fundData.push({ ticker, value: x.value, type: types.stock });
+              fundData.push({
+                ticker,
+                value: x.value,
+                type: types.stock,
+                sector: x.sector,
+                classificationCode: 'GICS',
+              });
             } else if (type !== types.etf) {
               fundData.push({ ticker: x.label, value: x.value, type: types.other });
             }
@@ -184,6 +221,39 @@ exports.save = (userId) =>
         }
       };
 
+      const sectors = [];
+
+      const addToSectorsArray = (x, fundValue) => {
+        let fundSectorName = sectorMapping[x.classificationCode][x.name];
+
+        if (!fundSectorName) {
+          if (x.name.includes('REIT')) {
+            // fundSectorName = 'REIT';
+            fundSectorName = sectorMapping.GICS['Real Estate'];
+          } else if (x.name.includes('Real Estate')) {
+            fundSectorName = sectorMapping.GICS['Real Estate'];
+          } else {
+            fundSectorName = x.name;
+          }
+        }
+
+        const existingIndex = sectors.findIndex((i) => i.name === fundSectorName);
+        const stockValue = parseFloat(x.currYrPct) * fundValue;
+
+        if (stockValue === 0) {
+          return;
+        }
+
+        if (existingIndex !== -1) {
+          sectors[existingIndex].percent += stockValue / totalValue;
+        } else {
+          sectors.push({
+            name: fundSectorName,
+            percent: stockValue / totalValue,
+          });
+        }
+      };
+
       data.forEach((x) => {
         if (x.type === types.etf) {
           x.stocks.forEach((s) => {
@@ -193,8 +263,16 @@ exports.save = (userId) =>
           x.bonds.forEach((b) => {
             addToTotalsArray(b, x.value);
           });
+
+          x.diversification.forEach((d) => {
+            addToSectorsArray(d, x.value);
+          });
         } else {
           addToTotalsArray({ percentWeight: '100', ticker: x.ticker, shortName: x.label }, x.value);
+          addToSectorsArray(
+            { currYrPct: '100', name: x.sector, shortName: x.label, classificationCode: x.classificationCode },
+            x.value
+          );
         }
       });
 
@@ -212,12 +290,19 @@ exports.save = (userId) =>
 
       totalPortfolio.sort(sortByPercentDesc);
 
+      const totalSectorPercent = sectors.reduce((partialSum, a) => partialSum + a.percent, 0);
+
+      if (totalSectorPercent !== 100) {
+        sectors.push({ name: 'Other', percent: 100 - totalSectorPercent });
+      }
+
       const doc = new AllocationModel({
         userId,
         portfolio: data,
         totalValue,
         percentIndexFunds,
         totalPortfolio,
+        totalDiversification: sectors,
       });
 
       return doc.save();
