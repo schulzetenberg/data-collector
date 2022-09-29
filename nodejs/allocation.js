@@ -296,6 +296,8 @@ exports.save = (userId) =>
         sectors.push({ name: 'Other', percent: 100 - totalSectorPercent });
       }
 
+      sectors.sort(sortByPercentDesc);
+
       const doc = new AllocationModel({
         userId,
         portfolio: data,
