@@ -25,7 +25,11 @@ type FormData = {
   vehicles: Vehicle[];
 };
 
-const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const FuellySettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const classes = useStyles();
 
   // NOTE: Since we need to have the latest data to keep the table updated, have this (dangerous) state value.

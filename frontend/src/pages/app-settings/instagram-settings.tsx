@@ -15,7 +15,7 @@ type FormData = {
   cloudinaryUpload: boolean;
 };
 
-const InstagramSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
+const InstagramSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
   data,
   isLoading,
   submit,

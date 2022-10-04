@@ -4,14 +4,14 @@ import { useHistory } from 'react-router-dom';
 import { ErrorList, SessionContext, Request } from '@schulzetenberg/component-library';
 
 import AccountPassword from './account-password';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
 
 const PasswordReset: React.FC = (props: any) => {
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
 
-  const { setSession }: any = React.useContext(SessionContext);
+  const { setSession } = React.useContext(SessionContext);
   const {
     match: {
       params: { token },
@@ -30,9 +30,9 @@ const PasswordReset: React.FC = (props: any) => {
 
       setSession({ email: response.data.email });
       history.push('/account');
-    } catch (e: any) {
+    } catch (e) {
       setLoading(false);
-      setLoginErrors(e);
+      setLoginErrors(e as CatchResponse);
     }
   };
 

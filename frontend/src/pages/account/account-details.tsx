@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import createStyles from '@mui/styles/createStyles';
 import { Card, Container, CardHeader, CardContent, Divider, Grid } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
+import { Profile } from '../../types/account';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -15,12 +16,14 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const AccountDetails: React.FC<{ data: any; saveData: any; handleCancel: any; isLoading: boolean }> = ({
-  data,
-  saveData,
-  handleCancel,
-  isLoading,
-}) => {
+type FormData = { firstName: string; lastName: string; email: string };
+
+const AccountDetails: React.FC<{
+  data?: Profile;
+  saveData: SubmitHandler<FormData>;
+  handleCancel: () => void;
+  isLoading: boolean;
+}> = ({ data, saveData, handleCancel, isLoading }) => {
   const classes = useStyles();
 
   const validationSchema = yup.object().shape({
@@ -29,7 +32,6 @@ const AccountDetails: React.FC<{ data: any; saveData: any; handleCancel: any; is
     email: yup.string().required('Required').email('Invalid email'),
   });
 
-  type FormData = { firstName: string; lastName: string; email: string };
   const resolver = useValidation(validationSchema);
   const {
     handleSubmit,

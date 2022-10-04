@@ -92,7 +92,7 @@ const AppCard: React.FC<AppCardProps> = ({
     setExpanded(!expanded);
   };
 
-  const handleActiveChange = (e: any): void => {
+  const handleActiveChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     updateStatus(appKey, e.target.checked);
   };
 

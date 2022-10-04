@@ -15,7 +15,11 @@ type FormData = {
   token: string;
 };
 
-const GithubSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const GithubSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const classes = useStyles();
 
   const {

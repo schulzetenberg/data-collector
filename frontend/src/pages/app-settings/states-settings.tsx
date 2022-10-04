@@ -8,7 +8,11 @@ type FormData = {
   options: { value: string; label: string }[];
 };
 
-const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const StatesSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const {

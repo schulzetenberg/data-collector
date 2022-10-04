@@ -14,28 +14,29 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type List = {
+type ListItem = {
   label: string;
   value: string;
   isStock: boolean;
   isETF: boolean;
   isOther: boolean;
+  sector: string;
   tableData?: { id: number };
 };
 
 type FormData = {
-  list: List[];
+  list: ListItem[];
 };
 
 const AllocationSettings: React.FC<{
   data: FormData;
   isLoading: boolean;
-  submit: any;
+  submit: (formData: FormData) => void;
 }> = ({ data, isLoading, submit }) => {
   const classes = useStyles();
   // NOTE: Since we need to have the latest data to keep the table updated, have this (dangerous) state value.
   //	A better option would be to figure out how to update the table based on the react hook forms change event
-  const [unsavedList, setUnsavedList] = useState<List[]>([]);
+  const [unsavedList, setUnsavedList] = useState<ListItem[]>([]);
 
   const {
     handleSubmit,
@@ -86,20 +87,20 @@ const AllocationSettings: React.FC<{
             title: 'Is Individual Stock',
             field: 'isStock',
             type: 'boolean',
-            render: (x: any) => (x.isStock ? <CheckCircleOutlineIcon /> : ''),
+            render: (x: ListItem) => (x.isStock ? <CheckCircleOutlineIcon /> : ''),
           },
           {
             title: 'Is Mutual Fund or ETF',
             field: 'isETF',
             type: 'boolean',
-            render: (x: any) => (x.isETF ? <CheckCircleOutlineIcon /> : ''),
+            render: (x: ListItem) => (x.isETF ? <CheckCircleOutlineIcon /> : ''),
           },
           {
             title: 'Sector',
             field: 'sector',
             lookup: sectorOptions,
             initialEditValue: 'N/A',
-            validate: (rowData: any) =>
+            validate: (rowData: ListItem) =>
               !rowData.sector ||
               rowData.sector === 'N/A' ||
               (rowData.isStock ? true : 'Sector is only used for Individual Stocks'),

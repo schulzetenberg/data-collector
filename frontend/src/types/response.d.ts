@@ -9,3 +9,5 @@ interface ReponseError {
 }
 
 export interface ServerResponse extends ResponseSuccess, ReponseError {}
+
+export type CatchResponse = string[];

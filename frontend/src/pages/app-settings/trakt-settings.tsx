@@ -16,7 +16,11 @@ type FormData = {
   key: string;
 };
 
-const TraktSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const TraktSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const classes = useStyles();
 
   const {

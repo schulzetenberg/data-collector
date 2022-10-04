@@ -14,7 +14,11 @@ type FormData = {
   cloudinaryUpload: boolean;
 };
 
-const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const ParksSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const classes = useStyles();
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 

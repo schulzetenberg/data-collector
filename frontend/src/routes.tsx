@@ -17,8 +17,12 @@ const AuthenticatedRoute = ({ component: Component, session, ...rest }: any): Re
   return (
     <Route
       {...rest}
-      render={(props: any): ReactElement =>
-        session ? <Component {...props} /> : <Redirect to={`/sign-in?redirect=${props.location.pathname}`} />
+      render={(props): ReactElement =>
+        session && Object.keys(session).length !== 0 ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to={`/sign-in?redirect=${props.location.pathname}`} />
+        )
       }
     />
   );
@@ -29,7 +33,7 @@ const PublicRoute = ({ component: Component, ...rest }: any): ReactElement => {
 };
 
 const Routes: React.FC = () => {
-  const { session }: any = React.useContext(SessionContext);
+  const { session } = React.useContext(SessionContext);
 
   return (
     <Switch>

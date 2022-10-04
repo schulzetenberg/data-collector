@@ -34,7 +34,7 @@ function getProfile(config) {
     .then((data) => {
       const mediaArr = [];
 
-      data.graphql.user.edge_owner_to_timeline_media.edges.forEach(({ node }) => {
+      data?.graphql?.user?.edge_owner_to_timeline_media?.edges?.forEach(({ node }) => {
         mediaArr.push({
           caption: node.edge_media_to_caption.edges[0].node.text,
           imgUrl: node.display_url,

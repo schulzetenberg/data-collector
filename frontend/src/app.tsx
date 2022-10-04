@@ -12,7 +12,7 @@ const noHeaderPages = ['/sign-in', '/forgot-password', '/sign-up'];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const App: React.FC = ({ location }: any) => {
-  const { setSession }: any = React.useContext(SessionContext);
+  const { setSession } = React.useContext(SessionContext);
 
   axios.interceptors.response.use(
     (response) => response,

@@ -11,7 +11,8 @@ import { useHistory } from 'react-router-dom';
 import { ErrorList, Request } from '@schulzetenberg/component-library';
 
 import AppCard from './app-card';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
+import { AppSettingsModel } from '../../types/app-settings';
 
 const useStyles = makeStyles((theme) => ({
   snackbarContent: {
@@ -23,7 +24,7 @@ const AppConfig: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const [errors, setErrors] = useState<string[]>([]);
-  const [data, setData]: any = useState();
+  const [data, setData] = useState<AppSettingsModel>();
   const [isLoading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -38,22 +39,22 @@ const AppConfig: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.get({ url: 'app-config/config' });
       setData(response.data);
-    } catch (e: any) {
-      setErrors(e);
+    } catch (e) {
+      setErrors(e as CatchResponse);
     } finally {
       setLoading(false);
     }
   };
 
-  const saveData = async (body: any): Promise<void> => {
+  const saveData = async (body: AppSettingsModel): Promise<void> => {
     setSuccessMessage('');
 
     try {
       const { data: response }: ServerResponse = await Request.post({ url: '/app-config/config', body });
       setData(response.data);
       setSuccessMessage(messageConstants.saveSuccess);
-    } catch (e: any) {
-      setErrors(e);
+    } catch (e) {
+      setErrors(e as CatchResponse);
     }
   };
 
@@ -68,16 +69,20 @@ const AppConfig: React.FC = () => {
         body: { app: appName },
       });
       setSuccessMessage(messageConstants.runSuccess);
-    } catch (e: any) {
-      setErrors(e);
+    } catch (e) {
+      setErrors(e as CatchResponse);
     }
   };
 
   const handleUpdateStatus = (appKey: string, checked: boolean) => {
+    if (!data) {
+      return;
+    }
+
     const toSave = {
       ...data,
       [appKey]: {
-        ...data[appKey],
+        ...data[appKey as keyof AppSettingsModel],
         active: checked,
       },
     };
@@ -119,11 +124,11 @@ const AppConfig: React.FC = () => {
           <Grid container spacing={3}>
             <AppCard
               appKey="music"
-              active={data && data.music.active}
+              active={data && data.music?.active}
               {...cardDefaultProps}
               title="Music"
               image="/img/music.jpg"
-              lastUpdated={data && data.music.lastUpdated}
+              lastUpdated={data && data.music?.lastUpdated}
               summary="Collect music listening habits from Spotify & LastFM"
               // eslint-disable-next-line max-len
               description="The data being collected includes the top 15 artists, total number of artists, and number of songs listened to in the past 12 months."
@@ -131,11 +136,11 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="goodreads"
-              active={data && data.goodreads.active}
+              active={data?.goodreads?.active}
               {...cardDefaultProps}
               title="Books"
               image="/img/books.jpg"
-              lastUpdated={data && data.goodreads.lastUpdated}
+              lastUpdated={data?.goodreads?.lastUpdated}
               summary="Collect data on the books read from Goodreads"
               // eslint-disable-next-line max-len
               description="The data being collected includes the book title, date read, rating, cover image link, number of pages, and number of times read"
@@ -143,11 +148,11 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="fuelly"
-              active={data && data.fuelly.active}
+              active={data?.fuelly?.active}
               {...cardDefaultProps}
               title="Driving"
               image="/img/driving.jpg"
-              lastUpdated={data && data.fuelly.lastUpdated}
+              lastUpdated={data?.fuelly?.lastUpdated}
               summary="Collect mileage and fuel data from Fuelly"
               // eslint-disable-next-line max-len
               description="The data being collected includes the miles driven, amount of fuel consumed, and cost of fuel per vehicle"
@@ -155,11 +160,11 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="github"
-              active={data && data.github.active}
+              active={data?.github?.active}
               {...cardDefaultProps}
               title="Software Contributions"
               image="/img/coding.jpg"
-              lastUpdated={data && data.github.lastUpdated}
+              lastUpdated={data && data.github?.lastUpdated}
               summary="Collect software contribution data from Github"
               // eslint-disable-next-line max-len
               description="The data being collected includes a user's number of repos, contributions graphic, and follower & following lists"
@@ -167,21 +172,21 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="playerFm"
-              active={data && data.playerFm.active}
+              active={data?.playerFm?.active}
               {...cardDefaultProps}
               title="Podcasts"
               image="/img/microphone.jpg"
-              lastUpdated={data && data.playerFm.lastUpdated}
+              lastUpdated={data?.playerFm?.lastUpdated}
               summary="Collect podcast subscriptions from PlayerFM"
             />
 
             <AppCard
               appKey="tmdb"
-              active={data && data.tmdb.active}
+              active={data?.tmdb?.active}
               {...cardDefaultProps}
               title="Media Artwork"
               image="/img/theatre.jpg"
-              lastUpdated={data && data.tmdb.lastUpdated}
+              lastUpdated={data?.tmdb?.lastUpdated}
               summary="Collect images of TV shows & movies using TMDB"
             />
 
@@ -211,21 +216,21 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="feedly"
-              active={data && data.feedly.active}
+              active={data?.feedly?.active}
               {...cardDefaultProps}
               title="Blogs"
               image="/img/blog.jpg"
-              lastUpdated={data && data.feedly.lastUpdated}
+              lastUpdated={data?.feedly?.lastUpdated}
               summary="Collect Blog subscriptions from Feedly"
             />
 
             <AppCard
               appKey="trakt"
-              active={data && data.trakt.active}
+              active={data?.trakt?.active}
               {...cardDefaultProps}
               title="TV & Movies"
               image="/img/movie.jpg"
-              lastUpdated={data && data.trakt.lastUpdated}
+              lastUpdated={data?.trakt?.lastUpdated}
               summary="Collect TV & movie viewing data from Trakt"
               // eslint-disable-next-line max-len
               description="The data being collected includes the number of episodes & movies, ratings, and time spent watching"
@@ -233,11 +238,11 @@ const AppConfig: React.FC = () => {
 
             <AppCard
               appKey="instagram"
-              active={data && data.instagram.active}
+              active={data?.instagram?.active}
               {...cardDefaultProps}
               title="Instagram"
               image="/img/phone.jpg"
-              lastUpdated={data && data.instagram.lastUpdated}
+              lastUpdated={data?.instagram?.lastUpdated}
               summary="Collect public Instagram images"
             />
 
@@ -246,7 +251,7 @@ const AppConfig: React.FC = () => {
               {...cardDefaultProps}
               title="Asset Allocations"
               image="/img/stocks.jpg"
-              lastUpdated={data && data.allocations?.lastUpdated}
+              lastUpdated={data?.allocation?.lastUpdated}
               summary="Allocation of financial assets"
             />
           </Grid>

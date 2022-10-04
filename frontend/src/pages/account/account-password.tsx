@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { Card, Container, CardHeader, CardContent, Divider, Grid } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, Form, TextField2, useValidation } from '@schulzetenberg/component-library';
@@ -12,11 +12,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountPassword: React.FC<{ saveData: any; handleCancel?: any; isLoading: boolean }> = ({
-  saveData,
-  handleCancel,
-  isLoading,
-}) => {
+type FormData = { password: string; confirmPassword: string };
+
+const AccountPassword: React.FC<{
+  saveData: SubmitHandler<FormData>;
+  handleCancel?: () => void;
+  isLoading: boolean;
+}> = ({ saveData, handleCancel, isLoading }) => {
   const classes = useStyles();
 
   const validationSchema = yup.object().shape({
@@ -24,7 +26,6 @@ const AccountPassword: React.FC<{ saveData: any; handleCancel?: any; isLoading: 
     confirmPassword: yup.string().required('Required'),
   });
 
-  type FormData = { password: string; confirmPassword: string };
   const resolver = useValidation(validationSchema);
   const {
     handleSubmit,

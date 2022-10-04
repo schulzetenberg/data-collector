@@ -18,7 +18,11 @@ type FormData = {
   cloudinaryUpload: boolean;
 };
 
-const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({ data, isLoading, submit }) => {
+const MusicSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
+  data,
+  isLoading,
+  submit,
+}) => {
   const classes = useStyles();
 
   const {

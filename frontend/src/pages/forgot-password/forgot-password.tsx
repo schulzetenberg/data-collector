@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Button, ErrorList, Form, TextField2, Request, useValidation } from '@schulzetenberg/component-library';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -67,8 +67,8 @@ const ForgotPassword: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/forgot', body: inputs });
       setResetSuccess(true);
       setLoginErrors(response.errors);
-    } catch (e: any) {
-      setLoginErrors(e);
+    } catch (e) {
+      setLoginErrors(e as CatchResponse);
     } finally {
       setLoading(false);
     }

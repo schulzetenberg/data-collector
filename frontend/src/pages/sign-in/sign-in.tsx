@@ -22,7 +22,7 @@ import {
   SessionContext,
   Request,
 } from '@schulzetenberg/component-library';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@global': {
@@ -51,7 +51,7 @@ const SignIn: React.FC = ({ location }: any) => {
   const [isLoading, setLoading] = useState(false);
   const [loginErrors, setLoginErrors] = useState<string[]>([]);
 
-  const { setSession }: any = React.useContext(SessionContext);
+  const { setSession } = React.useContext(SessionContext);
 
   type FormData = {
     email: string;
@@ -80,9 +80,9 @@ const SignIn: React.FC = ({ location }: any) => {
       const { data: response }: ServerResponse = await Request.post({ url: '/signin', body });
       setSession({ email: response.data.email });
       history.push(redirectPath);
-    } catch (e: any) {
+    } catch (e) {
       setLoading(false);
-      setLoginErrors(e);
+      setLoginErrors(e as CatchResponse);
     }
   };
 

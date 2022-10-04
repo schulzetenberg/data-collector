@@ -16,7 +16,7 @@ type FormData = {
   cloudinaryUpload: boolean;
 };
 
-const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: any }> = ({
+const GoodreadsSettings: React.FC<{ data: FormData; isLoading: boolean; submit: (formData: FormData) => void }> = ({
   data,
   isLoading,
   submit,

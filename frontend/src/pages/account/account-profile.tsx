@@ -3,6 +3,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Card, CardActions, CardContent, Avatar, Typography, Divider, Grid } from '@mui/material';
 
 import { ErrorList, Modal, Button } from '@schulzetenberg/component-library';
+import { Profile } from '../../types/account';
 
 const useStyles = makeStyles((theme) => ({
   details: {
@@ -24,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AccountProfile: React.FC<{
-  data?: any;
-  handleRemove: any;
+  data?: Profile;
+  handleRemove: () => Promise<void>;
   isLoading: boolean;
   errors: string[];
-  setShowProfile: any;
-  setShowPassword: any;
+  setShowProfile: (showProfile: boolean) => void;
+  setShowPassword: (showPassword: boolean) => void;
 }> = ({ data, handleRemove, isLoading, errors, setShowProfile, setShowPassword }) => {
   const classes = useStyles();
 

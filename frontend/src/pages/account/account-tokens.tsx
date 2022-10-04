@@ -3,7 +3,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import MaterialTable from 'material-table';
 
 import { ErrorList, Request } from '@schulzetenberg/component-library';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
+import { Token } from '../../types/account';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -11,14 +12,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Token = { _id?: string; token: string; createdAt: string; tableData?: { id: number } };
-
 const AccountTokens: React.FC<{
-  tokens: Token[];
-  updateTokens: any;
-  // saveData: any;
+  tokens?: Token[];
+  updateTokens: (tokens: Token[]) => void;
   isLoading: boolean;
-}> = ({ tokens, updateTokens, isLoading }) => {
+}> = ({ tokens = [], updateTokens, isLoading }) => {
   const [isTokenLoading, setTokenLoading] = useState(false);
   const [tokenErrors, setTokenErrors] = useState<string[]>([]);
   const classes = useStyles();
@@ -34,8 +32,8 @@ const AccountTokens: React.FC<{
       } else {
         updateTokens(response.data);
       }
-    } catch (e: any) {
-      setTokenErrors(e);
+    } catch (e) {
+      setTokenErrors(e as CatchResponse);
     } finally {
       setTokenLoading(false);
     }
@@ -55,8 +53,8 @@ const AccountTokens: React.FC<{
       } else {
         updateTokens(response.data);
       }
-    } catch (e: any) {
-      setTokenErrors(e);
+    } catch (e) {
+      setTokenErrors(e as CatchResponse);
     } finally {
       setTokenLoading(false);
     }

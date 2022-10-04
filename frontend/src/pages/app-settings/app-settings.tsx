@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -22,7 +22,8 @@ import TraktSettings from './trakt-settings';
 import InstagramSettings from './instagram-settings';
 import ParksSettings from './parks-settings';
 import AllocationSettings from './allocation-settings';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
+import { AppSettingsModel } from '../../types/app-settings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   snackbarContent: {
@@ -52,7 +53,7 @@ const AppSettings: React.FC = () => {
   const { appName = '' } = useParams<{ appName: string }>();
   const classes = useStyles();
   const [responseErrors, setResponseErrors] = useState<string[]>([]);
-  const [data, setData]: any = useState();
+  const [data, setData] = useState<AppSettingsModel>();
   const [isLoading, setLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -62,14 +63,14 @@ const AppSettings: React.FC = () => {
     try {
       const { data: response }: ServerResponse = await Request.get({ url: '/app-config/config' });
       setData(response.data);
-    } catch (e: any) {
-      setResponseErrors(e);
+    } catch (e) {
+      setResponseErrors(e as CatchResponse);
     } finally {
       setLoading(false);
     }
   };
 
-  const saveData = async (body: any): Promise<void> => {
+  const saveData = async (body: AppSettingsModel): Promise<void> => {
     setResponseErrors([]);
     setSaveSuccess(false);
 
@@ -80,16 +81,20 @@ const AppSettings: React.FC = () => {
       });
       setData(response.data);
       setSaveSuccess(true);
-    } catch (e: any) {
-      setResponseErrors(e);
+    } catch (e) {
+      setResponseErrors(e as CatchResponse);
     }
   };
 
-  const submit = (formData: FormData): void => {
+  const submit = (formData: any): void => {
+    if (!data) {
+      return;
+    }
+
     const toSave = {
       ...data,
       [appName]: {
-        ...data[appName],
+        ...data[appName as keyof AppSettingsModel],
         ...formData,
       },
     };
@@ -137,20 +142,20 @@ const AppSettings: React.FC = () => {
               {
                 (
                   {
-                    music: <MusicSettings data={data && data.music} {...baseAppProps} />,
-                    goodreads: <GoodreadsSettings data={data && data.goodreads} {...baseAppProps} />,
-                    feedly: <FeedlySettings data={data && data.feedly} {...baseAppProps} />,
-                    playerFm: <PlayerFmSettings data={data && data.playerFm} {...baseAppProps} />,
-                    states: <StatesSettings data={data && data.states} {...baseAppProps} />,
-                    parks: <ParksSettings data={data && data.parks} {...baseAppProps} />,
-                    countries: <StatesSettings data={data && data.countries} {...baseAppProps} />,
-                    github: <GithubSettings data={data && data.github} {...baseAppProps} />,
-                    fuelly: <FuellySettings data={data && data.fuelly} {...baseAppProps} />,
-                    tmdb: <TmdbSettings data={data && data.tmdb} {...baseAppProps} />,
-                    trakt: <TraktSettings data={data && data.trakt} {...baseAppProps} />,
-                    instagram: <InstagramSettings data={data && data.instagram} {...baseAppProps} />,
-                    allocation: <AllocationSettings data={data && data.allocation} {...baseAppProps} />,
-                  } as any
+                    music: <MusicSettings data={data?.music} {...baseAppProps} />,
+                    goodreads: <GoodreadsSettings data={data?.goodreads} {...baseAppProps} />,
+                    feedly: <FeedlySettings data={data?.feedly} {...baseAppProps} />,
+                    playerFm: <PlayerFmSettings data={data?.playerFm} {...baseAppProps} />,
+                    states: <StatesSettings data={data?.states} {...baseAppProps} />,
+                    parks: <ParksSettings data={data?.parks} {...baseAppProps} />,
+                    countries: <StatesSettings data={data?.countries} {...baseAppProps} />,
+                    github: <GithubSettings data={data?.github} {...baseAppProps} />,
+                    fuelly: <FuellySettings data={data?.fuelly} {...baseAppProps} />,
+                    tmdb: <TmdbSettings data={data?.tmdb} {...baseAppProps} />,
+                    trakt: <TraktSettings data={data?.trakt} {...baseAppProps} />,
+                    instagram: <InstagramSettings data={data?.instagram} {...baseAppProps} />,
+                    allocation: <AllocationSettings data={data?.allocation} {...baseAppProps} />,
+                  } as Record<string, ReactElement>
                 )[appName]
               }
             </div>

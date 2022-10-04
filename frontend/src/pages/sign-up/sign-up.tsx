@@ -20,7 +20,7 @@ import {
   SessionContext,
   useValidation,
 } from '@schulzetenberg/component-library';
-import { ServerResponse } from '../../types/response';
+import { CatchResponse, ServerResponse } from '../../types/response';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -45,7 +45,7 @@ const SignUp: React.FC = () => {
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
   const [signupErrors, setSignupErrors] = useState<string[]>([]);
-  const { setSession }: any = React.useContext(SessionContext);
+  const { setSession } = React.useContext(SessionContext);
   const submit = async (inputs: { email: string; password: string }): Promise<void> => {
     setSignupErrors([]);
     setLoading(true);
@@ -54,9 +54,9 @@ const SignUp: React.FC = () => {
       const { data: response }: ServerResponse = await Request.post({ url: '/signup', body: inputs });
       setSession({ email: response.data.email });
       history.push('/');
-    } catch (e: any) {
+    } catch (e) {
       setLoading(false);
-      setSignupErrors(e);
+      setSignupErrors(e as CatchResponse);
     }
   };
 
