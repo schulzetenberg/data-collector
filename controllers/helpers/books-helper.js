@@ -49,10 +49,13 @@ exports.processBookData = (data) => {
   let topBooksList = '';
 
   for (let j = 0; j < topBooks.length; j += 1) {
+    let shortenedTitle = topBooks[j].split(':')[0];
+    shortenedTitle = shortenedTitle.length > 40 ? `${shortenedTitle.substring(0, 37)}...` : shortenedTitle;
+
     if (j % 2) {
-      topBooksList += `<b>${topBooks[j]}. </b>`;
+      topBooksList += `<b>${shortenedTitle}. </b>`;
     } else {
-      topBooksList += `${topBooks[j]}. `;
+      topBooksList += `${shortenedTitle} `;
     }
   }
 
