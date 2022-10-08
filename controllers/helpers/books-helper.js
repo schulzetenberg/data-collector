@@ -46,11 +46,13 @@ exports.processBookData = (data) => {
 
   parsedData.books = recentBooksArr;
   parsedData.pagesRead = pagesRead;
+  parsedData.topBooks = [];
   let topBooksList = '';
 
   for (let j = 0; j < topBooks.length; j += 1) {
     let shortenedTitle = topBooks[j].split(':')[0];
     shortenedTitle = shortenedTitle.length > 40 ? `${shortenedTitle.substring(0, 37)}...` : shortenedTitle;
+    parsedData.topBooks.push(shortenedTitle);
 
     if (j % 2) {
       topBooksList += `<b>${shortenedTitle}. </b>`;

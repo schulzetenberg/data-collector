@@ -1,3 +1,4 @@
+const cheerio = require('cheerio');
 const GithubModel = require('../models/github-model');
 const appConfig = require('./app-config');
 const api = require('./api');
@@ -39,9 +40,18 @@ exports.save = (userId) =>
       return Promise.all(promises);
     })
     .then((data) => {
+      const $ = cheerio.load(data[0]);
+      let contributions;
+      const contributionText = $('h2.f4').text();
+
+      if (contributionText) {
+        contributions = parseInt(contributionText, 10);
+      }
+
       const doc = new GithubModel({
         userId,
         contribSvg: data[0],
+        contributions,
         repos: data[1].public_repos,
         followers: data[2],
         following: data[3],
