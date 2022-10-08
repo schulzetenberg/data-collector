@@ -12,7 +12,7 @@ exports.save = (userId) =>
       }
 
       const promises = [
-        // Contributions data
+        // Contributions SVG
         api.get({
           url: `https://github.com/users/${githubConfig.user}/contributions`,
           headers: { ACCEPT: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' },
@@ -20,19 +20,7 @@ exports.save = (userId) =>
 
         // User data
         api.get({
-          url: `https://api.github.com/users/${githubConfig.user}?per_page=100`,
-          headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
-        }),
-
-        // Followers data
-        api.get({
-          url: `https://api.github.com/users/${githubConfig.user}/followers?per_page=100`,
-          headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
-        }),
-
-        // Following data
-        api.get({
-          url: `https://api.github.com/users/${githubConfig.user}/following?per_page=100`,
+          url: `https://api.github.com/users/${githubConfig.user}`,
           headers: { 'User-Agent': `GitHub User:${githubConfig.user}`, Authorization: `token ${githubConfig.token}` },
         }),
       ];
@@ -52,9 +40,12 @@ exports.save = (userId) =>
         userId,
         contribSvg: data[0],
         contributions,
-        repos: data[1].public_repos,
-        followers: data[2],
-        following: data[3],
+        publicRepos: data[1]?.public_repos,
+        privateRepos: data[1]?.total_private_repos,
+        publicGists: data[1]?.public_gists,
+        privateGists: data[1]?.private_gists,
+        followers: data[1]?.followers,
+        following: data[1]?.following,
       });
 
       return doc.save();
